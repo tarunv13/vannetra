@@ -1,0 +1,14 @@
+# Private / raw data never leaves the machine
+data/raw/
+data/private/
+data/interim/
+data/labels/*.csv
+!data/labels/README.md
+models/*.joblib
+models/*.pt
+.env
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/

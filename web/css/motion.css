@@ -1,0 +1,109 @@
+/* VanNetra motion system.
+ *
+ * Adapted from the OpenHiggsfield studio's motion vocabulary (open-higgsfield,
+ * src/openhiggsfield/openhiggsfield.css): two curves, entrances that bloom,
+ * exits that leave faster than they came, one plate that travels between tabs,
+ * loading sheens that loop without a seam, and numbers that change rather than
+ * redraw. Re-tuned here for a light glass surface and a map-first site.
+ *
+ * Every animation runs on transform/opacity (compositor only) and is switched
+ * off under prefers-reduced-motion.
+ */
+:root {
+  --ease: cubic-bezier(0.2, 0, 0, 1);          /* standard: quick start, soft landing */
+  --ease-slide: cubic-bezier(0.16, 1, 0.3, 1); /* deep ease-out: travel, glides */
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);     /* exits accelerate away */
+  --d-in: 420ms;
+  --d-out: 240ms; /* exit ~ 2/3 of entrance: a dismissal should feel decided */
+}
+
+/* ---------- keyframes ---------- */
+@keyframes vn-rise { from { opacity: 0; transform: translateY(10px) scale(0.99); } to { opacity: 1; transform: none; } }
+@keyframes vn-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes vn-out  { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-6px) scale(0.995); } }
+@keyframes vn-arrive {
+  0% { opacity: 0; transform: scale(0.96); filter: brightness(1.18) saturate(0.7); }
+  55% { opacity: 1; filter: brightness(1.05) saturate(0.95); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+@keyframes vn-sheen { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+@keyframes vn-drain { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes vn-count { from { opacity: 0; translate: 0 -0.35em; } to { opacity: 1; translate: 0 0; } }
+@keyframes vn-drift { 0%, 100% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(2.5vmax, -1.5vmax, 0) scale(1.06); } }
+@keyframes vn-pulse { 0%, 100% { opacity: 0.5; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1); } }
+
+/* ---------- section-to-section: View Transitions ---------- */
+/* The nav and the ambient light stay put; only the page content crossfades. */
+.nav { view-transition-name: vn-nav; }
+.ambient { view-transition-name: vn-ambient; }
+::view-transition-old(root) { animation: vn-out var(--d-out) var(--ease-exit) both; }
+::view-transition-new(root) { animation: vn-rise var(--d-in) var(--ease-slide) both; }
+::view-transition-group(vn-nav), ::view-transition-group(vn-ambient) { animation-duration: 0s; }
+
+/* Without the API, the view still rises in (glass.css .view). */
+
+/* ---------- staggered bloom: cards arrive in reading order ---------- */
+.stagger > * { animation: vn-rise var(--d-in) var(--ease) both; animation-delay: calc(var(--i, 0) * 45ms); }
+.bloom { animation: vn-arrive 620ms var(--ease) both; }
+
+/* ---------- one plate travels between tabs ---------- */
+.tabs { position: relative; }
+.tab-thumb {
+  position: absolute; top: 3px; bottom: 3px; left: 0; z-index: 0;
+  width: var(--thumb-w, 0); transform: translate3d(var(--thumb-x, 0), 0, 0);
+  border-radius: 999px; background: #fff; pointer-events: none; opacity: 0;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08), 0 6px 18px -8px rgba(15, 23, 42, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: transform 440ms var(--ease-slide), width 440ms var(--ease-slide), opacity 200ms ease;
+}
+.tab-thumb[data-ready="true"] { opacity: 1; }
+.tab { position: relative; z-index: 1; }
+.tabs .tab[aria-current="page"] { background: transparent; box-shadow: none; }
+.tab:active { transform: scale(0.97); }
+@media (max-width: 860px) { .tab-thumb { top: 6px; bottom: 6px; border-radius: 18px; } }
+
+/* ---------- loading: a lamp travelling over a plate ---------- */
+.skeleton { position: relative; overflow: hidden; border-radius: 16px; background: rgba(255, 255, 255, 0.55); min-height: 90px; }
+.skeleton::before {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 200%;
+  background-image: linear-gradient(100deg, rgba(255,255,255,0) 24%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 76%);
+  background-size: 50% 100%; background-repeat: repeat-x;
+  animation: vn-sheen 2.8s linear infinite; /* linear: an eased loop stalls at the seam */
+}
+
+/* ---------- numbers change, they don't redraw ---------- */
+.count-in { display: inline-block; animation: vn-count 360ms var(--ease) both; }
+
+/* ---------- drawer: in on a deep glide, out quicker ---------- */
+.drawer { transition: transform var(--d-out) var(--ease-exit), opacity var(--d-out) var(--ease-exit); opacity: 0; }
+.drawer.on { transition: transform 520ms var(--ease-slide), opacity 300ms var(--ease); opacity: 1; }
+.scrim { transition: opacity var(--d-out) var(--ease-exit); }
+.scrim.on { transition: opacity 360ms var(--ease); }
+
+/* ---------- the ambient light breathes, very slowly ---------- */
+.ambient i:nth-child(1) { animation: vn-drift 26s ease-in-out infinite; }
+.ambient i:nth-child(2) { animation: vn-drift 32s ease-in-out infinite reverse; }
+.ambient i:nth-child(3) { animation: vn-drift 38s ease-in-out infinite; }
+
+/* ---------- map glide (guided tour) ---------- */
+.tour { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 3; max-width: 460px; padding: 14px 16px 12px; border-radius: 18px; }
+.tour .meta { font-size: 12px; color: var(--ink-3); display: flex; justify-content: space-between; gap: 8px; }
+.tour .title { font: 600 16px/1.35 var(--font-display); margin: 6px 0 10px; letter-spacing: -0.01em; }
+.tour .controls { display: flex; gap: 6px; align-items: center; }
+.tour .btn { min-height: 32px; padding: 0 10px; font-size: 13px; }
+.tour .hairline { height: 2px; border-radius: 2px; background: rgba(15, 23, 42, 0.08); overflow: hidden; margin-top: 10px; }
+.tour .hairline i { display: block; height: 100%; background: var(--j); transform-origin: left; animation: vn-drain linear forwards; }
+.tour.paused .hairline i { animation-play-state: paused; }
+.tour-step { animation: vn-arrive 520ms var(--ease) both; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--j); display: inline-block; animation: vn-pulse 2.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+  .stagger > *, .bloom, .tour-step, .count-in { animation: none; }
+  .skeleton::before, .ambient i, .live-dot { animation: none; }
+  .tab-thumb, .drawer, .drawer.on { transition: none; }
+}
+
+/* grid children inside a staggered view cascade too */
+.stagger .grid > .glass, .stagger .grid > .sp-card { animation: vn-rise var(--d-in) var(--ease) both; animation-delay: calc(var(--i, 0) * 45ms); }
+.obs-card { animation: vn-rise var(--d-in) var(--ease) both; animation-delay: calc(var(--i, 0) * 35ms); }
+@media (prefers-reduced-motion: reduce) { .stagger .grid > .glass, .stagger .grid > .sp-card, .obs-card { animation: none !important; } }

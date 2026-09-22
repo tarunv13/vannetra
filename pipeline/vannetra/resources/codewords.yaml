@@ -1,0 +1,29 @@
+# Trade codewords: WATCHLIST, not lexicon.
+#
+# These terms were passed on in an LLM conversation (Google Gemini, Sep 2026) and
+# attributed to WWF / TRAFFIC / Oxpeckers / GI-TOC. VanNetra could NOT find a public
+# primary source for any of them on 2026-09-22. The Coalition to End Wildlife
+# Trafficking Online keeps its real list (1,000+ terms) restricted, precisely so
+# that sellers cannot adapt.
+#
+# So they are used only to FLAG an item for human review (`codeword_hits`).
+# They never create a case, never raise a relevance score, and are shown
+# on the site as "unverified". To promote a term to lexicon.yaml, add a
+# `source:` citation to a primary report and set `verified: true` in a PR.
+#
+# Several are ordinary words ("tea", "penny", "wood", "jelly"), so a hit on
+# its own means very little. The review queue shows the hit together with the
+# species or sale context around it.
+
+codewords:
+  - {term: "striped t-shirt",  means: tiger skin,          region: South Asia (online forums), verified: false, source: null}
+  - {term: "chota chadar",     means: leopard skin,        region: India / Nepal,              verified: false, source: null, note: "Same LLM also attributed it to rhino horn: inconsistent."}
+  - {term: "lakdi",            means: leopard bones,       region: South Asia,                 verified: false, source: null, note: "Hindi 'wood'; extremely common word."}
+  - {term: "kanta",            means: tiger/leopard claws, region: South Asia,                 verified: false, source: null, note: "Hindi 'thorn/hook'; common word."}
+  - {term: "four-wheeler",     means: star tortoise,       region: global,                     verified: false, source: null}
+  - {term: "white plastic",    means: ivory,               region: online auctions,            verified: false, source: null}
+  - {term: "white gold",       means: ivory,               region: online auctions,            verified: false, source: null}
+  - {term: "teh",              means: rhino horn,          region: Vietnam,                    verified: false, source: null}
+  - {term: "tigre americano",  means: jaguar parts sold as tiger, region: Bolivia / Suriname → China, verified: false, source: "Earth League International, Operation Jaguar (report exists; term not yet checked against it)"}
+  - {term: "buche",            means: totoaba swim bladder, region: Mexico → China,           verified: false, source: "EIA reports on totoaba (term not yet checked)"}
+  - {term: "hongmu",           means: rosewood timber (Dalbergia), region: China demand,      verified: false, source: "EIA timber reports (term widely used in the literature; citation pending)"}

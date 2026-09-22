@@ -1,0 +1,168 @@
+name,aliases,type,country,admin1,lat,lon
+India,,country,IN,,22.35,78.67
+Andhra Pradesh,,state,IN,Andhra Pradesh,15.91,79.74
+Arunachal Pradesh,,state,IN,Arunachal Pradesh,28.22,94.73
+Assam,,state,IN,Assam,26.20,92.94
+Bihar,,state,IN,Bihar,25.10,85.31
+Chhattisgarh,,state,IN,Chhattisgarh,21.28,81.87
+Goa,,state,IN,Goa,15.30,74.12
+Gujarat,,state,IN,Gujarat,22.26,71.19
+Haryana,,state,IN,Haryana,29.06,76.09
+Himachal Pradesh,,state,IN,Himachal Pradesh,31.10,77.17
+Jharkhand,,state,IN,Jharkhand,23.61,85.28
+Karnataka,,state,IN,Karnataka,15.32,75.71
+Kerala,,state,IN,Kerala,10.85,76.27
+Madhya Pradesh,,state,IN,Madhya Pradesh,22.97,78.66
+Maharashtra,,state,IN,Maharashtra,19.75,75.71
+Manipur,,state,IN,Manipur,24.66,93.91
+Meghalaya,,state,IN,Meghalaya,25.47,91.37
+Mizoram,,state,IN,Mizoram,23.16,92.94
+Nagaland,,state,IN,Nagaland,26.16,94.56
+Odisha,Orissa,state,IN,Odisha,20.95,85.10
+Punjab,,state,IN,Punjab,31.15,75.34
+Rajasthan,,state,IN,Rajasthan,27.02,74.22
+Sikkim,,state,IN,Sikkim,27.53,88.51
+Tamil Nadu,,state,IN,Tamil Nadu,11.13,78.66
+Telangana,,state,IN,Telangana,18.11,79.02
+Tripura,,state,IN,Tripura,23.94,91.99
+Uttar Pradesh,,state,IN,Uttar Pradesh,26.85,80.95
+Uttarakhand,Uttaranchal,state,IN,Uttarakhand,30.07,79.02
+West Bengal,,state,IN,West Bengal,22.99,87.86
+Jammu and Kashmir,Jammu & Kashmir,state,IN,Jammu and Kashmir,33.78,76.58
+Ladakh,,state,IN,Ladakh,34.15,77.58
+Andaman and Nicobar,Andaman,state,IN,Andaman and Nicobar,11.74,92.66
+Delhi,New Delhi,city,IN,Delhi,28.61,77.21
+Mumbai,Bombay,city,IN,Maharashtra,19.08,72.88
+Kolkata,Calcutta,city,IN,West Bengal,22.57,88.36
+Chennai,Madras,city,IN,Tamil Nadu,13.08,80.27
+Bengaluru,Bangalore,city,IN,Karnataka,12.97,77.59
+Hyderabad,,city,IN,Telangana,17.39,78.49
+Ahmedabad,,city,IN,Gujarat,23.02,72.57
+Pune,,city,IN,Maharashtra,18.52,73.86
+Lucknow,,city,IN,Uttar Pradesh,26.85,80.95
+Jaipur,,city,IN,Rajasthan,26.91,75.79
+Bhopal,,city,IN,Madhya Pradesh,23.26,77.41
+Patna,,city,IN,Bihar,25.59,85.14
+Guwahati,,city,IN,Assam,26.14,91.74
+Bhubaneswar,,city,IN,Odisha,20.30,85.82
+Thiruvananthapuram,Trivandrum,city,IN,Kerala,8.52,76.94
+Kochi,Cochin,city,IN,Kerala,9.93,76.27
+Visakhapatnam,Vizag,city,IN,Andhra Pradesh,17.69,83.22
+Nagpur,,city,IN,Maharashtra,21.15,79.09
+Indore,,city,IN,Madhya Pradesh,22.72,75.86
+Raipur,,city,IN,Chhattisgarh,21.25,81.63
+Ranchi,,city,IN,Jharkhand,23.34,85.31
+Dehradun,,city,IN,Uttarakhand,30.32,78.03
+Siliguri,,city,IN,West Bengal,26.73,88.40
+Imphal,,city,IN,Manipur,24.82,93.94
+Moreh,,city,IN,Manipur,24.25,94.30
+Aizawl,,city,IN,Mizoram,23.73,92.72
+Champhai,,city,IN,Mizoram,23.46,93.33
+Dimapur,,city,IN,Nagaland,25.91,93.73
+Kohima,,city,IN,Nagaland,25.67,94.11
+Shillong,,city,IN,Meghalaya,25.58,91.89
+Agartala,,city,IN,Tripura,23.83,91.29
+Gangtok,,city,IN,Sikkim,27.33,88.61
+Itanagar,,city,IN,Arunachal Pradesh,27.08,93.61
+Tezpur,,city,IN,Assam,26.63,92.80
+Kaziranga,,park,IN,Assam,26.58,93.17
+Jorhat,,city,IN,Assam,26.75,94.20
+Silchar,,city,IN,Assam,24.83,92.78
+Coimbatore,,city,IN,Tamil Nadu,11.02,76.96
+Madurai,,city,IN,Tamil Nadu,9.93,78.12
+Tiruchirappalli,Trichy,city,IN,Tamil Nadu,10.79,78.70
+Ramanathapuram,,city,IN,Tamil Nadu,9.37,78.83
+Thoothukudi,Tuticorin,city,IN,Tamil Nadu,8.76,78.13
+Mangaluru,Mangalore,city,IN,Karnataka,12.91,74.86
+Mysuru,Mysore,city,IN,Karnataka,12.30,76.64
+Tirupati,,city,IN,Andhra Pradesh,13.63,79.42
+Chittoor,,city,IN,Andhra Pradesh,13.22,79.10
+Kadapa,Cuddapah,city,IN,Andhra Pradesh,14.47,78.82
+Nellore,,city,IN,Andhra Pradesh,14.44,79.99
+Vijayawada,,city,IN,Andhra Pradesh,16.51,80.65
+Warangal,,city,IN,Telangana,17.97,79.59
+Surat,,city,IN,Gujarat,21.17,72.83
+Vadodara,Baroda,city,IN,Gujarat,22.31,73.18
+Kanpur,,city,IN,Uttar Pradesh,26.45,80.33
+Varanasi,,city,IN,Uttar Pradesh,25.32,82.97
+Agra,,city,IN,Uttar Pradesh,27.18,78.01
+Gorakhpur,,city,IN,Uttar Pradesh,26.76,83.37
+Bareilly,,city,IN,Uttar Pradesh,28.37,79.43
+Lakhimpur Kheri,Lakhimpur,city,IN,Uttar Pradesh,27.95,80.78
+Chandigarh,,city,IN,Chandigarh,30.73,76.78
+Amritsar,,city,IN,Punjab,31.63,74.87
+Jodhpur,,city,IN,Rajasthan,26.24,73.02
+Udaipur,,city,IN,Rajasthan,24.59,73.71
+Ranthambore,Sawai Madhopur,park,IN,Rajasthan,26.02,76.50
+Jabalpur,,city,IN,Madhya Pradesh,23.18,79.99
+Katni,,city,IN,Madhya Pradesh,23.83,80.39
+Gwalior,,city,IN,Madhya Pradesh,26.22,78.18
+Chandrapur,,city,IN,Maharashtra,19.96,79.30
+Gadchiroli,,city,IN,Maharashtra,20.18,80.00
+Nashik,,city,IN,Maharashtra,20.00,73.79
+Thane,,city,IN,Maharashtra,19.22,72.98
+Srinagar,,city,IN,Jammu and Kashmir,34.08,74.80
+Leh,,city,IN,Ladakh,34.16,77.58
+Port Blair,Sri Vijaya Puram,city,IN,Andaman and Nicobar,11.62,92.73
+Sundarbans,Sunderbans,park,IN,West Bengal,21.95,88.90
+Nepal,,country,NP,,28.39,84.12
+Kathmandu,,city,NP,,27.72,85.32
+Birgunj,,city,NP,,27.01,84.88
+Bhutan,,country,BT,,27.51,90.43
+Bangladesh,,country,BD,,23.68,90.36
+Dhaka,,city,BD,,23.81,90.41
+Chittagong,Chattogram,city,BD,,22.36,91.78
+Sri Lanka,,country,LK,,7.87,80.77
+Colombo,,city,LK,,6.93,79.86
+Pakistan,,country,PK,,30.38,69.35
+China,,country,CN,,35.86,104.20
+Kunming,,city,CN,,25.04,102.71
+Ruili,,city,CN,,24.01,97.85
+Guangzhou,,city,CN,,23.13,113.26
+Hong Kong,,city,HK,,22.32,114.17
+Myanmar,Burma,country,MM,,21.91,95.96
+Yangon,Rangoon,city,MM,,16.87,96.20
+Mandalay,,city,MM,,21.96,96.09
+Tamu,,city,MM,,24.22,94.31
+Tachileik,,city,MM,,20.45,99.88
+Mong La,,city,MM,,21.68,101.89
+Thailand,,country,TH,,15.87,100.99
+Bangkok,,city,TH,,13.76,100.50
+Suvarnabhumi,,airport,TH,,13.69,100.75
+Mae Sai,,city,TH,,20.43,99.88
+Chiang Mai,,city,TH,,18.79,98.98
+Songkhla,,city,TH,,7.19,100.60
+Vietnam,Viet Nam,country,VN,,14.06,108.28
+Hanoi,Ha Noi,city,VN,,21.03,105.85
+Ho Chi Minh City,Saigon,city,VN,,10.82,106.63
+Hai Phong,Haiphong,city,VN,,20.84,106.69
+Da Nang,,city,VN,,16.05,108.20
+Laos,Lao PDR,country,LA,,19.86,102.50
+Vientiane,,city,LA,,17.97,102.63
+Golden Triangle,Bokeo,region,LA,,20.35,100.08
+Cambodia,,country,KH,,12.57,104.99
+Phnom Penh,,city,KH,,11.56,104.93
+Malaysia,,country,MY,,4.21,101.98
+Kuala Lumpur,KLIA;KL,city,MY,,3.14,101.69
+Penang,,city,MY,,5.41,100.33
+Johor Bahru,Johor,city,MY,,1.49,103.74
+Sabah,,state,MY,,5.98,116.08
+Singapore,,country,SG,,1.35,103.82
+Indonesia,,country,ID,,-0.79,113.92
+Jakarta,,city,ID,,-6.21,106.85
+Surabaya,,city,ID,,-7.25,112.75
+Medan,,city,ID,,3.60,98.67
+Sumatra,,region,ID,,-0.59,101.34
+Kalimantan,Borneo,region,ID,,-0.28,114.59
+Sulawesi,,region,ID,,-2.00,120.00
+Philippines,,country,PH,,12.88,121.77
+Manila,,city,PH,,14.60,120.98
+Palawan,,region,PH,,9.83,118.74
+Dubai,,city,AE,,25.20,55.27
+United Arab Emirates,UAE,country,AE,,23.42,53.85
+Nigeria,,country,NG,,9.08,8.68
+Lagos,,city,NG,,6.52,3.38
+Mozambique,,country,MZ,,-18.67,35.53
+South Africa,,country,ZA,,-30.56,22.94
+Kenya,,country,KE,,-0.02,37.91
+Madagascar,,country,MG,,-18.77,46.87

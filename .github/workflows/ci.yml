@@ -1,0 +1,13 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -e ".[dev]"
+      - run: pytest -q
+      - name: Privacy gate on published data
+        run: python -c "import json,glob; from vannetra.privacy import assert_public_safe; [assert_public_safe(json.load(open(f,encoding='utf-8')), f) for f in ['web/data/cases.json']]"
