@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-ROOT = Path(os.environ.get("VANNETRA_ROOT", Path(__file__).resolve().parents[2]))
+ROOT = Path(os.environ.get("WILDTRACE_ROOT", Path(__file__).resolve().parents[2]))
 DATA = ROOT / "data"
 RAW = DATA / "raw"            # collector output, one JSONL per run (gitignored)
 PRIVATE = DATA / "private"    # anything with personal data (gitignored)
@@ -16,13 +16,13 @@ WEB_DATA = ROOT / "web" / "data"  # the ONLY public output; must pass privacy ch
 RESOURCES = Path(__file__).resolve().parent / "resources"
 
 # Folder holding the WCS-OWT training CSVs. Point this at your own copy.
-WCS_OWT_DIR = Path(os.environ.get("VANNETRA_WCS_OWT_DIR", DATA / "private" / "wcs_owt"))
+WCS_OWT_DIR = Path(os.environ.get("WILDTRACE_WCS_OWT_DIR", DATA / "private" / "wcs_owt"))
 
 USER_AGENT = os.environ.get(
-    "VANNETRA_USER_AGENT",
-    "VanNetra/0.1 (+https://github.com/; research OSINT; polite crawler)",
+    "WILDTRACE_USER_AGENT",
+    "WildTrace/0.1 (+https://github.com/; research OSINT; polite crawler)",
 )
-REQUEST_DELAY_S = float(os.environ.get("VANNETRA_DELAY", "5"))
+REQUEST_DELAY_S = float(os.environ.get("WILDTRACE_DELAY", "5"))
 
 
 def ensure_dirs() -> None:

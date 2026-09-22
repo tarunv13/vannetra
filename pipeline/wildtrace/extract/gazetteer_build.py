@@ -1,6 +1,6 @@
 """Build resources/gazetteer_geonames.csv from GeoNames (CC-BY 4.0, geonames.org).
 
-    vannetra gazetteer            # downloads cities1000 + admin1 codes, writes the CSV
+    wildtrace gazetteer            # downloads cities1000 + admin1 codes, writes the CSV
 
 Keeps populated places of >= 1,000 people (district towns included) in the observatory's countries, plus
 state/province centroids. Names that are also ordinary English words, species

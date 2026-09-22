@@ -1,10 +1,10 @@
-# Pugmark
+# WildTrace
 
-**Open intelligence on the wildlife trade.** Pugmark is an open-source map of the global illegal wildlife trade: seizures, arrests and convictions, the routes between them, the species and the names they are sold under, and the observatories that watch them. It includes an in-browser link-analysis workbench (an open alternative to i2 Analyst's Notebook) that works on your own data without uploading it.
+**The open atlas of illegal wildlife trade.** WildTrace is an open-source map of the global illegal wildlife trade: seizures, arrests and convictions, the routes between them, the species and the names they are sold under, and the observatories that watch them. It includes an in-browser link-analysis workbench (an open alternative to i2 Analyst's Notebook) that works on your own data without uploading it.
 
-A *pugmark* is the footprint a tracker reads to follow an animal. Here, the trail is evidence.
+*Wild* covers everything CITES calls "wild fauna and flora": ivory and orchids, pangolins and rosewood. *Trace* is what investigators do and what the trade leaves behind. The map at its centre is **the Atlas**. Tagline: **Follow the trade.**
 
-**Live:** https://tarunv13.github.io/vannetra/
+**Live:** https://tarunv13.github.io/wildtrace/
 
 ---
 
@@ -20,7 +20,7 @@ Everything happens on a single globe. The other surfaces float over it, so you c
 | **Inspector** | Case, species, country, observatory or your own entity. Everything links onward, with back/forward and a breadcrumb trail. The URL follows, so any view can be shared |
 | **Timeline** | Cases per week. Drag to pick a period; ▶ glides the map through cases in time order |
 | **Investigate** | Link chart (i2-style) of cases, species, places and agencies, plus **Your data**: import CSV, Excel or JSON, map columns, and see it on the chart and the globe, all in your browser |
-| **Network** | 33 observatories, databases and codebooks, each checked, with what it does and how Pugmark uses it |
+| **Network** | 33 observatories, databases and codebooks, each checked, with what it does and how WildTrace uses it |
 | **Methods** | Pipeline, classifier, privacy and sources |
 
 Case records follow evidence discipline: **documented facts**, **analytical context** and **limits of the evidence** are kept apart. Routes are attributed to the reports ("as reported"), and every case links to its original sources.
@@ -35,10 +35,10 @@ Case records follow evidence discipline: **documented facts**, **analytical cont
 
 ```bash
 pip install -e ".[dev,video]"
-export VANNETRA_WCS_OWT_DIR=/path/to/WCS-OWT          # optional: trains the listing classifier
-pugmark train                                          # classifier, channel-grouped evaluation
-pugmark collect --gnews --youtube --countries ALL     # global news + listings
-pugmark build                                          # cases, graph, site data (privacy gate)
+export WILDTRACE_WCS_OWT_DIR=/path/to/WCS-OWT          # optional: trains the listing classifier
+wildtrace train                                          # classifier, channel-grouped evaluation
+wildtrace collect --gnews --youtube --countries ALL     # global news + listings
+wildtrace build                                          # cases, graph, site data (privacy gate)
 python -m http.server -d web 8000                      # open http://localhost:8000
 ```
 
@@ -64,13 +64,13 @@ Trained on WCS India's labelled online listings (1,274 videos), evaluated on a t
 
 ## Privacy
 
-Pugmark never publishes a person's name, a phone number, an e-mail address or a seller identity; the build fails if one slips through, and CI checks again. Your imported data lives in your browser's localStorage. There are no analytics, cookies or accounts. See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md).
+WildTrace never publishes a person's name, a phone number, an e-mail address or a seller identity; the build fails if one slips through, and CI checks again. Your imported data lives in your browser's localStorage. There are no analytics, cookies or accounts. See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md).
 
 ## Repository
 
 ```
-pipeline/vannetra/  collectors, classifier, extraction, graph, publishing (Python package; CLI: pugmark)
-web/                the portal: index.html, css/pugmark.css, js/{main,globe,inspector,pulse,timeline,search,investigate,sheets,store}.js
+pipeline/wildtrace/  collectors, classifier, extraction, graph, publishing (Python package; CLI: wildtrace)
+web/                the portal: index.html, css/wildtrace.css, js/{main,globe,inspector,pulse,timeline,search,investigate,sheets,store}.js
 docs/               ARCHITECTURE, ETHICS_PRIVACY, OBSERVATORIES
 .github/workflows/  tests + privacy gate; weekly refresh; Pages deploy
 ```

@@ -50,7 +50,7 @@ function caseView(id) {
   const facts = [
     `${KIND_LABEL[KIND(c.kind)]} involving ${c.species.map(spLabel).join(", ") || "wildlife"}${place && c.place_basis !== "outlet" ? ` in ${esc(place.name)}${place.admin1 && place.admin1 !== place.name ? `, ${esc(place.admin1)}` : ""}` : ""}, first reported ${esc(c.date || "on an unknown date")}.`,
     qs.length ? `Quantities reported: ${qs.join(" · ")}.` : "",
-    c.people_arrested ? `${c.people_arrested} ${c.people_arrested === 1 ? "person" : "people"} arrested (count only; Pugmark never names people).` : "",
+    c.people_arrested ? `${c.people_arrested} ${c.people_arrested === 1 ? "person" : "people"} arrested (count only; WildTrace never names people).` : "",
     c.agencies.length ? `Agencies named: ${c.agencies.map(esc).join(", ")}.` : "",
     c.value_inr ? `Value as reported: ${inr(c.value_inr)}.` : "",
   ].filter(Boolean);
@@ -157,7 +157,7 @@ function obsView(id) {
       ${o.languages?.length ? `<dt>Languages</dt><dd>${esc(o.languages.join(", "))}</dd>` : ""}
     </dl>
     ${o.global_south ? `<div class="box"><h4>Global South relevance</h4>${esc(o.global_south)}</div>` : ""}
-    <div class="box" style="border-left:3px solid var(--network)"><h4>How Pugmark uses it</h4>${esc(o.vannetra.how)}</div>
+    <div class="box" style="border-left:3px solid var(--network)"><h4>How WildTrace uses it</h4>${esc(o.wildtrace.how)}</div>
     ${o.status.note ? `<div class="box limit"><h4>Check note</h4>${esc(o.status.note)}</div>` : ""}
     <div class="row" style="margin-top:12px">${o.url ? `<a class="btn primary" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer">Open ${esc(o.name.split(" (")[0].split(" ·")[0])} ↗</a>` : ""}
       <button class="btn" data-act="network">All observatories</button></div>
@@ -171,7 +171,7 @@ function entityView(id, ctx) {
   return `
     <div class="eyebrow">Your data · ${esc(n.type)}</div>
     <h2 class="title">${esc(n.label)}</h2>
-    <div class="note">Stored only in this browser. Pugmark never uploads it.</div>
+    <div class="note">Stored only in this browser. WildTrace never uploads it.</div>
     <dl class="facts">${Object.entries(n).filter(([k, v]) => !["id", "label", "type", "local"].includes(k) && v !== "" && v != null)
       .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
     <div class="row"><button class="btn violet" data-act="chart-entity">Show in chart</button></div>`;

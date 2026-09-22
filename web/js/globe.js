@@ -1,5 +1,5 @@
 // The living map. MapLibre GL 5 on a light OpenFreeMap basemap, globe projection,
-// no API keys and no tracking. Every other surface of Pugmark floats over this.
+// no API keys and no tracking. Every other surface of WildTrace floats over this.
 import { esc } from "./charts.js";
 
 const STYLE = "https://tiles.openfreemap.org/styles/positron";
@@ -34,7 +34,7 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     container: el, center: [30, 12], zoom: small ? 0.9 : 1.75, minZoom: 0.4,
     attributionControl: { compact: true }, maxPitch: 60,
   });
-  map.on("error", (e) => console.warn("[pugmark map]", e?.error?.message || e));
+  map.on("error", (e) => console.warn("[wildtrace map]", e?.error?.message || e));
   // Globe and sky are part of the style from the first frame (MapLibre's documented pattern).
   map.setStyle(STYLE, {
     transformStyle: (_prev, next) => ({

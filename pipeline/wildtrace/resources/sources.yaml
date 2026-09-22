@@ -61,7 +61,7 @@ sources:
     role: [legal-trade, demand-supply, seizures-source-I]
     region: global
     terms: "Free for non-commercial use with attribution to CITES Secretariat / UNEP-WCMC"
-    notes: "Annual full CSV download. Source code 'I' = confiscated/seized specimens. Loader: vannetra cites <folder>."
+    notes: "Annual full CSV download. Source code 'I' = confiscated/seized specimens. Loader: wildtrace cites <folder>."
 
   - id: cites_speciesplus
     name: Species+ / CITES Checklist API

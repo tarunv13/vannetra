@@ -1,9 +1,9 @@
 # The observatory network
 
-Pugmark is one observatory among many. This document explains what the others
-do, how each one feeds Pugmark's pipeline and design, and which principles the
+WildTrace is one observatory among many. This document explains what the others
+do, how each one feeds WildTrace's pipeline and design, and which principles the
 project takes from them. The machine-readable registry is
-[`pipeline/vannetra/resources/observatories.yaml`](../pipeline/vannetra/resources/observatories.yaml).
+[`pipeline/wildtrace/resources/observatories.yaml`](../pipeline/wildtrace/resources/observatories.yaml).
 The site's **Network** section renders it.
 
 ## Where the list came from, and how it was checked
@@ -12,7 +12,7 @@ The registry combines three inputs:
 
 1. the project owner's spreadsheet `illegal_wildlife_trade_observatories_comprehensive_2026.xlsx` (15 rows),
 2. notes from a Google Gemini conversation (September 2026),
-3. Pugmark's own collector registry (`sources.yaml`).
+3. WildTrace's own collector registry (`sources.yaml`).
 
 Inputs 1 and 2 were produced by a language model, so on 2026-09-22 every entry
 was re-checked. The HTTP status was tested, and the page was read to see whether
@@ -31,7 +31,7 @@ and shown on its card:
 | Wildlife Sentinel | aviation reporting app | no official page found: kept as **unverified** |
 | Codewords ("striped T-shirt", "four-wheeler", "teh", "penny" …) | "verified public list" | no primary source found: **watchlist only** |
 
-## How each kind of observatory feeds Pugmark
+## How each kind of observatory feeds WildTrace
 
 | Stage | What happens | Observatories that inform it |
 |---|---|---|
@@ -55,5 +55,5 @@ and shown on its card:
 ## Adding an observatory
 
 Add an entry to `observatories.yaml` with `status.state` and `status.checked`,
-plus a `vannetra.how` that says concretely which stage it serves. An entry that
+plus a `wildtrace.how` that says concretely which stage it serves. An entry that
 cannot say how it helps goes in with `role: []` so the gap stays visible.

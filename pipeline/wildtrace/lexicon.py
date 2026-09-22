@@ -28,7 +28,7 @@ def _pattern(term: str) -> re.Pattern[str]:
 @lru_cache(maxsize=1)
 def load() -> dict[str, Any]:
     """Curated lexicon, extended by the PMC8579131 codebook when it has been built
-    (`vannetra codebook`). Codebook names go under `pmc_<lang>` keys so their
+    (`wildtrace codebook`). Codebook names go under `pmc_<lang>` keys so their
     provenance stays visible."""
     with open(RESOURCES / "lexicon.yaml", encoding="utf-8") as f:
         lex = yaml.safe_load(f)

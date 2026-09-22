@@ -8,7 +8,7 @@ names to species.
 
 figshare blocks scripted downloads, so fetch the zip in a browser and run:
 
-    vannetra codebook path/to/dataset_of_seized_wildlife_and_their_intended_uses.zip
+    wildtrace codebook path/to/dataset_of_seized_wildlife_and_their_intended_uses.zip
 
 Output: resources/lexicon_pmc.yaml, extra common names per lexicon group
 (matched on genus/species from `taxa`) plus the recorded use-types. The

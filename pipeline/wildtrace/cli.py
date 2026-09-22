@@ -1,14 +1,14 @@
 """Command line.
 
-  vannetra train   [--target-recall 0.98] [--embed]    train + evaluate relevance model
-  vannetra collect [--countries IN,TH,VN] [--gnews] [--youtube] [--timespan 3m]
-  vannetra build                                        extract cases, publish web/data
-  vannetra run                                          collect + build
-  vannetra cites   <folder>                             aggregate CITES trade flows
-  vannetra relabel                                      merge reviewed labels into corrections.csv
-  vannetra codebook <zip>                               merge PMC8579131 multilingual names (CC BY)
-  vannetra gazetteer                                    build GeoNames place index (CC-BY)
-  vannetra doctor                                       show which sources/tools are available
+  wildtrace train   [--target-recall 0.98] [--embed]    train + evaluate relevance model
+  wildtrace collect [--countries IN,TH,VN] [--gnews] [--youtube] [--timespan 3m]
+  wildtrace build                                        extract cases, publish web/data
+  wildtrace run                                          collect + build
+  wildtrace cites   <folder>                             aggregate CITES trade flows
+  wildtrace relabel                                      merge reviewed labels into corrections.csv
+  wildtrace codebook <zip>                               merge PMC8579131 multilingual names (CC BY)
+  wildtrace gazetteer                                    build GeoNames place index (CC-BY)
+  wildtrace doctor                                       show which sources/tools are available
 """
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def _relabel() -> None:
     from .config import LABELS
     q = LABELS / "review_queue.csv"
     if not q.exists():
-        sys.exit("no review queue yet: run `vannetra train` first")
+        sys.exit("no review queue yet: run `wildtrace train` first")
     df = pd.read_csv(q, dtype=str).fillna("")
     done = df[df["new_label"].str.upper().isin(["R", "IR"])][["id", "new_label"]].rename(columns={"new_label": "label"})
     done["label"] = done["label"].str.upper()
@@ -50,7 +50,7 @@ def _relabel() -> None:
         old = pd.read_csv(path, dtype=str)
         done = pd.concat([old, done]).drop_duplicates("id", keep="last")
     done.to_csv(path, index=False)
-    print(f"{len(done)} corrections in {path}. Run `vannetra train` again.")
+    print(f"{len(done)} corrections in {path}. Run `wildtrace train` again.")
 
 
 def _doctor() -> None:
@@ -61,7 +61,7 @@ def _doctor() -> None:
     ch = agent_reach_channels()
     if ch:
         print("  channels   :", ", ".join(k for k, ok in ch.items() if ok))
-    print("WCS-OWT dir  :", WCS_OWT_DIR, "(found)" if WCS_OWT_DIR.exists() else "(missing: set VANNETRA_WCS_OWT_DIR)")
+    print("WCS-OWT dir  :", WCS_OWT_DIR, "(found)" if WCS_OWT_DIR.exists() else "(missing: set WILDTRACE_WCS_OWT_DIR)")
     print("model        :", "trained" if (MODELS / "relevance.joblib").exists() else "not trained")
     try:
         import sentence_transformers  # noqa: F401
@@ -71,7 +71,7 @@ def _doctor() -> None:
 
 
 def main(argv=None) -> None:
-    p = argparse.ArgumentParser("vannetra", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p = argparse.ArgumentParser("wildtrace", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
     t = sub.add_parser("train"); t.add_argument("--target-recall", type=float, default=0.98)
     t.add_argument("--embed", action="store_true"); t.add_argument("--repeats", type=int, default=2)

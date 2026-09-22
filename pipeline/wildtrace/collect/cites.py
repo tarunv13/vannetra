@@ -3,7 +3,7 @@
 Download the full database from https://trade.cites.org/ (``Download`` → full
 database, a zip of CSVs, updated yearly), unzip it anywhere, and run
 
-    vannetra cites path/to/Trade_database_download_vYYYY.1
+    wildtrace cites path/to/Trade_database_download_vYYYY.1
 
 The loader streams each CSV, keeps shipments where the exporter or importer is
 in scope, maps taxa onto the lexicon's species groups, and aggregates flows:

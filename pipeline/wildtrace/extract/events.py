@@ -78,7 +78,7 @@ def _gazetteer_all() -> tuple[dict[str, list[Place]], list[tuple[str, Place]]]:
     """(latin index, native-script names).
 
     Latin index: lower-cased name/alias -> places. The hand-curated gazetteer.csv
-    wins over the GeoNames extract (gazetteer_geonames.csv, `vannetra gazetteer`).
+    wins over the GeoNames extract (gazetteer_geonames.csv, `wildtrace gazetteer`).
     Native names (Devanagari, Odia, Bengali, Tamil, Telugu, Thai, Burmese, Khmer …)
     come from GeoNames alternate names and are matched as whole words."""
     index: dict[str, list[Place]] = {}

@@ -23,7 +23,7 @@ export function mountNetwork(root) {
           <div class="row" style="justify-content:space-between;align-items:start"><h4>${esc(o.name.split(" (")[0])}</h4><span class="status ${c}">${l}</span></div>
           <div class="muted" style="font-size:12.5px">${esc(o.entity)}${o.hq ? ` · ${esc(o.hq.city)}` : ""}</div>
           <div>${esc(o.features)}</div>
-          <div class="use"><b>In Pugmark:</b> ${esc(o.vannetra.how)}</div>
+          <div class="use"><b>In WildTrace:</b> ${esc(o.wildtrace.how)}</div>
         </article>`; }).join("")}</div>
       <div class="prose" style="max-width:none">
         <h3>What the network taught this project</h3>
@@ -67,7 +67,7 @@ export function mountMethods(root, tab = "pipeline") {
         <tr><td>ROC-AUC</td><td class="num">${t.roc_auc ?? "–"}</td></tr></tbody></table>
       <p>Scored once on a test set split by seller channel, so a seller's videos never appear on both sides. The learning curve has flattened (${esc(m.saturation || "")}); contradictory labels, not the model, set the ceiling.</p></div>`,
     privacy: `<div class="prose">
-      <h3 style="margin-top:0">What Pugmark will not publish</h3>
+      <h3 style="margin-top:0">What WildTrace will not publish</h3>
       <p><b>People.</b> Accused persons are presumed innocent. Case summaries are built from extracted facts, never copied headlines, and arrests are counts.</p>
       <p><b>Contacts.</b> Phone numbers, e-mails, messenger links and handles are removed; the build fails if any remain.</p>
       <p><b>Sellers.</b> Channel names are only used to keep one seller's listings on one side of the test split.</p>

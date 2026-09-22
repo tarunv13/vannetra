@@ -1,4 +1,4 @@
-// Pugmark: one map, everything else floats on it.
+// WildTrace: one map, everything else floats on it.
 import { esc } from "./charts.js";
 import { arc, createGlobe, KIND } from "./globe.js";
 import { render as renderInspector, title } from "./inspector.js";

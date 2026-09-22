@@ -15,9 +15,9 @@ Evaluation protocol, chosen so the reported numbers hold up on unseen data:
    That test score is the one to quote.
 5. A learning curve shows whether more labels would still help. Out-of-fold
    mistakes are written to a review queue so humans can fix label noise, and
-   the loop repeats (``vannetra train`` again after corrections).
+   the loop repeats (``wildtrace train`` again after corrections).
 
-Run:  python -m vannetra.cli train [--embed] [--target-recall 0.98]
+Run:  python -m wildtrace.cli train [--embed] [--target-recall 0.98]
 """
 from __future__ import annotations
 

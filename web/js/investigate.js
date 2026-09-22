@@ -23,10 +23,11 @@ export const TYPES = {
   Shipment: { color: "#a16207", shape: "rhomboid", label: "Shipments" },
   Other: { color: "#9aa3b2", shape: "ellipse", label: "Other" },
 };
-const KEY = "pugmark.local.v1";
+const KEY = "wildtrace.local.v1";
 const store = {
   load() {
-    try { return JSON.parse(localStorage.getItem(KEY) || localStorage.getItem("vannetra.workbench.local.v1") || '{"elements":[]}'); }
+    // Earlier builds stored under the project's previous names; carry that data over.
+    try { return JSON.parse(localStorage.getItem(KEY) || localStorage.getItem("pugmark.local.v1") || localStorage.getItem("vannetra.workbench.local.v1") || '{"elements":[]}'); }
     catch { return { elements: [] }; }
   },
   save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch { /* storage blocked: session only */ } },
@@ -159,16 +160,16 @@ export function mountChart(root, { onLocalChange, focus } = {}) {
     insp.innerHTML = `<div class="sec" style="margin-top:0"><h3>Shortest path</h3></div><p style="font-size:13px">${r.found ? `${(r.path.length - 1) / 2} hop(s): ` + r.path.nodes().map((n) => `<b>${esc(n.data("label"))}</b>`).join(" → ") : "These two are not connected among the visible entities."}</p>`;
   });
   const dl = (name, blob) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
-  on("#x-png", () => { const u = cy.png({ full: true, scale: 2, bg: "#ffffff" }); fetch(u).then((r) => r.blob()).then((b) => dl("pugmark-chart.png", b)); });
-  on("#x-json", () => dl("pugmark-chart.json", new Blob([JSON.stringify({ elements: cy.elements(":visible").jsons() })], { type: "application/json" })));
+  on("#x-png", () => { const u = cy.png({ full: true, scale: 2, bg: "#ffffff" }); fetch(u).then((r) => r.blob()).then((b) => dl("wildtrace-chart.png", b)); });
+  on("#x-json", () => dl("wildtrace-chart.json", new Blob([JSON.stringify({ elements: cy.elements(":visible").jsons() })], { type: "application/json" })));
   on("#x-csv", () => { const q = (s) => `"${String(s ?? "").replace(/"/g, '""')}"`;
     const lines = ["source,source_type,target,target_type,link_type,weight,date"];
     cy.edges(":visible").forEach((e) => lines.push([e.source().data("label"), e.source().data("type"), e.target().data("label"), e.target().data("type"), e.data("type"), e.data("weight"), e.data("first")].map(q).join(",")));
-    dl("pugmark-links.csv", new Blob([lines.join("\n")], { type: "text/csv" })); });
+    dl("wildtrace-links.csv", new Blob([lines.join("\n")], { type: "text/csv" })); });
   on("#x-graphml", () => { const x = (s) => String(s ?? "").replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c]));
     const nodes = cy.nodes(":visible").map((n) => `<node id="${x(n.id())}"><data key="label">${x(n.data("label"))}</data><data key="type">${x(n.data("type"))}</data></node>`).join("");
     const edges = cy.edges(":visible").map((e) => `<edge source="${x(e.source().id())}" target="${x(e.target().id())}"><data key="etype">${x(e.data("type"))}</data><data key="weight">${e.data("weight") || 1}</data></edge>`).join("");
-    dl("pugmark-chart.graphml", new Blob([`<?xml version="1.0" encoding="UTF-8"?><graphml xmlns="http://graphml.graphdrawing.org/xmlns"><key id="label" for="node" attr.name="label" attr.type="string"/><key id="type" for="node" attr.name="type" attr.type="string"/><key id="etype" for="edge" attr.name="type" attr.type="string"/><key id="weight" for="edge" attr.name="weight" attr.type="int"/><graph edgedefault="directed">${nodes}${edges}</graph></graphml>`], { type: "application/xml" })); });
+    dl("wildtrace-chart.graphml", new Blob([`<?xml version="1.0" encoding="UTF-8"?><graphml xmlns="http://graphml.graphdrawing.org/xmlns"><key id="label" for="node" attr.name="label" attr.type="string"/><key id="type" for="node" attr.name="type" attr.type="string"/><key id="etype" for="edge" attr.name="type" attr.type="string"/><key id="weight" for="edge" attr.name="weight" attr.type="int"/><graph edgedefault="directed">${nodes}${edges}</graph></graphml>`], { type: "application/xml" })); });
   if (focus) setTimeout(() => {
     const n = cy.getElementById(focus);
     if (n.length) { n.select(); const keep = n.closedNeighborhood().closedNeighborhood(); cy.elements().not(keep).addClass("faded"); cy.animate({ fit: { eles: keep, padding: 80 } }, { duration: 500 }); }
@@ -214,7 +215,7 @@ export function mountImport(root, { onLocalChange } = {}) {
     root.innerHTML = `<div class="imp">
       <div>
         <h3 style="font:650 17px/1.2 var(--display);margin:0 0 6px">Chart your own data</h3>
-        <p class="muted" style="margin:0 0 12px;font-size:13px">Load a spreadsheet of links (one row per relationship) or entities. Map its columns, and Pugmark adds them to the link chart and, if rows carry coordinates, to the globe. Nothing leaves this browser.</p>
+        <p class="muted" style="margin:0 0 12px;font-size:13px">Load a spreadsheet of links (one row per relationship) or entities. Map its columns, and WildTrace adds them to the link chart and, if rows carry coordinates, to the globe. Nothing leaves this browser.</p>
         <label class="drop" id="drop" tabindex="0"><input type="file" id="file" accept=".csv,.tsv,.txt,.xlsx,.xls,.json" hidden>
           <b>${rows ? esc(name) : "Drop a CSV, Excel or JSON file"}</b><div class="muted" style="font-size:12.5px;margin-top:4px">${rows ? `${rows.length - 1} rows · ${head.length} columns` : "or click to choose one"}</div></label>
         <div class="row" style="margin-top:10px"><button class="btn" id="sample">Load fictional sample</button>
@@ -240,7 +241,7 @@ export function mountImport(root, { onLocalChange } = {}) {
         : `<div class="prose" style="padding:0"><h3 style="margin-top:0">What you can do here</h3>
           <p>Rebuild a network from a case file or a public investigation. People, phones, accounts, vehicles, companies and shipments sit next to the public cases, species and places.</p>
           <p>Then use the chart tools: shortest path between two suspects, who brokers between groups (betweenness), and communities. Export to GraphML for Gephi, or CSV in the same layout i2 Analyst's Notebook imports.</p>
-          <p class="muted">Pugmark's public data never contains people. Yours stays on this device.</p></div>`}
+          <p class="muted">WildTrace's public data never contains people. Yours stays on this device.</p></div>`}
       </div></div>`;
     const drop = root.querySelector("#drop"), file = root.querySelector("#file");
     drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });

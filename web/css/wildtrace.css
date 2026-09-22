@@ -1,4 +1,4 @@
-/* Pugmark: one living map, everything else floats on it.
+/* WildTrace, the open atlas of illegal wildlife trade: one living map, everything else floats on it.
  *
  * Ground  mist #EDF1EF (a grey biased to leaf green, so the globe reads as a place, not a void)
  * Ink     #0F1A17 deep forest ink; body #3C4A45; captions #5F6D68
@@ -86,7 +86,8 @@ body.inspecting .maplibregl-ctrl-bottom-right { right: calc(var(--gutter) + 430p
 .topbar > * { pointer-events: auto; }
 .brand { display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px 0 12px; text-decoration: none; color: var(--ink); flex: none; }
 .brand svg { width: 30px; height: 30px; color: var(--ink); }
-.brand b { font: 700 19px/1 var(--display); letter-spacing: -0.03em; }
+.brand b { font: 800 19px/1 var(--display); letter-spacing: -0.03em; }
+.brand .wm-a { font-weight: 500; }
 .brand small { display: block; font: 500 10.5px/1.2 var(--font); color: var(--ink-3); letter-spacing: 0.01em; margin-top: 3px; }
 
 .omni { position: relative; width: min(460px, 100%); flex: 0 1 460px; }
@@ -118,6 +119,8 @@ body.inspecting .maplibregl-ctrl-bottom-right { right: calc(var(--gutter) + 430p
 .lens .n { font: 500 11.5px/1 var(--mono); color: var(--ink-3); }
 .lens.tool { color: #fff; background: var(--invest); }
 .lens.tool:hover { background: var(--invest-ink); }
+.lens-title { font: 650 10.5px/1 var(--font); text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); padding: 0 6px 0 10px; }
+@media (max-width: 1180px) { .lens-title { display: none; } }
 .sep { width: 1px; height: 24px; background: var(--line-2); margin: 0 4px; }
 
 /* ------------------------------------------------------------------ pulse (left) */

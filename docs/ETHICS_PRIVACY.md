@@ -1,6 +1,6 @@
 # Ethics, privacy and responsible OSINT
 
-Pugmark publishes information about crimes. That creates duties towards the
+WildTrace publishes information about crimes. That creates duties towards the
 people named in reports, towards the sources, and towards readers who may act on
 the data.
 

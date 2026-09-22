@@ -2,11 +2,11 @@ import json
 
 import pytest
 
-from vannetra import lexicon
-from vannetra.extract.cases import cluster, summarise
-from vannetra.extract.events import extract, find_places, is_enforcement_candidate
-from vannetra.privacy import assert_public_safe, find_pii, scrub
-from vannetra.schema import Record
+from wildtrace import lexicon
+from wildtrace.extract.cases import cluster, summarise
+from wildtrace.extract.events import extract, find_places, is_enforcement_candidate
+from wildtrace.privacy import assert_public_safe, find_pii, scrub
+from wildtrace.schema import Record
 
 
 def rec(title, **kw):
@@ -120,7 +120,7 @@ def test_developing_story_threads_within_state_but_not_across_states():
 
 
 def test_codeword_hits_flag_but_do_not_make_species():
-    from vannetra import lexicon
+    from wildtrace import lexicon
     t = "Selling striped t-shirt, call now"
     assert [h["term"] for h in lexicon.codeword_hits(t)] == ["striped t-shirt"]
     assert lexicon.species_groups(t) == []

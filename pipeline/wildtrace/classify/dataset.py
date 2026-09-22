@@ -51,7 +51,7 @@ def find_files(folder: Path | None = None) -> list[Path]:
     files = sorted(p for p in folder.rglob("*.csv") if "checkpoint" not in str(p).lower())
     if not files:
         raise FileNotFoundError(
-            f"No CSVs under {folder}. Set VANNETRA_WCS_OWT_DIR to your WCS-OWT folder."
+            f"No CSVs under {folder}. Set WILDTRACE_WCS_OWT_DIR to your WCS-OWT folder."
         )
     return files
 
