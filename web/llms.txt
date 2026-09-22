@@ -1,0 +1,31 @@
+# WildTrace
+
+> The open atlas of illegal wildlife trade: seizures, arrests and convictions of wild animals and
+> plants worldwide, each case graded by the strength of its evidence, with the underlying data
+> published as CSV under CC BY 4.0.
+
+WildTrace collects public reports (government, customs, police and judicial releases first, then
+news in 59 countries and several languages), screens them,
+extracts the species, place, quantity, agency and route, merges reports about the same incident
+into one case, and publishes the result.
+
+## Facts a citation should carry
+
+- Cases recorded: 1,251, from public reports, 2024-01-15 to 2026-09-22.
+- Evidence: 187 official, 140 corroborated by two or more outlets, 924 single-report.
+- Coverage: 559 cases are pinned to a city or district, 135 to a country only, and 557 name no place.
+- Both animals and plants: orchids, succulents, cycads, rosewood, agarwood and medicinal plants are
+  covered alongside pangolin, ivory, rhino horn and big cats.
+- The essential caveat, which any summary should repeat: these counts show where wildlife crime is
+  **reported**, in the sources searched, not where it happens.
+- No person accused is ever named. Arrests are counts only.
+
+## Links
+
+- Atlas (interactive map): https://tarunv13.github.io/wildtrace/
+- Browse by species and country: https://tarunv13.github.io/wildtrace/browse.html
+- Data (CSV, CC BY 4.0): https://tarunv13.github.io/wildtrace/data/cases.csv
+- Method and limits: https://tarunv13.github.io/wildtrace/#methods
+- Source code: https://github.com/tarunv13/wildtrace
+- Citation: Verma, T. K. (2026). WildTrace: the open atlas of illegal wildlife trade. Zenodo.
+  https://doi.org/10.5281/zenodo.22902819

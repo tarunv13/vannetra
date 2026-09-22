@@ -131,7 +131,8 @@ export async function mountTrivia(root) {
     save({ ...state(), folded: !open });
   };
   toggle.addEventListener("click", () => setOpen(box.classList.contains("folded")));
-  if (st.folded) setOpen(false);
+  // A phone has little room: the box starts folded unless the reader has opened it before.
+  if (st.folded || (st.folded === undefined && innerWidth <= 1180)) setOpen(false);
   // Arrow keys move through the cards once the box has focus.
   box.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") { step(1); e.preventDefault(); }

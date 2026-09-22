@@ -92,6 +92,9 @@ def main(argv=None) -> None:
         c.add_argument("--official", action="store_true", help="search government / enforcement / judicial domains")
         c.add_argument("--history", type=int, default=0, help="backfill this many past months (Google News date ranges)")
         c.add_argument("--no-gdelt", action="store_true", help="skip GDELT (heavily throttled)")
+    mi = sub.add_parser("mine", help="mine the research literature for taxa, trade names and datasets")
+    mi.add_argument("--topics", default="all", help="all | flora | fauna | codewords | datasets (comma-separated)")
+    mi.add_argument("--pages", type=int, default=2, help="pages per query, 50-100 papers each")
     b = sub.add_parser("build"); b.add_argument("--no-fetch", action="store_true", help="skip fetching article ledes")
     sub.add_parser("relabel"); sub.add_parser("doctor"); sub.add_parser("gazetteer")
     ci = sub.add_parser("cites"); ci.add_argument("folder")
@@ -103,6 +106,9 @@ def main(argv=None) -> None:
         train(a.target_recall, a.embed, repeats=a.repeats)
     elif a.cmd == "collect":
         _collect(a)
+    elif a.cmd == "mine":
+        from .collect.literature import mine
+        mine(a.topics, a.pages)
     elif a.cmd == "build":
         from .publish import build
         build(fetch_text=not a.no_fetch)

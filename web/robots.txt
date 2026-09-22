@@ -1,0 +1,42 @@
+# WildTrace: open data, open to crawlers, including the ones that answer questions.
+User-agent: *
+Allow: /
+
+# Named explicitly so there is no doubt: the data is CC BY 4.0, and attribution is the only ask.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+Sitemap: https://tarunv13.github.io/wildtrace/sitemap.xml

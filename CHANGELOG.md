@@ -2,6 +2,25 @@
 
 All notable changes to WildTrace. Dates are the release date, newest first.
 
+## 1.4.0 — 2026-09-23
+
+### Added
+- **A crawlable layer.** A static page for every case, species group and country, an index at
+  `/browse.html`, `sitemap.xml`, a `robots.txt` that names the AI crawlers explicitly, and
+  `llms.txt`. Schema.org Dataset, WebSite and FAQPage structured data on the Atlas; Dataset and
+  Report structured data on the static pages. Every page carries the reporting caveat with its
+  numbers, so a quoted figure arrives with its limits.
+- **Literature miner** (`wildtrace mine`): Europe PMC and OpenAlex searches for trade research,
+  with species names resolved against the GBIF backbone, candidate trade names and code words
+  taken only from sentences that say a name is used in trade, and dataset links. Output is CSV
+  for review; nothing merges itself into the lexicon.
+- **Eight flora groups**: orchids, cacti and succulents, cycads, carnivorous plants, medicinal and
+  aromatic plants, sandalwood, resins and gums, wild bulbs and ornamentals. 39 groups in all.
+
+### Changed
+- Phones: the lens bar scrolls with a fade instead of clipping Tour and Investigate, and the
+  trivia box appears folded above the summary panel instead of being hidden.
+
 ## 1.3.0 — 2026-09-23
 
 ### Added

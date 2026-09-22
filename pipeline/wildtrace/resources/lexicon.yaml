@@ -310,6 +310,83 @@ groups:
       es: [pieles de reptil]
       pt: [peles de cobra, peles de jacaré]
 
+  orchids:
+    label: Orchids
+    taxa: [Orchidaceae, Cymbidium spp., Dendrobium spp., Paphiopedilum spp., Dactylorhiza spp., Orchis spp.]
+    cites: "I/II"
+    products: [live plants, tubers, salep]
+    terms:
+      en: [wild orchid, wild orchids, orchid seized, orchid smuggling, lady's slipper orchid, salep, sahlep, orchid tubers]
+      hi: [जंगली ऑर्किड, सालमपंजा, सालम पंजा]
+      es: [orquídea silvestre, orquídeas silvestres, tráfico de orquídeas]
+      pt: [orquídea silvestre, orquídeas silvestres]
+      id_ms: [anggrek liar, anggrek dilindungi]
+      vi: [lan rừng]
+      th: [กล้วยไม้ป่า]
+  cacti_succulents:
+    label: Cacti & succulents
+    taxa: [Cactaceae, Conophytum spp., Lithops spp., Ariocarpus spp., Euphorbia spp., Dudleya spp.]
+    cites: "I/II"
+    products: [live plants, seeds]
+    terms:
+      en: [succulent poaching, poached succulents, conophytum, lithops, ariocarpus, dudleya poaching, cactus smuggling, cacti seized, peyote seized]
+      es: [suculentas, cactáceas, tráfico de cactus, peyote decomisado]
+      pt: [suculentas apreendidas, cactos apreendidos]
+  cycads:
+    label: Cycads
+    taxa: [Cycadaceae, Encephalartos spp., Cycas spp.]
+    cites: "I/II"
+    products: [live plants, seeds]
+    terms:
+      en: [cycad, cycads, encephalartos, cycad theft, cycad poaching, sago palm seized]
+      es: [cícadas]
+      pt: [cicas apreendidas]
+  carnivorous_plants:
+    label: Pitcher & carnivorous plants
+    taxa: [Nepenthes spp., Sarracenia spp., Dionaea muscipula]
+    cites: "I/II"
+    products: [live plants]
+    terms:
+      en: [nepenthes, pitcher plant, pitcher plants, venus flytrap, sarracenia, flytrap poaching]
+      id_ms: [kantong semar]
+  medicinal_plants:
+    label: Medicinal & aromatic plants
+    taxa: [Saussurea costus, Nardostachys jatamansi, Panax quinquefolius, Prunus africana, Taxus wallichiana, Aquilaria, Rauvolfia serpentina]
+    cites: "I/II"
+    products: [roots, bark, herbs]
+    terms:
+      en: [medicinal plants seized, kuth roots, jatamansi, wild ginseng, american ginseng poaching, prunus africana bark, taxus bark, yew bark seized, sarpagandha]
+      hi: [जड़ी बूटी तस्करी, कुठ, जटामांसी, सर्पगंधा]
+      es: [plantas medicinales decomisadas]
+      pt: [plantas medicinais apreendidas]
+      vi: [cây thuốc quý]
+  sandalwood:
+    label: Sandalwood
+    taxa: [Santalum album, Santalum spp.]
+    cites: "–"
+    products: [logs, oil, chips]
+    terms:
+      en: [sandalwood, sandalwood logs, sandalwood smuggling, sandalwood seized, santalum]
+      hi: [चंदन, चंदन तस्करी, चंदन की लकड़ी]
+      te: [చందనం]
+      id_ms: [kayu cendana]
+  resins_gums:
+    label: Frankincense, myrrh & plant resins
+    taxa: [Boswellia spp., Commiphora spp., Aloe spp.]
+    cites: "II"
+    products: [resin, gum, sap]
+    terms:
+      en: [frankincense, boswellia, myrrh seized, aloe ferox, dragon's blood resin]
+      es: [resina de aloe]
+  bulbs_ornamental:
+    label: Wild bulbs & ornamental plants
+    taxa: [Galanthus spp., Cyclamen spp., Sternbergia spp., Tree ferns (Cyatheaceae)]
+    cites: "II"
+    products: [bulbs, live plants]
+    terms:
+      en: [wild bulbs, snowdrop bulbs, galanthus, cyclamen bulbs, tree fern seized, wild collected bulbs]
+      es: [bulbos silvestres]
+      pt: [xaxim apreendido]
   wildlife_general:
     label: Wildlife (unspecified)
     taxa: []

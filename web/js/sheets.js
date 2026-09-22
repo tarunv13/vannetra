@@ -130,7 +130,10 @@ export function mountAbout(root) {
     <p>Data: <b>CC BY 4.0</b>. Code: MIT. Suggested citation:</p>
     <p class="box mono" style="font-size:12.5px">${esc(m.cite || "WildTrace. The open atlas of illegal wildlife trade.")}</p>
     <div class="row"><a class="btn primary" href="data/cases.csv" download>Download all cases (CSV)</a>
+      <a class="btn" href="browse.html">Browse by species &amp; country</a>
       <a class="btn" href="https://github.com/tarunv13/wildtrace/issues/new?title=Correction%3A%20&labels=correction" target="_blank" rel="noopener">Report a correction</a></div>
+    <p class="muted" style="font-size:12.5px">Every species group, country and case also has a plain page of its own,
+      readable without JavaScript and linked from <a href="browse.html">the index</a>.</p>
     <p class="muted" style="font-size:12.5px;margin-top:12px">Last updated ${esc(m.built || "")}. Refreshed weekly. Usage measured with Microsoft Clarity; no accounts.</p>
   </div>`;
 }

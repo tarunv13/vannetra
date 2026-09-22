@@ -334,6 +334,10 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
     if report or not (WEB_DATA / "model_report.json").exists():
         _dump("model_report.json", report)
     graph.export(G, WEB_DATA)
+    # The static, crawlable layer: one page per case, species and country, plus sitemap and robots.
+    from .seo import build_pages
+    n_pages = build_pages(cases, species_meta, countries, meta, WEB_DATA.parent)
+    print(f"  static pages: {n_pages}")
     print(f"built: {len(recs)} records -> {len(cand)} enforcement candidates -> {len(cases)} cases; "
           f"graph {G.number_of_nodes()} nodes / {G.number_of_edges()} links -> {WEB_DATA}")
     return meta

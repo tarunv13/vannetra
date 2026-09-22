@@ -173,10 +173,36 @@ listings    cues, minus arrests (count),  languages and     centrality      and 
 
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) has the data contracts and design choices.
 
+## Findable without JavaScript
+
+The Atlas is an application; search engines and AI answer engines need text. Every build also
+writes a plain HTML layer from the same data — a page per
+[species group](https://tarunv13.github.io/wildtrace/species/pangolin.html), per
+[country](https://tarunv13.github.io/wildtrace/country/in.html) and per case, all indexed from
+[browse.html](https://tarunv13.github.io/wildtrace/browse.html) — plus `sitemap.xml`, a `robots.txt`
+that welcomes AI crawlers, and [`llms.txt`](https://tarunv13.github.io/wildtrace/llms.txt), a plain-text
+brief so an answer engine quoting the figures also carries the caveats. Each page states its numbers
+in text, names its licence, links its sources, and repeats the line that matters: these counts show
+where wildlife crime is *reported*, not where it happens.
+
+## Mining the research literature
+
+News under-reports plants. `wildtrace mine` searches Europe PMC and OpenAlex for trade research and
+extracts three things: species names (checked against the GBIF backbone, so a plant is recognisably a
+plant), candidate trade names and code words (only from sentences where a paper says a name is used in
+trade), and datasets other researchers have published. Nothing is merged automatically: the results
+land in `data/interim/*.csv` for a person to accept or reject.
+
+```bash
+wildtrace mine --topics flora          # or: codewords, fauna, datasets, all
+```
+
 ## Coverage
 
-- **31 species groups**: pangolin, ivory, rhino horn, tiger, leopard, jaguar, lion bone, African
-  grey parrots, totoaba, glass eels, abalone, rosewood, agarwood, red sanders and more, in
+- **39 species groups**, animals and plants: pangolin, ivory, rhino horn, tiger, leopard, jaguar,
+  lion bone, African grey parrots, totoaba, glass eels, abalone, plus orchids, cacti and succulents,
+  cycads, carnivorous plants, medicinal and aromatic plants, sandalwood, plant resins, wild bulbs,
+  rosewood, agarwood and red sanders, in
   English, Hindi, Telugu, Portuguese, Spanish, French, Vietnamese, Thai and Indonesian/Malay,
   plus 2,376 names in 66 languages from the open seized-wildlife codebook (Stringham et al. 2021).
 - **46,000 places**: every town above 15,000 people worldwide, every town above 1,000 in South

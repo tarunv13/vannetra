@@ -1,0 +1,55 @@
+/* Static pages: the readable layer under the Atlas.
+ *
+ * Mobile first, one column, no JavaScript, no web fonts to wait for. A reader who arrives from a
+ * search result on a phone should have text on screen immediately, so this file stays small and
+ * every size is set in relative units that respect the reader's own font size.
+ */
+:root {
+  --ground: #edf1ef; --card: #fff; --ink: #0f1a17; --ink-2: #3c4a45; --ink-3: #5f6d68;
+  --line: rgba(15, 26, 23, 0.12); --accent: #c27a06; --link: #1d4fbf; --species: #218a5b;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  padding: 0 16px env(safe-area-inset-bottom, 0px);
+}
+a { color: var(--link); }
+main, .top, footer { max-width: 44rem; margin: 0 auto; }
+.top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; padding: 18px 0 10px; }
+.brand { font-size: 1.32rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+.brand b { color: var(--species); font-weight: 800; }
+.tag { color: var(--ink-3); font-size: 0.82rem; }
+.crumbs { font-size: 0.8rem; color: var(--ink-3); margin: 6px 0 14px; }
+h1 { font-size: clamp(1.5rem, 5vw, 2.1rem); line-height: 1.18; letter-spacing: -0.02em; margin: 6px 0 12px; text-wrap: balance; }
+h2 { font-size: 1.14rem; margin: 30px 0 10px; letter-spacing: -0.01em; }
+p { margin: 0 0 12px; color: var(--ink-2); }
+.lede { font-size: 1.06rem; color: var(--ink); }
+.small { font-size: 0.82rem; color: var(--ink-3); }
+.muted { color: var(--ink-3); font-size: 0.86rem; }
+.account { background: var(--card); border-radius: 14px; padding: 16px 18px 6px; margin: 14px 0 6px; }
+.account p:first-child { color: var(--ink); }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; background: var(--card);
+  border-radius: 14px; padding: 16px 18px; margin: 0; }
+.facts dt { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-3); }
+.facts dd { margin: 0; }
+ul { padding-left: 1.1rem; }
+ul.cols { list-style: none; padding: 0; display: grid; gap: 2px; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+ul.cols li, ul.cases li, ul.sources li { background: var(--card); border-radius: 10px; padding: 9px 12px; }
+ul.cases, ul.sources { list-style: none; padding: 0; display: grid; gap: 4px; }
+ul.cases a, ul.sources a { text-decoration: none; }
+ul.cases a:hover, ul.sources a:hover { text-decoration: underline; }
+.pill { display: inline-block; background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+  padding: 7px 14px; margin: 0 6px 8px 0; text-decoration: none; font-size: 0.9rem; min-height: 40px; line-height: 26px; }
+.pill:hover { border-color: var(--accent); }
+footer { border-top: 1px solid var(--line); margin-top: 38px; padding: 16px 0 34px; }
+footer p { font-size: 0.86rem; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0e1513; --card: #16201d; --ink: #eef3f1; --ink-2: #c3cec9; --ink-3: #93a09b;
+    --line: rgba(255, 255, 255, 0.12); --link: #86b0ff;
+  }
+  :root:not([data-theme="light"]) .brand { color: var(--ink); }
+}

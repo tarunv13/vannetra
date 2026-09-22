@@ -239,3 +239,37 @@ def test_trivia_cards_are_checkable():
         assert "reported, not where it happens" in c["caveat"]
     # the catch-all group is never the headline species
     assert "unspecified" not in ours.get("wt_top_species", {}).get("fact", "").lower()
+
+
+def test_seo_pages_are_crawlable_and_honest(tmp_path):
+    """The static layer is what a search engine and an answer engine actually read, so it must
+    carry the numbers, the licence, the canonical URL and the reporting caveat."""
+    from wildtrace.seo import build_pages, slug
+    cases = [{"id": "abc123", "date": "2026-03-04", "kind": "seizure", "summary": "Seizure · Pangolin · Bengaluru",
+              "species": ["pangolin"], "place": {"name": "Bengaluru", "admin1": "Karnataka", "country": "IN",
+                                                 "lat": 12.97, "lon": 77.59, "type": "city"},
+              "sources": [{"url": "https://example.gov.in/x", "outlet": "PIB", "date": "2026-03-04", "tier": "official"}],
+              "n_sources": 3, "n_outlets": 2, "verification": "official", "people_arrested": 2, "agencies": ["DRI"]}]
+    species = {"pangolin": {"label": "Pangolin", "cites": "I", "taxa": ["Manis javanica"]}}
+    countries = {"IN": {"name": "India"}}
+    meta = {"window": ["2024-01-15", "2026-09-22"], "verification": {"official": 1, "corroborated": 0, "single": 0},
+            "coverage": {"mapped": 1, "country_only": 0, "unmapped": 0}}
+    n = build_pages(cases, species, countries, meta, tmp_path)
+    assert n >= 4
+    case_html = (tmp_path / "case" / "abc123.html").read_text(encoding="utf-8")
+    assert "<h1>" in case_html and "Bengaluru" in case_html
+    assert "application/ld+json" in case_html and "creativecommons.org/licenses/by/4.0" in case_html
+    assert 'rel="canonical"' in case_html
+    assert "never names" in case_html or "never who they are" in case_html      # the privacy line survives
+    assert "reported" in case_html
+    sp_html = (tmp_path / "species" / f"{slug('pangolin')}.html").read_text(encoding="utf-8")
+    assert "1</b> cases" in sp_html or "recorded <b>1</b>" in sp_html
+    assert "not where it happens" in sp_html                                     # the caveat travels with the number
+    robots = (tmp_path / "robots.txt").read_text(encoding="utf-8")
+    assert "Sitemap:" in robots and "GPTBot" in robots and "ClaudeBot" in robots
+    sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
+    assert "<loc>" in sitemap and "case/abc123.html" in sitemap
+    llms = (tmp_path / "llms.txt").read_text(encoding="utf-8")
+    assert "doi.org/10.5281/zenodo" in llms and "reported" in llms
+    # internal links must be relative, so a fork or a local copy works
+    assert 'href="../css/page.css"' in case_html

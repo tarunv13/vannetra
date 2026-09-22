@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>WildTrace</title>
-  <meta name="description" content="WildTrace, the open atlas of illegal wildlife trade in fauna and flora: seizures, routes, species and the observatories that watch them, with an in-browser link-analysis workbench for your own data.">
+  <title>WildTrace — Illegal wildlife trade map and open data</title>
+  <meta name="description" content="Interactive global map of illegal wildlife trade: 1,251 recorded seizures, arrests and convictions of trafficked animals and plants — pangolin, ivory, rhino horn, orchids, rosewood and more — each case graded by the strength of its evidence, with free CSV data (CC BY 4.0) and a link-analysis workbench.">
   <meta name="theme-color" content="#edf1ef">
   <!-- Usage analytics: Microsoft Clarity (see js/analytics.js and About). Tiles: OpenFreeMap. Fonts: self-hosted. -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23edf1ef'/%3E%3Ccircle cx='16' cy='16' r='12.6' fill='none' stroke='%230f1a17' stroke-width='1.5' opacity='.3'/%3E%3Cpath d='M7.4 21.2C10.6 12.4 17 9.4 24.6 11.2' fill='none' stroke='%230f1a17' stroke-width='2.1' stroke-linecap='round' stroke-dasharray='.1 3.7'/%3E%3Ccircle cx='7.4' cy='21.2' r='2.7' fill='%230f1a17'/%3E%3Ccircle cx='15.2' cy='13.4' r='2.1' fill='%230f1a17'/%3E%3Ccircle cx='24.6' cy='11.2' r='3.1' fill='%23c27a06'/%3E%3C/svg%3E">
@@ -21,9 +21,12 @@
   <meta name="twitter:title" content="WildTrace · The open atlas of illegal wildlife trade">
   <meta name="twitter:description" content="WildTrace, the open atlas of illegal wildlife trade in fauna and flora: seizures, routes, species and the observatories that watch them, each case graded by the strength of its evidence.">
   <meta name="twitter:image" content="https://tarunv13.github.io/wildtrace/og.png">
-  <link rel="stylesheet" href="css/fonts.css?v=1.3.2">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "WildTrace: the open atlas of illegal wildlife trade", "alternateName": "WildTrace illegal wildlife trade dataset", "description": "Interactive global map of illegal wildlife trade: 1,251 recorded seizures, arrests and convictions of trafficked animals and plants — pangolin, ivory, rhino horn, orchids, rosewood and more — each case graded by the strength of its evidence, with free CSV data (CC BY 4.0) and a link-analysis workbench.", "url": "https://tarunv13.github.io/wildtrace/", "sameAs": ["https://github.com/tarunv13/wildtrace", "https://doi.org/10.5281/zenodo.22902819"], "identifier": "https://doi.org/10.5281/zenodo.22902819", "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true, "keywords": ["illegal wildlife trade", "wildlife trafficking", "wildlife crime", "seizures", "CITES", "poaching", "pangolin", "ivory", "rhino horn", "rosewood", "orchids", "open data", "OSINT", "link analysis", "environmental crime"], "creator": {"@type": "Person", "name": "Tarun Kumar Verma", "identifier": "https://orcid.org/0009-0009-4130-2455"}, "distribution": [{"@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": "https://tarunv13.github.io/wildtrace/data/cases.csv"}, {"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://tarunv13.github.io/wildtrace/data/cases.json"}], "citation": "Verma, T. K. (2026). WildTrace: the open atlas of illegal wildlife trade. Zenodo. https://doi.org/10.5281/zenodo.22902819", "measurementTechnique": "Automated collection of public government, enforcement and news reports; rule-based extraction; per-case verification grading", "spatialCoverage": {"@type": "Place", "name": "Worldwide"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "WildTrace", "url": "https://tarunv13.github.io/wildtrace/", "potentialAction": {"@type": "SearchAction", "target": {"@type": "EntryPoint", "urlTemplate": "https://tarunv13.github.io/wildtrace/browse.html?q={search_term_string}"}, "query-input": "required name=search_term_string"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is illegal wildlife trade?", "acceptedAnswer": {"@type": "Answer", "text": "Illegal wildlife trade is the unlawful taking, transport and sale of wild animals and plants and their parts, from pangolin scales and elephant ivory to orchids, cacti, rosewood and medicinal roots. CITES lists more than 40,900 species whose international trade is regulated; UNODC recorded around 140,000 seizures in 162 countries between 2015 and 2021, involving about 4,000 species."}}, {"@type": "Question", "name": "Where can I download open data on wildlife seizures?", "acceptedAnswer": {"@type": "Answer", "text": "WildTrace publishes every recorded case as CSV at https://tarunv13.github.io/wildtrace/data/cases.csv under CC BY 4.0, with the place, species group, quantity, agencies, sources and an evidence grade for each case. The JSON behind the map is in the same folder."}}, {"@type": "Question", "name": "How reliable is each wildlife trafficking case?", "acceptedAnswer": {"@type": "Answer", "text": "Every case is graded: validated (checked by a reviewer), official (at least one government, customs, police or judicial source), corroborated (two or more independent outlets) or single report (one outlet, a lead rather than a finding). Counts show where wildlife crime is reported, not where it happens, and cases whose reports name no place are counted but not mapped."}}, {"@type": "Question", "name": "Does WildTrace cover plants as well as animals?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Alongside pangolin, ivory, rhino horn and big cats, WildTrace tracks orchids, cacti and succulents, cycads, carnivorous plants, rosewood and other timber, agarwood, sandalwood, red sanders and medicinal and aromatic plants, which are heavily traded and rarely reported."}}, {"@type": "Question", "name": "Is there a free alternative to i2 Analyst's Notebook for link analysis?", "acceptedAnswer": {"@type": "Answer", "text": "WildTrace includes an open-source link-analysis workbench that runs entirely in your browser. You can import your own CSV, Excel or JSON, map the columns, and chart your entities against the public wildlife trade data. Nothing is uploaded: imported data stays in your browser."}}]}</script>
+  <link rel="stylesheet" href="css/fonts.css?v=1.4.1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="css/wildtrace.css?v=1.3.2">
+  <link rel="stylesheet" href="css/wildtrace.css?v=1.4.1">
 </head>
 <!-- data-clarity: the Microsoft Clarity project id. Remove the attribute (or set it to
      REPLACE_ME) and no analytics load at all — useful for forks and local work. -->
@@ -126,9 +129,14 @@
 
   <div id="trivia-root"></div>
   <div class="toast glass" id="toast" role="status"></div>
-  <noscript><p style="position:fixed;inset:auto 16px 16px;padding:14px;background:#fff;border-radius:12px">WildTrace needs JavaScript for its map. The full case list is available as <a href="data/cases.csv">CSV</a>.</p></noscript>
+  <noscript><div style="position:fixed;inset:0;overflow:auto;background:#edf1ef;padding:24px 16px;font:16px/1.6 system-ui,sans-serif">
+    <h1 style="font-size:1.6rem;margin:0 0 8px">WildTrace — the open atlas of illegal wildlife trade</h1>
+    <p>The map needs JavaScript, but the whole record is readable without it:</p>
+    <ul><li><a href="browse.html">Browse every species group and country</a></li>
+      <li><a href="data/cases.csv">Download all cases as CSV</a> (CC BY 4.0)</li>
+      <li><a href="llms.txt">What this dataset is, in plain text</a></li></ul></div></noscript>
 
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
-  <script type="module" src="js/main.js?v=1.3.2"></script>
+  <script type="module" src="js/main.js?v=1.4.1"></script>
 </body>
 </html>
