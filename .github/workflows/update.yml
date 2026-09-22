@@ -22,7 +22,7 @@ jobs:
           key: raw-${{ github.run_id }}
           restore-keys: raw-
       # YouTube is left out of CI: datacentre IPs are routinely bot-checked. Run it locally.
-      - run: python -m wildtrace.cli run --timespan 1m --gnews --countries ALL
+      - run: python -m wildtrace.cli run --timespan 1m --official --gnews --countries ALL
       - run: pytest -q || true
       - name: Commit refreshed public data
         run: |

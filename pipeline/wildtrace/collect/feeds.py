@@ -46,10 +46,13 @@ def parse(xml: bytes, source: str, country: str = "", kind: str = "news", query:
             link = el.get("href", "") if el is not None else ""
         src_el = it.find("source")
         outlet = (src_el.text or "").strip() if src_el is not None and src_el.text else urlparse(link).netloc
+        # Google News wraps links; the publisher's own address is on <source url="...">.
+        src_url = src_el.get("url", "") if src_el is not None else ""
         desc = _TAG.sub(" ", t("description") or t("a:summary"))
         out.append(Record(url=link, title=t("title") or t("a:title"), text=desc.strip(), source=source,
                           outlet=outlet, published=_date(t("pubDate") or t("a:updated")),
-                          country_hint=country, kind=kind, query=query))
+                          country_hint=country, kind=kind, query=query,
+                          extra={"source_url": src_url} if src_url else {}))
     return out
 
 
@@ -120,4 +123,68 @@ def collect_gnews(editions: list[str] | None = None, when: str = "30d") -> list[
             if got:
                 print(f"  gnews {ed} {gid}: {len(got)}")
             recs += got
+    return recs
+
+
+# ------------------------------------------------------------------ official sources
+# Government, enforcement and judicial publishers, searched through their own domains.
+# (site, edition, language). Official releases are the backbone of a validated record.
+OFFICIAL_SITES = [
+    ("gov.br", "BR", "pt"), ("gob.mx", "MX", "es"), ("gob.pe", "PE", "es"), ("gov.co", "CO", "es"), ("gob.ar", "AR", "es"),
+    ("go.id", "ID", "id_ms"), ("gov.ph", "PH", "en"), ("gov.in", "IN", "en"), ("nic.in", "IN", "en"), ("gov.za", "ZA", "en"),
+    ("go.ke", "KE", "en"), ("justice.gov", "US", "en"), ("fws.gov", "US", "en"), ("info.gov.hk", "HK", "en"), ("gov.sg", "SG", "en"),
+    ("gov.my", "MY", "en"), ("gov.lk", "US", "en"), ("gov.la", "US", "en"), ("gov.vn", "VN", "vi"), ("go.th", "TH", "en"),
+    ("gov.au", "AU", "en"), ("gov.uk", "GB", "en"), ("gouv.fr", "FR", "fr"), ("interpol.int", "US", "en"), ("europa.eu", "GB", "en"),
+]
+OFFICIAL_TERMS = {
+    "en": '(wildlife OR pangolin OR ivory OR "rhino horn" OR turtles OR tortoises OR parrots OR "endangered species" OR "red sanders" OR rosewood)',
+    "pt": '("animais silvestres" OR "tráfico de animais" OR "fauna silvestre" OR "aves silvestres" OR "madeira ilegal")',
+    "es": '("fauna silvestre" OR "tráfico de especies" OR "vida silvestre" OR "especies protegidas" OR totoaba)',
+    "fr": "(\"espèces protégées\" OR \"trafic d'espèces\" OR ivoire OR pangolin)",
+    "id_ms": '("satwa dilindungi" OR "perdagangan satwa" OR trenggiling OR "satwa liar")',
+    "vi": '("động vật hoang dã" OR "tê tê" OR "ngà voi")',
+}
+
+
+def collect_official(since: str = "2024-01-01") -> list[Record]:
+    """Official releases about wildlife seizures, arrests and convictions, from
+    government domains worldwide (one Google News query per domain)."""
+    recs = []
+    for site, ed, lang in OFFICIAL_SITES:
+        hl, gl, ceid, _ = GNEWS_EDITIONS[ed]
+        q = f"{OFFICIAL_TERMS[lang]} {LOCAL_CUES.get(lang, LOCAL_CUES['en'])} site:{site} after:{since}"
+        url = f"https://news.google.com/rss/search?q={quote_plus(q)}&hl={hl}&gl={gl}&ceid={ceid}"
+        r = get(url, delay=3, check_robots=False)
+        got = parse(r.content, "official", gl, "official", q) if r is not None and r.ok else []
+        print(f"  official {site}: {len(got)}")
+        recs += got
+    return recs
+
+
+def collect_history(months: int = 12, editions: tuple[str, ...] = ("IN", "US", "GB", "ZA", "NG", "BR", "MX", "ID", "PH", "TH")) -> list[Record]:
+    """Backfill: one query per month, edition and batch of species terms, using
+    Google News' after:/before: operators. Gives the timeline real history instead of
+    a 30-day spike."""
+    from datetime import date
+    lex = lexicon.load()["groups"]
+    recs = []
+    today = date.today().replace(day=1)
+    windows = []
+    for k in range(1, months + 1):
+        y, m = divmod(today.year * 12 + today.month - 1 - k, 12)
+        start = date(y, m + 1, 1)
+        y2, m2 = divmod(y * 12 + m + 1, 12)
+        windows.append((start, date(y2, m2 + 1, 1)))
+    for ed in editions:
+        hl, gl, ceid, lang = GNEWS_EDITIONS[ed]
+        terms = [t for g in lex.values() for t in (g["terms"].get(lang) or g["terms"].get("en") or [])[:2] if len(t) > 4]
+        batches = [terms[i:i + 10] for i in range(0, len(terms), 10)]
+        for start, end in windows:
+            for b in batches:
+                q = "(" + " OR ".join(f'"{t}"' for t in b) + f") {LOCAL_CUES.get(lang, LOCAL_CUES['en'])} after:{start} before:{end}"
+                url = f"https://news.google.com/rss/search?q={quote_plus(q)}&hl={hl}&gl={gl}&ceid={ceid}"
+                r = get(url, delay=3, check_robots=False, cache_hours=24 * 30)
+                got = parse(r.content, "gnews", gl, "news", q) if r is not None and r.ok else []
+                recs += got
+            print(f"  history {ed} {start:%Y-%m}: {len(recs)} so far")
     return recs

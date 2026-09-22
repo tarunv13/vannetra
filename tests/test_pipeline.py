@@ -183,3 +183,14 @@ def test_hash_ids_are_not_mistaken_for_phone_numbers():
     assert_public_safe([{"id": "a6774353051b", "summary": "Seizure · Pangolin · Lagos"}])
     with pytest.raises(ValueError):
         assert_public_safe([{"id": "x", "summary": "call 6774353051"}])
+
+
+def test_source_tiers():
+    from wildtrace.sources_tier import tier
+    assert tier("https://www.gov.br/pf/pt-br/assuntos/noticias/x") == "official"
+    assert tier("https://www.justice.gov/usao-sdfl/pr/x") == "official"
+    assert tier("https://pib.gov.in/PressReleasePage.aspx?PRID=1") == "official"
+    assert tier("https://www.traffic.org/news/x") == "ngo"
+    assert tier("https://timesofindia.indiatimes.com/x") == "media"
+    # a look-alike domain is not a government one
+    assert tier("https://govtnews.example.com/x") == "media"

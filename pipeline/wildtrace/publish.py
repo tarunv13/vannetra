@@ -21,6 +21,10 @@ from .graph import build as graph
 from .privacy import assert_public_safe, scrub
 
 
+MIN_DATE = "2024-01-01"
+NOT_EVENTS = {"cordis.europa.eu", "op.europa.eu", "eur-lex.europa.eu", "data.europa.eu", "researchgate.net", "frontiersin.org", "sciencedirect.com"}
+
+
 def _dump(name: str, obj) -> Path:
     p = WEB_DATA / name
     p.write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":"), default=str), encoding="utf-8")
@@ -93,6 +97,22 @@ def trade_signals() -> dict:
     return out
 
 
+def write_csv(cases: list[dict]) -> None:
+    """Flat, citable export of every published case (CC BY 4.0)."""
+    import csv
+    cols = ["id", "date", "kind", "verification", "summary", "species", "place", "admin1", "country", "place_precision", "lat", "lon",
+            "quantities", "people_arrested", "agencies", "modes", "n_reports", "n_outlets", "official_sources", "source_urls"]
+    with open(WEB_DATA / "cases.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f); w.writerow(cols)
+        for c in cases:
+            p = c.get("place") or {}
+            w.writerow([c["id"], c["date"], c["kind"], c["verification"], c["summary"], ";".join(c["species"]), p.get("name", ""),
+                        p.get("admin1", ""), p.get("country", ""), ("inferred from publisher" if c.get("place_basis") == "outlet" else p.get("type", "")),
+                        p.get("lat", ""), p.get("lon", ""), ";".join(f"{q['value']:g} {q['unit']}" for q in c.get("quantities") or []),
+                        c.get("people_arrested") or "", ";".join(c["agencies"]), ";".join(c["modes"]), c["n_sources"], c.get("n_outlets", ""),
+                        sum(1 for s in c["sources"] if s["tier"] == "official"), " ".join(s["url"] for s in c["sources"])])
+
+
 def live_listings(listings, scores) -> dict:
     """Aggregate freshly collected online listings (YouTube etc.). Public output is
     counts only: per species group and month, split by the classifier's decision.
@@ -147,10 +167,15 @@ def enrich(cands, limit: int = 200) -> None:
 def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
     ensure_dirs()
     recs = read_all_raw()
-    news = [r for r in recs if r.kind in ("news", "official", "court")]
+    news = [r for r in recs if r.kind in ("news", "official", "court")]  # "official": government releases
     listings = [r for r in recs if r.kind in ("listing", "video")]
     scores = score_records(news + listings)
 
+    # Published window: from MIN_DATE on (older records stay in the private raw archive).
+    # Research and project-information portals describe projects, not enforcement events.
+    from .sources_tier import domain as _dom
+    news = [r for r in news if not r.published or r.published >= MIN_DATE]
+    news = [r for r in news if _dom((r.extra or {}).get("source_url") or r.url) not in NOT_EVENTS]
     cand = [r for r in news if is_enforcement_candidate(f"{r.title} {r.text}")]
     if fetch_text:
         enrich(cand)
@@ -164,6 +189,15 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
             f.write(json.dumps(e.to_dict(), ensure_ascii=False) + "\n")
 
     cases = [summarise(g) for g in cluster(events)]
+    # Human review (resources/validations.yaml) outranks every automatic status.
+    vpath = RESOURCES / "validations.yaml"
+    reviews = (yaml.safe_load(vpath.read_text(encoding="utf-8")) or {}) if vpath.exists() else {}
+    cases = [c for c in cases if (reviews.get(c["id"]) or {}).get("status") != "rejected"]
+    for c in cases:
+        r = reviews.get(c["id"]) or {}
+        if r.get("status") == "validated":
+            c["verification"] = "validated"
+            c["review"] = {k: str(r.get(k, "")) for k in ("reviewer", "date", "note")}
     cases.sort(key=lambda c: c.get("date") or "", reverse=True)
     for c in cases:
         c["summary"] = scrub(c["summary"])
@@ -203,12 +237,20 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
 
     s = stats(cases)
     meta = {"built": time.strftime("%Y-%m-%d %H:%M"), "records_seen": len(recs), "news_records": len(news),
+            "licence": "CC BY 4.0 (data) · MIT (code)",
+            "cite": f"WildTrace ({time.strftime('%Y')}). The open atlas of illegal wildlife trade. https://tarunv13.github.io/wildtrace/ (data built {time.strftime('%Y-%m-%d')}).",
+            "coverage": {"mapped": sum(1 for c in cases if c.get("place") and c["place"]["type"] != "country"),
+                         "country_only": sum(1 for c in cases if c.get("place") and c["place"]["type"] == "country"),
+                         "unmapped": sum(1 for c in cases if not c.get("place"))},
+            "verification": dict(Counter(c["verification"] for c in cases)),
+            "source_tiers": dict(Counter(src["tier"] for c in cases for src in c["sources"])),
             "listing_records": len(listings), "by_source": dict(Counter(r.source for r in recs)),
             "candidates": len(cand), "cases": len(cases), "version": "0.1.0",
             "window": [min((c["date"] for c in cases if c.get("date")), default=""),
                        max((c["date"] for c in cases if c.get("date")), default="")]}
 
     _dump("cases.json", cases); _dump("cases.geojson", geo); _dump("stats.json", s)
+    write_csv(cases)
     _dump("species.json", species_meta); _dump("sources.json", registry); _dump("meta.json", meta)
     # Country index: code -> name + capital point + bounding box of its cases.
     countries = {}

@@ -187,7 +187,7 @@ def train(target_recall: float = 0.98, embed: bool = False, folds: int = 5, repe
                 MODELS / "relevance.joblib")
 
     report = {
-        "task": "WCS-OWT YouTube listings: R (wildlife trade signal) vs IR",
+        "task": "OWT labelled set (YouTube listings): R (wildlife trade signal) vs IR",
         "trained_at": time.strftime("%Y-%m-%d %H:%M"),
         "n": int(len(df)), "n_R": int(y.sum()), "n_IR": int((1 - y).sum()),
         "n_conflicts_held_out": int(conflicts["id"].nunique()),

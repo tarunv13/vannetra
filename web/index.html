@@ -8,19 +8,30 @@
   <meta name="theme-color" content="#edf1ef">
   <!-- No analytics, no cookies, no trackers. Tiles: OpenFreeMap. Fonts: Google Fonts. -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23edf1ef'/%3E%3Ccircle cx='16' cy='16' r='12.6' fill='none' stroke='%230f1a17' stroke-width='1.5' opacity='.3'/%3E%3Cpath d='M7.4 21.2C10.6 12.4 17 9.4 24.6 11.2' fill='none' stroke='%230f1a17' stroke-width='2.1' stroke-linecap='round' stroke-dasharray='.1 3.7'/%3E%3Ccircle cx='7.4' cy='21.2' r='2.7' fill='%230f1a17'/%3E%3Ccircle cx='15.2' cy='13.4' r='2.1' fill='%230f1a17'/%3E%3Ccircle cx='24.6' cy='11.2' r='3.1' fill='%23c27a06'/%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap">
+  <link rel="canonical" href="https://tarunv13.github.io/wildtrace/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WildTrace">
+  <meta property="og:title" content="WildTrace · The open atlas of illegal wildlife trade">
+  <meta property="og:description" content="WildTrace, the open atlas of illegal wildlife trade in fauna and flora: seizures, routes, species and the observatories that watch them, each case graded by the strength of its evidence.">
+  <meta property="og:url" content="https://tarunv13.github.io/wildtrace/">
+  <meta property="og:image" content="https://tarunv13.github.io/wildtrace/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WildTrace · The open atlas of illegal wildlife trade">
+  <meta name="twitter:description" content="WildTrace, the open atlas of illegal wildlife trade in fauna and flora: seizures, routes, species and the observatories that watch them, each case graded by the strength of its evidence.">
+  <meta name="twitter:image" content="https://tarunv13.github.io/wildtrace/og.png">
+  <link rel="stylesheet" href="css/fonts.css?v=1.2.3">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="css/wildtrace.css?v=1.1.0">
+  <link rel="stylesheet" href="css/wildtrace.css?v=1.2.3">
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="logo" viewBox="0 0 32 32">
-      <circle cx="16" cy="16" r="12.6" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"/>
-      <path d="M7.4 21.2C10.6 12.4 17 9.4 24.6 11.2" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-dasharray=".1 3.7"/>
-      <circle cx="7.4" cy="21.2" r="2.7" fill="currentColor"/><circle cx="15.2" cy="13.4" r="2.1" fill="currentColor"/>
-      <circle cx="24.6" cy="11.2" r="3.1" fill="#c27a06"/>
+      <circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="2" opacity=".28"/>
+      <path d="M7.2 21.6C10.6 12.2 17.2 9.2 24.8 11" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-dasharray=".1 4.2"/>
+      <circle cx="7.2" cy="21.6" r="3.3" fill="currentColor"/>
+      <circle cx="24.8" cy="11" r="3.8" fill="#c27a06"/>
     </symbol>
   </svg>
 
@@ -47,8 +58,10 @@
       <button class="lens" data-layer="observatories" aria-pressed="false" style="--c:var(--network)"><span class="dot"></span><span class="label">Observatories</span> <span class="n" id="n-obs"></span></button>
       <button class="lens" data-layer="mine" aria-pressed="true" style="--c:var(--invest)" hidden id="lens-mine"><span class="dot"></span><span class="label">Your data</span> <span class="n" id="n-mine"></span></button>
       <span class="sep" aria-hidden="true"></span>
+      <button class="lens" data-sheet="table"><span class="label">Table</span></button>
       <button class="lens" data-sheet="network"><span class="label">Network</span></button>
       <button class="lens" data-sheet="methods"><span class="label">Methods</span></button>
+      <button class="lens" data-sheet="about"><span class="label">About</span></button>
       <button class="lens tool" data-sheet="investigate"><span class="label">Investigate</span></button>
     </nav>
   </header>
@@ -76,13 +89,17 @@
   <div class="mapctl">
     <button class="icon-btn" id="proj" aria-label="Switch between globe and flat map" title="Globe / flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg></button>
     <button class="icon-btn" id="world" aria-label="Show the whole world" title="Whole world"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    <button class="icon-btn" id="spin" aria-pressed="true" aria-label="Slow rotation on or off" title="Rotate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+    <button class="icon-btn" id="legend-toggle" aria-pressed="true" aria-label="Show or hide the legend" title="Legend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><path d="M11 7h9M11 17h9"/></svg></button>
   </div>
 
   <div class="legend glass" aria-label="Legend">
     <div class="r"><span class="sw" style="background:var(--k-seizure)"></span>Seizure</div>
     <div class="r"><span class="sw" style="background:var(--k-arrest)"></span>Arrest · conviction</div>
     <div class="r"><span class="sw" style="background:var(--k-other)"></span>Rescue · report</div>
-    <div class="r muted"><span class="sw" style="background:transparent;box-shadow:0 0 0 2px var(--k-seizure)"></span>Place inferred from publisher</div>
+    <div class="r muted"><span class="sw" style="background:var(--k-seizure);opacity:.5"></span>Paler: single report</div>
+    <div class="r muted"><span class="sw" style="background:transparent;box-shadow:0 0 0 2px var(--k-seizure)"></span>Ring: approximate place</div>
+    <div class="r muted"><span class="sw" style="background:radial-gradient(circle,rgba(214,69,61,.7),rgba(214,69,61,0) 70%);box-shadow:none"></span>Glow: density of reports</div>
     <div class="r muted"><span class="sw" style="background:var(--network);border-radius:3px;transform:rotate(45deg)"></span>Observatory</div>
   </div>
 
@@ -104,10 +121,9 @@
   </section>
 
   <div class="toast glass" id="toast" role="status"></div>
+  <noscript><p style="position:fixed;inset:auto 16px 16px;padding:14px;background:#fff;border-radius:12px">WildTrace needs JavaScript for its map. The full case list is available as <a href="data/cases.csv">CSV</a>.</p></noscript>
 
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.34.3/dist/cytoscape.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-  <script type="module" src="js/main.js?v=1.1.0"></script>
+  <script type="module" src="js/main.js?v=1.2.3"></script>
 </body>
 </html>

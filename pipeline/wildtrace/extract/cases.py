@@ -167,7 +167,10 @@ def summarise(evs: list[Event]) -> dict:
         "quantities": quantities[:8],
         "value_inr": value,
         "people_arrested": people,
-        "sources": [{"outlet": e.outlet, "url": e.url, "date": e.published} for e in evs],
+        "sources": [{"outlet": e.outlet, "url": e.url, "date": e.published, "domain": e.domain, "tier": e.tier} for e in evs],
         "n_sources": len(evs),
+        "n_outlets": len({e.domain or e.outlet for e in evs}),
+        "verification": ("official" if any(e.tier == "official" for e in evs)
+                         else "corroborated" if len({e.domain or e.outlet for e in evs}) >= 2 else "single"),
         "confidence": round(min(1.0, 0.45 + 0.15 * len(evs) + (0.1 if place_basis == "text" else 0.03 if place else 0) + (0.1 if qty else 0)), 2),
     }

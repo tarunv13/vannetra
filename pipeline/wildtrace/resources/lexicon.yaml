@@ -310,6 +310,21 @@ groups:
       es: [pieles de reptil]
       pt: [peles de cobra, peles de jacaré]
 
+  wildlife_general:
+    label: Wildlife (unspecified)
+    taxa: []
+    cites: null
+    products: [mixed or unnamed species]
+    note: "Used only when no specific group matches: official releases often name no species."
+    terms:
+      en: [wildlife trafficking, wildlife smuggling, wildlife crime, wild animals seized, protected species, endangered species, exotic animals seized, wildlife products]
+      pt: [animais silvestres, fauna silvestre, tráfico de animais silvestres, aves silvestres apreendidas]
+      es: [fauna silvestre, vida silvestre, especies protegidas, tráfico de especies]
+      fr: [espèces protégées, trafic d'espèces sauvages, faune sauvage]
+      id_ms: [satwa dilindungi, perdagangan satwa, satwa liar]
+      vi: [động vật hoang dã]
+      hi: [वन्यजीव तस्करी, वन्य जीव]
+
 # Words that signal a trade listing (supply side) rather than a news report.
 sale_cues:
   en: [for sale, price, buy, sell, seller, whatsapp, call, contact, genuine, real test, tester, available, wholesale]

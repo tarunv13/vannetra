@@ -81,9 +81,16 @@ def cues(section: str) -> dict[str, list[re.Pattern[str]]]:
     return _cue_patterns(section)
 
 
+GENERAL = "wildlife_general"
+
+
 def species_groups(text: str) -> list[str]:
+    """Groups named in the text. The catch-all 'wildlife (unspecified)' group is kept
+    only when nothing more specific matches."""
     t = norm(text)
-    return [gid for gid, pats in _compiled().items() if any(p.search(t) for _, p in pats)]
+    hits = [gid for gid, pats in _compiled().items() if any(p.search(t) for _, p in pats)]
+    specific = [g for g in hits if g != GENERAL]
+    return specific or hits
 
 
 def matched_terms(text: str) -> list[str]:

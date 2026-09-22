@@ -4,7 +4,7 @@ import { KIND } from "./globe.js";
 
 export const S = {
   data: { cases: [], species: {}, countries: {}, obs: { observatories: [], categories: {} }, meta: {}, report: {}, trade: {}, sources: [], codewords: [], graph: { elements: [] } },
-  filters: { kinds: new Set(), species: new Set(), countries: new Set(), range: null },
+  filters: { kinds: new Set(), species: new Set(), countries: new Set(), ver: new Set(), range: null },
   layers: { cases: true, routes: true, observatories: false, mine: true },
   trail: [], pos: -1, // navigation stack for the inspector (back / forward)
 };
@@ -12,8 +12,17 @@ const subs = new Set();
 export const on = (fn) => (subs.add(fn), () => subs.delete(fn));
 export const emit = (what = "filters") => subs.forEach((fn) => fn(what));
 
+// graph.json (the link chart) is fetched only when Investigate opens: see loadGraph().
 const FILES = { cases: "cases", species: "species", countries: "countries", obs: "observatories", meta: "meta",
-  report: "model_report", trade: "trade_signals", sources: "sources", codewords: "codewords", graph: "graph" };
+  report: "model_report", trade: "trade_signals", sources: "sources", codewords: "codewords" };
+export async function loadGraph() {
+  if (!S.data.graph.elements?.length) {
+    try { S.data.graph = await (await fetch("data/graph.json", { cache: "no-cache" })).json(); } catch { /* keep empty */ }
+  }
+  return S.data.graph;
+}
+/** Verification bucket used by the filter: official and validated count as "strong". */
+export const verBucket = (c) => (c.verification === "validated" || c.verification === "official" ? "strong" : c.verification || "single");
 export async function load() {
   await Promise.all(Object.entries(FILES).map(async ([k, f]) => {
     try { S.data[k] = await (await fetch(`data/${f}.json`, { cache: "no-cache" })).json(); } catch { /* keep default */ }
@@ -32,6 +41,7 @@ export function filtered(ignore = "") {
     (ignore === "kinds" || !f.kinds.size || f.kinds.has(KIND(c.kind))) &&
     (ignore === "species" || !f.species.size || c.species.some((s) => f.species.has(s))) &&
     (ignore === "countries" || !f.countries.size || f.countries.has(c.place?.country)) &&
+    (ignore === "ver" || !f.ver.size || f.ver.has(verBucket(c))) &&
     (ignore === "range" || !f.range || (c.date && c.date >= f.range[0] && c.date <= f.range[1])));
 }
 
@@ -42,7 +52,7 @@ export function toggle(facet, value) {
 }
 
 export function clearFilters() {
-  S.filters.kinds.clear(); S.filters.species.clear(); S.filters.countries.clear(); S.filters.range = null;
+  S.filters.kinds.clear(); S.filters.species.clear(); S.filters.countries.clear(); S.filters.ver.clear(); S.filters.range = null;
   emit("filters");
 }
 

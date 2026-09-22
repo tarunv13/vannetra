@@ -5,19 +5,22 @@ import { render as renderInspector, title } from "./inspector.js";
 import { local, localEntity, localPoints, mountChart, mountImport } from "./investigate.js";
 import { renderPulse } from "./pulse.js";
 import { mountSearch } from "./search.js";
-import { mountMethods, mountNetwork } from "./sheets.js";
+import { mountAbout, mountMethods, mountNetwork, mountTable } from "./sheets.js";
 import { renderTimeline } from "./timeline.js";
-import { S, back, closeTrail, emit, filtered, fromHash, fwd, go, load, on } from "./store.js";
+import { S, back, closeTrail, emit, filtered, fromHash, fwd, go, load, loadGraph, on } from "./store.js";
 
 const $ = (s) => document.querySelector(s);
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const libs = {};
+const lib = (src) => (libs[src] ||= new Promise((ok, fail) => { const e = document.createElement("script"); e.src = src; e.onload = ok; e.onerror = fail; document.head.append(e); }));
 const toast = (msg) => { const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2600); };
 
 // ------------------------------------------------------------------ map layers from state
 let globe = null;
 function caseGeo(cs) {
   return { type: "FeatureCollection", features: cs.filter((c) => c.place).map((c) => ({ type: "Feature",
-    properties: { id: c.id, kind: c.kind, kg: KIND(c.kind), date: c.date, summary: c.summary, n_sources: c.n_sources, basis: c.place_basis || "text" },
+    properties: { id: c.id, kind: c.kind, kg: KIND(c.kind), date: c.date, summary: c.summary, n_sources: c.n_sources, basis: c.place_basis || "text",
+      level: c.place.type, ver: c.verification || "single" },
     geometry: { type: "Point", coordinates: [c.place.lon, c.place.lat] } })) };
 }
 function routeGeo(cs) {
@@ -33,7 +36,9 @@ function obsGeo() {
 function drawMap() {
   if (!globe?.map.getSource("cases")) return;
   const cs = filtered();
-  globe.set("cases", caseGeo(cs));
+  const geo = caseGeo(cs);
+  globe.set("cases", geo);
+  globe.set("heat", geo);
   globe.set("routes", routeGeo(cs));
   globe.set("obs", obsGeo());
   globe.set("mine", localPoints());
@@ -41,7 +46,8 @@ function drawMap() {
   $("#n-cases").textContent = cs.length;
   const nr = routeGeo(cs).features.length;
   $("#n-routes").textContent = nr;
-  document.querySelector('[data-layer="routes"]').title = nr ? `${nr} routes as stated in reports` : "No report in view states a route (from … to …, bound for …)";
+  // A layer with nothing in it only advertises a gap: the Routes toggle appears once a report states a route.
+  document.querySelector('[data-layer="routes"]').hidden = !S.data.cases.some((c) => c.route_coords);
   $("#n-obs").textContent = obsGeo().features.length;
   const mine = localPoints().features.length;
   $("#lens-mine").hidden = !local.elements.length;
@@ -49,12 +55,20 @@ function drawMap() {
 }
 
 // ------------------------------------------------------------------ inspector + navigation
+let autoFolded = false;
 function drawInspector() {
   const item = S.trail[S.pos];
+  const was = document.body.classList.contains("inspecting");
   document.body.classList.toggle("inspecting", !!item);
   $("#inspector").classList.toggle("on", !!item);
+  // On narrower desktops, fold the summary while a record is open so the map keeps room.
+  if (item && !was && innerWidth < 1600 && innerWidth >= 860 && !$("#pulse").classList.contains("folded")) { $("#pulse").classList.add("folded"); autoFolded = true; }
+  if (!item && autoFolded) { $("#pulse").classList.remove("folded"); autoFolded = false; }
   if (!item) { globe?.highlight(null); return; }
   renderInspector(item, $("#insp-body"), { act, entity: localEntity });
+  // Move keyboard and screen-reader focus to the record that just opened.
+  const h = $("#insp-body .title");
+  if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
   $("#back").disabled = S.pos <= 0; $("#fwd").disabled = S.pos >= S.trail.length - 1;
   const start = Math.max(0, S.pos - 3);
   $("#crumbs").innerHTML = S.trail.slice(start, S.pos + 1).map((t, i) =>
@@ -64,7 +78,9 @@ function drawInspector() {
   if (item.kind === "case") {
     const c = S.data.byId[item.id];
     globe?.highlight(item.id);
+    globe?.spin(false);
     if (c?.place) globe?.fly([c.place.lon, c.place.lat], c.place.type === "country" ? 3.2 : c.place.type === "state" ? 4.6 : 6.2);
+    else toast("Not on the map: no report names a place for this case");
   } else {
     globe?.highlight(null);
     if (item.kind === "country") {
@@ -98,6 +114,8 @@ function act(what, item) {
 
 // ------------------------------------------------------------------ sheets
 const SHEETS = {
+  table: { title: "All cases", tabs: [] },
+  about: { title: "About WildTrace", tabs: [] },
   investigate: { title: "Investigate", tabs: [["chart", "Link chart"], ["import", "Your data"]] },
   network: { title: "The observatory network", tabs: [] },
   methods: { title: "Methods", tabs: [["pipeline", "Pipeline"], ["model", "Classifier"], ["privacy", "Privacy"], ["sources", "Sources"]] },
@@ -112,8 +130,19 @@ function openSheet(kind, tab, focus) {
   $("#sheet-tabs").querySelectorAll("[data-t]").forEach((b) => b.addEventListener("click", () => openSheet(kind, b.dataset.t)));
   const body = $("#sheet-body");
   body.innerHTML = "";
-  if (kind === "investigate" && t === "chart") mountChart(body, { focus });
-  if (kind === "investigate" && t === "import") mountImport(body, { onLocalChange: () => { drawMap(); toast("Your data is on the chart and the map"); } });
+  if (kind === "investigate") {
+    body.innerHTML = `<div class="skeleton" style="margin:18px;height:60%"></div>`;
+    // The graph engine (134 KB), the Excel reader (269 KB) and the chart data load only when needed.
+    Promise.all([lib("https://cdn.jsdelivr.net/npm/cytoscape@3.34.3/dist/cytoscape.min.js"), loadGraph(),
+      t === "import" ? lib("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js") : null]).then(() => {
+      if (sheetOpen !== "investigate") return;
+      body.innerHTML = "";
+      if (t === "chart") mountChart(body, { focus });
+      else mountImport(body, { onLocalChange: () => { drawMap(); toast("Your data is on the chart and the map"); } });
+    });
+  }
+  if (kind === "table") mountTable(body);
+  if (kind === "about") mountAbout(body);
   if (kind === "network") mountNetwork(body);
   if (kind === "methods") mountMethods(body, t);
   $("#sheet").classList.add("on");
@@ -166,6 +195,10 @@ async function boot() {
   $("#fold").addEventListener("click", () => { const f = $("#pulse").classList.toggle("folded"); $("#fold").setAttribute("aria-expanded", String(!f)); });
   $("#proj").addEventListener("click", () => toast(globe?.toggleProjection() ? "Globe" : "Flat map"));
   $("#world").addEventListener("click", () => globe?.world());
+  $("#spin").addEventListener("click", () => { globe?.spin(!globe.spinning); $("#spin").setAttribute("aria-pressed", String(!!globe?.spinning)); });
+  $("#legend-toggle").addEventListener("click", () => { const l = $(".legend"); l.hidden = !l.hidden; $("#legend-toggle").setAttribute("aria-pressed", String(!l.hidden)); });
+  addEventListener("wildtrace:open", (e) => openSheet(e.detail));
+  if (/^#(table|about|network|methods|investigate)$/.test(location.hash)) openSheet(location.hash.slice(1));
   $("#home").addEventListener("click", (e) => { e.preventDefault(); closeTrail(); closeSheet(); globe?.world(); });
   $("#play").addEventListener("click", glide);
   $("#range-reset").addEventListener("click", () => { S.filters.range = null; emit("filters"); });

@@ -36,7 +36,7 @@ and shown on its card:
 | Stage | What happens | Observatories that inform it |
 |---|---|---|
 | **Collect** | news, official feeds, online listings, bulk trade data | GDELT, Google News (opt-in), YouTube (opt-in), CITES Trade DB, Indian Kanoon (planned) |
-| **Screen** | is this an IWT signal? | WCS-OWT labels (training), PMC8579131 names, ECO-SOLVE / WILDTRADE methods, Coalition policy on codewords |
+| **Screen** | is this an IWT signal? | OWT labelled set (training), PMC8579131 names, ECO-SOLVE / WILDTRADE methods, Coalition policy on codewords |
 | **Extract** | species, place, route, quantity, mode, agency | GeoNames, C4ADS & ROUTES transport framing, Species+ (planned), EIA convictions |
 | **Link** | cases → entities → networks | WJC / Oxpeckers / Operation Jaguar as seed networks; TRAFFIC portal & ETIS as benchmarks |
 | **Publish** | privacy gate, static site | SMART's open-code / closed-data split |

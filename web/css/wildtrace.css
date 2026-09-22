@@ -332,3 +332,25 @@ body:not(.inspecting) .mapctl { right: var(--gutter); }
   .wb-side { display: none; }
   .imp { grid-template-columns: 1fr; }
 }
+
+/* ------------------------------------------------------------------ v1.2: map-control pill, table, evidence */
+.mapctl { gap: 0; padding: 4px; border-radius: 16px; background: var(--glass-2); box-shadow: var(--shadow); border: 1px solid var(--edge);
+  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
+.mapctl .icon-btn { background: transparent; box-shadow: none; border: 0; width: 36px; height: 36px; border-radius: 11px; }
+.mapctl .icon-btn:hover { background: rgba(15, 26, 23, 0.06); }
+.mapctl .icon-btn[aria-pressed="true"] { color: var(--invest-ink); background: rgba(101, 80, 200, 0.1); }
+.sort { border: 0; background: none; font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; padding: 0; }
+.sort:hover { color: var(--ink); }
+.linkish { border: 0; background: none; padding: 0; font: inherit; color: var(--ink); text-align: left; cursor: pointer; white-space: normal; }
+.linkish:hover { color: var(--place-ink); text-decoration: underline; }
+.sheet-body td { white-space: normal; }
+.sheet-body td.num { white-space: nowrap; }
+.insp-body .title:focus { outline: none; }
+.insp-body .title:focus-visible { outline: 2px solid var(--place); outline-offset: 4px; }
+.legend { gap: 4px; font-size: 11.5px; }
+.sec button { font-weight: 550; }
+/* folded summary shows only its handle */
+.pulse.folded .pulse-body, .pulse.folded .pulse-head h2 { visibility: hidden; }
+.pulse.folded .pulse-head { justify-content: flex-end; }
+.pulse.folded #fold svg { transform: rotate(180deg); }
+.insp-body .title:focus, .insp-body .title:focus-visible { outline: none; }

@@ -248,6 +248,8 @@ class Event:
     relevance: float | None = None
     trade_signal: float | None = None
     place_basis: str = ""  # "text" (named in the report) or "outlet" (publisher's home region)
+    domain: str = ""       # publisher domain (Google News: from <source url>)
+    tier: str = "media"    # official | ngo | media  (see sources_tier.py)
 
     def to_dict(self):
         return asdict(self)
@@ -283,6 +285,9 @@ def outlet_place(outlet: str, url: str = "") -> Place | None:
 def extract(rec: Record) -> Event:
     text = f"{rec.title}. {rec.text}"
     ev = Event(rec.id, rec.url, rec.title, rec.outlet, rec.published, rec.source)
+    from ..sources_tier import domain as _domain, tier as _tier
+    ev.domain = _domain((rec.extra or {}).get("source_url") or (rec.url if "news.google." not in rec.url else "") or rec.outlet)
+    ev.tier = _tier(ev.domain)
     ev.species = lexicon.species_groups(text)
     ev.terms = lexicon.matched_terms(text)
     ev.event_types = [k for k, v in lexicon.count_cues(text, "enforcement_cues").items() if v]

@@ -9,6 +9,15 @@ const HUE = { case: "var(--cases)", species: "var(--species)", country: "var(--p
 const LANG = { en: "English", hi: "Hindi", hi_latn: "Hindi (Latin)", te: "Telugu", te_latn: "Telugu (Latin)", vi: "Vietnamese", id_ms: "Indonesian / Malay",
   th: "Thai", pt: "Portuguese", es: "Spanish", fr: "French" };
 const inr = (v) => (v == null ? null : v >= 1e7 ? `₹${(v / 1e7).toFixed(1)} crore` : v >= 1e5 ? `₹${(v / 1e5).toFixed(1)} lakh` : `₹${fmt(v)}`);
+const VER = {
+  validated: ["good", "✓ Validated", "Checked by a person against its sources."],
+  official: ["good", "● Official source", "At least one report is a government, customs, police or judicial release."],
+  corroborated: ["info", "◑ Corroborated", "Two or more independent outlets report it."],
+  single: ["warn", "○ Single report", "One outlet only. Treat it as a lead until it is corroborated."],
+};
+const TIER = { official: "Official", ngo: "NGO", media: "Media" };
+const correction = (c) => `https://github.com/tarunv13/wildtrace/issues/new?labels=correction&title=${encodeURIComponent(`Correction: case ${c.id}`)}&body=${encodeURIComponent(
+  `Case: ${c.summary}\nID: ${c.id}\nLink: ${location.origin}${location.pathname}#case/${c.id}\n\nWhat is wrong, and the source that shows it:\n`)}`;
 const days = (a, b) => Math.abs((new Date(a) - new Date(b)) / 864e5);
 const link = (kind, id, label, sub = "") => `<button class="link-row" data-go="${kind}|${esc(id)}"><span>${label}</span><span class="muted" style="font-size:12px">${sub}</span></button>`;
 const caseLink = (c) => link("case", c.id, `<span style="display:inline-flex;gap:8px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:${KIND_COLOR[KIND(c.kind)]}"></span>${esc(c.summary)}</span>`, esc(c.date || ""));
@@ -63,6 +72,10 @@ function caseView(id) {
   return `
     <div class="eyebrow">${esc(KIND_LABEL[KIND(c.kind)])} · ${esc(c.date || "undated")}</div>
     <h2 class="title">${esc(c.summary)}</h2>
+    <div class="row" style="margin-bottom:8px"><span class="status ${VER[c.verification]?.[0] || "info"}" title="${esc(VER[c.verification]?.[2] || "")}">${VER[c.verification]?.[1] || ""}</span>
+      <span class="muted" style="font-size:12.5px">${esc(VER[c.verification]?.[2] || "")}</span></div>
+    ${c.review ? `<div class="box" style="border-left:3px solid var(--species)"><h4>Review</h4>${esc(c.review.note || "")} <span class="muted">(${esc(c.review.reviewer || "")}, ${esc(c.review.date || "")})</span></div>` : ""}
+    ${!place ? `<div class="box" style="border-left:3px solid var(--ink-3)"><h4>Not on the map</h4>No report names a place for this case, so it is counted but not drawn. The reports below may say more.</div>` : ""}
     <div class="row">
       ${c.species.map((s) => `<button class="chip" data-go="species|${s}" style="border-color:rgba(33,138,91,.3)">${esc(spLabel(s))} <span class="muted">CITES ${esc(S.data.species[s]?.cites || "–")}</span></button>`).join("")}
       ${place ? `<button class="chip" data-go="country|${esc(place.country)}">${esc(ccName(place.country))}</button>` : ""}
@@ -74,12 +87,14 @@ function caseView(id) {
       <p style="margin:0 0 6px">Extracted automatically from ${c.n_sources} public report${c.n_sources > 1 ? "s" : ""}; not reviewed by a person. Confidence ${Math.round(c.confidence * 100)}%.</p>
       <p style="margin:0">CITES appendices shown are group-level; check the taxon on Species+.</p></div>
     <div class="eyebrow" style="margin:18px 0 6px">Reports (${c.n_sources})</div>
-    ${c.sources.map((s) => `<a class="link-row" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer nofollow"><span>${esc(s.outlet || new URL(s.url).hostname)} ↗</span><span class="muted" style="font-size:12px">${esc(s.date || "")}</span></a>`).join("")}
+    ${c.sources.map((s) => `<a class="link-row" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer nofollow"><span>${esc(s.outlet || new URL(s.url).hostname)} ↗ <span class="status ${s.tier === "official" ? "good" : "info"}" style="margin-left:4px">${TIER[s.tier] || "Media"}</span></span><span class="muted" style="font-size:12px">${esc(s.date || "")}</span></a>`).join("")}
     ${related.length ? `<div class="eyebrow" style="margin:18px 0 6px">Related in time</div>${related.map(caseLink).join("")}` : ""}
     <div class="row" style="margin-top:16px">
       <button class="btn violet" data-act="chart">Chart this case</button>
       <button class="btn" data-act="copy">Copy link</button>
-    </div>`;
+      <a class="btn" href="${correction(c)}" target="_blank" rel="noopener">Report a correction</a>
+    </div>
+    <p class="muted mono" style="margin-top:10px">Case ID ${esc(c.id)}</p>`;
 }
 
 // ------------------------------------------------------------------ species
@@ -102,7 +117,7 @@ function speciesView(gid) {
       ${g.uses?.length ? `<dt>Intended uses</dt><dd>${esc(g.uses.slice(0, 10).join(", "))} <span class="muted">(seizure records, PMC8579131)</span></dd>` : ""}
       <dt>Cases</dt><dd>${cases.length}</dd>
       ${online ? `<dt>Online listings</dt><dd>${online.flagged} flagged as trade this build <span class="muted">(${online.not_flagged} not)</span></dd>` : ""}
-      ${owt ? `<dt>WCS-OWT labels</dt><dd>${owt.R} trade · ${owt.IR} irrelevant</dd>` : ""}
+      ${owt ? `<dt>OWT labelled set</dt><dd>${owt.R} trade · ${owt.IR} irrelevant</dd>` : ""}
     </dl>
     ${Object.keys(byCountry).length ? `<div class="eyebrow" style="margin:14px 0 6px">Where</div>${Object.entries(byCountry).sort((a, b) => b[1] - a[1]).slice(0, 8)
       .map(([cc, n]) => link("country", cc, esc(ccName(cc)), `${n} case${n > 1 ? "s" : ""}`)).join("")}` : ""}

@@ -1,0 +1,14 @@
+# Human review of published cases. The pipeline never writes this file.
+#
+#   <case id>:
+#     status: validated | rejected
+#     reviewer: GitHub handle of the person who checked it
+#     date: YYYY-MM-DD
+#     note: what was checked (e.g. "matches the customs release; quantity confirmed")
+#
+# validated  -> shown with a "Validated" badge; outranks every automatic status
+# rejected   -> removed from the published data (wrong event, not wildlife, duplicate ...)
+#
+# Case ids appear in the site's case panel and in cases.csv. Corrections from readers
+# arrive as GitHub issues ("Report a correction" on each case) and are resolved here.
+{}

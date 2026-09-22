@@ -40,8 +40,19 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     transformStyle: (_prev, next) => ({
       ...next,
       // Lighter sea and land than stock Positron: evidence marks carry the colour, the base map recedes.
-      layers: next.layers.map((l) => l.type === "background" ? { ...l, paint: { ...l.paint, "background-color": "#f7f8f5" } }
-        : l.id === "water" ? { ...l, paint: { ...l.paint, "fill-color": "#d3e2ea" } } : l),
+      layers: next.layers.map((l) => {
+        if (l.type === "background") return { ...l, paint: { ...l.paint, "background-color": "#f7f8f5" } };
+        if (l.id === "water") return { ...l, paint: { ...l.paint, "fill-color": "#d3e2ea" } };
+        if (l.type === "symbol" && l.layout?.["text-field"]) {
+          // One language on the map (English, else Latin script, else local): no stacked bilingual labels.
+          const out = { ...l, layout: { ...l.layout, "text-field": ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name"]] } };
+          if (/village|hamlet|suburb|neighbourhood|poi|place_other|isolated/.test(l.id)) out.minzoom = Math.max(l.minzoom || 0, 9);
+          else if (/town/.test(l.id)) out.minzoom = Math.max(l.minzoom || 0, 5.5);
+          if (/country/.test(l.id)) out.paint = { ...(l.paint || {}), "text-color": "#3c4a45" };
+          return out;
+        }
+        return l;
+      }),
       projection: { type: "globe" },
       // A pale atmosphere on a mist ground: the globe floats in light, never in black space.
       sky: { "sky-color": "#dfe9f2", "horizon-color": "#f4f7f6", "fog-color": "#edf1ef",
@@ -67,25 +78,40 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     map.addSource("mine", { type: "geojson", data: EMPTY });
     map.addLayer({ id: "mine", type: "circle", source: "mine",
       paint: { "circle-radius": 6, "circle-color": "#6550c8", "circle-stroke-color": "#fff", "circle-stroke-width": 2, "circle-opacity": 0.9 } });
+    // ---- density glow at world scale (unclustered copy of the cases)
+    map.addSource("heat", { type: "geojson", data: EMPTY });
+    map.addLayer({ id: "heat", type: "heatmap", source: "heat", maxzoom: 6,
+      paint: {
+        "heatmap-weight": ["interpolate", ["linear"], ["get", "n_sources"], 1, 0.55, 10, 1],
+        "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.9, 5, 2],
+        "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 18, 3, 34, 6, 44],
+        "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 0, 0.75, 3.5, 0.45, 5.5, 0],
+        "heatmap-color": ["interpolate", ["linear"], ["heatmap-density"],
+          0, "rgba(214,69,61,0)", 0.2, "rgba(236,150,110,0.35)", 0.5, "rgba(226,96,72,0.55)", 0.8, "rgba(214,69,61,0.75)", 1, "rgba(168,39,31,0.85)"],
+      } });
     // ---- cases, clustered
-    map.addSource("cases", { type: "geojson", data: EMPTY, cluster: true, clusterMaxZoom: 6, clusterRadius: 38 });
+    map.addSource("cases", { type: "geojson", data: EMPTY, cluster: true, clusterMaxZoom: 6, clusterRadius: 42 });
     map.addLayer({ id: "clusters", type: "circle", source: "cases", filter: ["has", "point_count"],
-      paint: { "circle-color": "rgba(214,69,61,0.14)", "circle-stroke-color": "#d6453d", "circle-stroke-width": 1.6,
-        "circle-radius": ["step", ["get", "point_count"], 14, 5, 18, 20, 24, 60, 30] } });
+      paint: { "circle-color": "rgba(255,255,255,0.92)", "circle-stroke-color": "rgba(15,26,23,0.55)", "circle-stroke-width": 1.2,
+        // Discs shrink on a small, zoomed-out globe (phones) so neighbouring clusters don't cover each other.
+        "circle-radius": ["interpolate", ["linear"], ["zoom"],
+          0.6, ["step", ["get", "point_count"], 9, 5, 11, 20, 14, 60, 17],
+          1.8, ["step", ["get", "point_count"], 13, 5, 17, 20, 22, 60, 28]] } });
     map.addLayer({ id: "cluster-n", type: "symbol", source: "cases", filter: ["has", "point_count"],
-      layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 12, "text-font": ["Noto Sans Bold"], "text-allow-overlap": true },
-      paint: { "text-color": "#a8271f" } });
+      layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": ["interpolate", ["linear"], ["zoom"], 0.6, 10, 1.8, 12], "text-font": ["Noto Sans Bold"], "text-allow-overlap": true },
+      paint: { "text-color": "#0f1a17" } });
     const kindColor = ["match", ["get", "kg"], "seizure", KIND_COLOR.seizure, "arrest", KIND_COLOR.arrest, KIND_COLOR.other];
+    const approx = ["any", ["==", ["get", "basis"], "outlet"], ["==", ["get", "level"], "country"]];
     map.addLayer({ id: "halo", type: "circle", source: "cases", filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "id"], ""]],
-      paint: { "circle-radius": 18, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": "#0f1a17", "circle-stroke-width": 2, "circle-stroke-opacity": 0.55 } });
+      paint: { "circle-radius": 18, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": "#0f1a17", "circle-stroke-width": 2, "circle-stroke-opacity": 0.6 } });
     map.addLayer({ id: "points", type: "circle", source: "cases", filter: ["!", ["has", "point_count"]],
       paint: {
         "circle-radius": ["interpolate", ["linear"], ["get", "n_sources"], 1, 6, 5, 9, 20, 13],
         "circle-color": kindColor,
-        // Places inferred from the publisher are hollow: a hint, not a fix.
-        "circle-opacity": ["match", ["get", "basis"], "outlet", 0.15, 0.92],
-        "circle-stroke-color": ["match", ["get", "basis"], "outlet", kindColor, "#ffffff"],
-        "circle-stroke-width": ["match", ["get", "basis"], "outlet", 2.5, 2],
+        // Evidence strength: single reports are paler; approximate places are hollow rings.
+        "circle-opacity": ["case", approx, 0.12, ["==", ["get", "ver"], "single"], 0.55, 0.95],
+        "circle-stroke-color": ["case", approx, kindColor, "#ffffff"],
+        "circle-stroke-width": ["case", approx, 2.5, ["in", ["get", "ver"], ["literal", ["official", "validated"]]], 3, 2],
       } });
 
     const hover = (layer, html) => {
@@ -96,7 +122,8 @@ export function createGlobe(el, { onPick, onReady } = {}) {
       });
       map.on("mouseleave", layer, () => { map.getCanvas().style.cursor = ""; popup.remove(); });
     };
-    hover("points", (p) => `<div class="muted" style="font-size:12px">${esc(p.date || "undated")} · ${esc(KIND_LABEL[p.kg])}</div><b>${esc(p.summary)}</b><div class="muted" style="font-size:12px">${p.n_sources} report(s)${p.basis === "outlet" ? " · place inferred from publisher" : ""}</div>`);
+    const VER = { validated: "Validated", official: "Official source", corroborated: "Corroborated", single: "Single report" };
+    hover("points", (p) => `<div class="muted" style="font-size:12px">${esc(p.date || "undated")} · ${esc(KIND_LABEL[p.kg])} · ${esc(VER[p.ver] || "")}</div><b>${esc(p.summary)}</b><div class="muted" style="font-size:12px">${p.n_sources} report(s)${p.basis === "outlet" ? " · place inferred from publisher" : p.level === "country" ? " · country-level location" : ""}</div>`);
     hover("obs", (p) => `<div class="muted" style="font-size:12px">Observatory · ${esc(p.city)}</div><b>${esc(p.name)}</b>`);
     hover("mine", (p) => `<div class="muted" style="font-size:12px">Your data (local)</div><b>${esc(p.label)}</b>`);
     hover("routes", (p) => `<b>${esc(p.label)}</b><div class="muted" style="font-size:12px">${p.n} case(s) · route as reported</div>`);
@@ -110,17 +137,44 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     map.on("click", "points", (e) => onPick?.({ kind: "case", id: e.features[0].properties.id }));
     map.on("click", "obs", (e) => onPick?.({ kind: "obs", id: e.features[0].properties.id }));
     map.on("click", "mine", (e) => onPick?.({ kind: "entity", id: e.features[0].properties.id }));
+    ["mousedown", "touchstart", "wheel", "dragstart"].forEach((ev) => map.on(ev, () => api.spin(false)));
+    map.on("moveend", () => spinning && spinStep());
     onReady?.();
+    setTimeout(() => api.spin(true), 1200);
   });
+
+  // Idle rotation: a slow drift that stops for good once the reader touches the map.
+  let spinning = false;
+  const spinStep = () => {
+    if (!spinning || map.getZoom() > 3 || document.body.classList.contains("inspecting")) return;
+    const c = map.getCenter(); c.lng -= 6;
+    map.easeTo({ center: c, duration: 4000, easing: (t) => t });
+  };
+  // Selected-case pulse: the halo breathes so the eye finds the case after a flight.
+  let pulseRaf = 0;
+  const pulse = (t) => {
+    if (!map.getLayer("halo")) return;
+    const k = (Math.sin(t / 380) + 1) / 2;
+    map.setPaintProperty("halo", "circle-radius", 15 + k * 9);
+    map.setPaintProperty("halo", "circle-stroke-opacity", 0.75 - k * 0.5);
+    pulseRaf = requestAnimationFrame(pulse);
+  };
 
   const api = {
     map,
     set(source, fc) { const s = map.getSource(source); if (s) s.setData(fc); },
     visible(layer, on) {
-      const ids = layer === "cases" ? ["clusters", "cluster-n", "points", "halo"] : [layer];
+      const ids = layer === "cases" ? ["clusters", "cluster-n", "points", "halo", "heat"] : [layer];
       ids.forEach((id) => map.getLayer(id) && map.setLayoutProperty(id, "visibility", on ? "visible" : "none"));
     },
-    highlight(id) { if (map.getLayer("halo")) map.setFilter("halo", ["all", ["!", ["has", "point_count"]], ["==", ["get", "id"], id || ""]]); },
+    highlight(id) {
+      if (!map.getLayer("halo")) return;
+      map.setFilter("halo", ["all", ["!", ["has", "point_count"]], ["==", ["get", "id"], id || ""]]);
+      cancelAnimationFrame(pulseRaf);
+      if (id && !reduced()) pulseRaf = requestAnimationFrame(pulse);
+    },
+    spin(on) { spinning = on && !reduced(); if (spinning) spinStep(); },
+    get spinning() { return spinning; },
     fly(center, zoom = 6) {
       const o = { center, zoom: Math.max(zoom, 1.2) };
       reduced() ? map.jumpTo(o) : map.flyTo({ ...o, speed: 0.9, curve: 1.5, essential: false, padding: api.padding() });

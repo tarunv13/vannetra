@@ -32,6 +32,14 @@ def _collect(a) -> None:
         from .collect import social
         print("YouTube (yt-dlp, metadata only)")
         print("  ->", write_jsonl(social.collect_youtube(), "youtube"))
+    if getattr(a, "official", False):
+        print("Official sources (government, enforcement, judicial domains)")
+        print("  ->", write_jsonl(feeds.collect_official(), "official"))
+    if getattr(a, "history", 0):
+        print(f"History backfill: {a.history} months")
+        print("  ->", write_jsonl(feeds.collect_history(a.history), "history"))
+    if getattr(a, "no_gdelt", False):
+        return
     print(f"GDELT: {countries}")
     print("  ->", write_jsonl(gdelt.collect(countries, a.timespan), "gdelt"))
 
@@ -81,6 +89,9 @@ def main(argv=None) -> None:
         c.add_argument("--timespan", default="3m")
         c.add_argument("--gnews", action="store_true", help="opt-in: Google News RSS (personal-use terms)")
         c.add_argument("--youtube", action="store_true", help="opt-in: YouTube listing search via yt-dlp")
+        c.add_argument("--official", action="store_true", help="search government / enforcement / judicial domains")
+        c.add_argument("--history", type=int, default=0, help="backfill this many past months (Google News date ranges)")
+        c.add_argument("--no-gdelt", action="store_true", help="skip GDELT (heavily throttled)")
     b = sub.add_parser("build"); b.add_argument("--no-fetch", action="store_true", help="skip fetching article ledes")
     sub.add_parser("relabel"); sub.add_parser("doctor"); sub.add_parser("gazetteer")
     ci = sub.add_parser("cites"); ci.add_argument("folder")

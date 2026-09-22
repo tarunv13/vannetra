@@ -2,7 +2,8 @@
 // so reading and exploring are the same gesture.
 import { esc, fmt } from "./charts.js";
 import { KIND, KIND_COLOR, KIND_LABEL } from "./globe.js";
-import { S, ccName, clearFilters, emit, filtered, go, spLabel, toggle } from "./store.js";
+import { S, ccName, clearFilters, emit, filtered, go, spLabel, toggle, verBucket } from "./store.js";
+const VERB = { strong: ["Official or validated", "var(--species)"], corroborated: ["Corroborated", "var(--place)"], single: ["Single report", "var(--ink-3)"] };
 
 function bars(entries, facet, color, max = 8) {
   const top = Math.max(1, ...entries.map((e) => e[1]));
@@ -17,17 +18,21 @@ export function renderPulse(el) {
   filtered("species").forEach((c) => c.species.forEach((s) => (sp[s] = (sp[s] || 0) + 1)));
   filtered("countries").forEach((c) => c.place && (cc[c.place.country] = (cc[c.place.country] || 0) + 1));
   filtered("kinds").forEach((c) => (kinds[KIND(c.kind)] = (kinds[KIND(c.kind)] || 0) + 1));
-  const f = S.filters, any = f.kinds.size || f.species.size || f.countries.size || f.range;
+  const f = S.filters, any = f.kinds.size || f.species.size || f.countries.size || f.ver.size || f.range;
+  const mapped = cs.filter((c) => c.place && c.place.type !== "country").length;
+  const vers = {};
+  filtered("ver").forEach((c) => (vers[verBucket(c)] = (vers[verBucket(c)] || 0) + 1));
   const reports = cs.reduce((n, c) => n + c.n_sources, 0);
   const latest = [...cs].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 12);
   const m = S.data.meta || {};
   el.innerHTML = `
     <h1 class="headline">${fmt(cs.length)} cases across ${countries.size} ${countries.size === 1 ? "country" : "countries"}</h1>
-    <p class="lede">${any ? "Filtered view. Click a chip to remove it." : `Seizures, arrests and convictions from ${fmt(reports)} open reports in ${Object.keys(m.by_source || {}).length || "several"} sources, ${esc(m.window?.[0] || "")} to ${esc(m.window?.[1] || "")}. Nobody accused is ever named.`}</p>
+    <p class="lede">${any ? "Filtered view. Click a chip to remove it." : `Seizures, arrests and convictions from ${fmt(reports)} public reports, ${esc(m.window?.[0] || "")} to ${esc(m.window?.[1] || "")}. <b>${fmt(mapped)}</b> are pinned to a city or district; the rest are country-level or name no place. Nobody accused is ever named.`}</p>
     <div class="active-filters">${[
       ...[...f.kinds].map((k) => `<button class="chip k" style="--kc:${KIND_COLOR[k]}" data-f="kinds" data-v="${k}">${KIND_LABEL[k]} <span class="x">✕</span></button>`),
       ...[...f.species].map((s) => `<button class="chip" data-f="species" data-v="${s}">${esc(spLabel(s))} <span class="x">✕</span></button>`),
       ...[...f.countries].map((c) => `<button class="chip" data-f="countries" data-v="${c}">${esc(ccName(c))} <span class="x">✕</span></button>`),
+      ...[...f.ver].map((v) => `<button class="chip" data-f="ver" data-v="${v}">${esc(VERB[v]?.[0] || v)} <span class="x">✕</span></button>`),
       f.range ? `<button class="chip" data-clear-range>${esc(f.range[0])} → ${esc(f.range[1])} <span class="x">✕</span></button>` : "",
       any ? `<button class="chip" data-clear-all style="background:transparent">Clear all</button>` : "",
     ].join("")}</div>
@@ -36,15 +41,19 @@ export function renderPulse(el) {
       <div class="tile"><div class="v">${Object.keys(sp).length}</div><div class="k">species groups</div></div>
     </div>
     <div class="chips" style="margin-bottom:6px">${Object.entries(KIND_LABEL).map(([k, l]) => `<button class="chip k" style="--kc:${KIND_COLOR[k]}${f.kinds.has(k) ? ";background:#fff;box-shadow:inset 0 0 0 1.5px " + KIND_COLOR[k] : ""}" data-f="kinds" data-v="${k}" aria-pressed="${f.kinds.has(k)}">${l} <span class="muted">${kinds[k] || 0}</span></button>`).join("")}</div>
+    <div class="sec"><h3>Evidence</h3><button data-open="about">What do these mean?</button></div>
+    <div class="chips" style="margin-bottom:4px">${Object.entries(VERB).map(([k, [l, c]]) => `<button class="chip k" style="--kc:${c}${f.ver.has(k) ? ";background:#fff;box-shadow:inset 0 0 0 1.5px " + c : ""}" data-f="ver" data-v="${k}" aria-pressed="${f.ver.has(k)}">${l} <span class="muted">${vers[k] || 0}</span></button>`).join("")}</div>
     <div class="sec"><h3>Species</h3></div>
     <div class="bars">${bars(Object.entries(sp).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, n, spLabel(k)]), "species", "var(--species)")}</div>
     <div class="sec"><h3>Countries</h3></div>
     <div class="bars">${bars(Object.entries(cc).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, n, ccName(k)]), "countries", "var(--place)")}</div>
-    <div class="sec"><h3>Latest</h3></div>
+    <div class="sec"><h3>Latest</h3><button data-open="table">All ${fmt(cs.length)} as a table</button></div>
     <div class="feed">${latest.map((c) => `<button class="item" data-case="${c.id}" style="--kc:${KIND_COLOR[KIND(c.kind)]}"><i class="k"></i><span><div class="t">${esc(c.summary)}</div>
       <div class="s">${esc(c.date || "undated")} · ${c.n_sources} report${c.n_sources > 1 ? "s" : ""}</div></span></button>`).join("") || `<p class="muted">Nothing matches these filters.</p>`}</div>`;
   el.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => toggle(b.dataset.f, b.dataset.v)));
   el.querySelector("[data-clear-all]")?.addEventListener("click", clearFilters);
   el.querySelector("[data-clear-range]")?.addEventListener("click", () => { S.filters.range = null; emit("filters"); });
   el.querySelectorAll("[data-case]").forEach((b) => b.addEventListener("click", () => go({ kind: "case", id: b.dataset.case })));
+  el.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:open", { detail: b.dataset.open }))));
+  el.insertAdjacentHTML("beforeend", `<p class="muted" style="font-size:12px;margin:16px 0 0">Counts show where wildlife crime is <i>reported</i> in the newsrooms and government sites searched, not where it happens. <a href="data/cases.csv" download>Download CSV</a> · CC BY 4.0</p>`);
 }

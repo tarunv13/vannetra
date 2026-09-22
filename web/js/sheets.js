@@ -59,7 +59,7 @@ export function mountMethods(root, tab = "pipeline") {
       <p><b>Link and publish.</b> Cases become a graph of species, places, agencies and outlets. A privacy gate blocks names, phones and handles before anything is published.</p></div>`,
     model: `<div class="prose">
       <h3 style="margin-top:0">The online-listing classifier</h3>
-      <p>${esc(m.task || "")}. Trained on ${fmt(m.n)} WCS-OWT labelled items (${fmt(m.n_R)} trade / ${fmt(m.n_IR)} irrelevant). ${esc(m.protocol || "")}.</p>
+      <p>${esc(m.task || "")}. Trained on ${fmt(m.n)} items from the OWT labelled set (${fmt(m.n_R)} trade / ${fmt(m.n_IR)} irrelevant). ${esc(m.protocol || "")}.</p>
       <table style="max-width:560px"><tbody>
         <tr><td>Trade listings kept (target ${pct(m.target_recall)})</td><td class="num"><b>${pct(t.recall_R)}</b></td></tr>
         <tr><td>Irrelevant listings rejected</td><td class="num"><b>${pct(t.recall_IR)}</b></td></tr>
@@ -78,4 +78,55 @@ export function mountMethods(root, tab = "pipeline") {
         <td><span class="status ${s.enabled ? "good" : "info"}">${s.enabled ? "on" : "off"}</span></td><td class="muted" style="white-space:normal">${esc(s.notes || s.terms || "")}</td></tr>`).join("")}</tbody></table></div>`,
   };
   root.innerHTML = sections[tab] || sections.pipeline;
+}
+
+// ------------------------------------------------------------------ all cases (text alternative to the map)
+const VER_LABEL = { validated: "Validated", official: "Official source", corroborated: "Corroborated", single: "Single report" };
+export function mountTable(root) {
+  const cases = S.data.cases;
+  let key = "date", dir = -1, q = "";
+  const cols = [["date", "Date"], ["summary", "Case"], ["verification", "Evidence"], ["country", "Country"], ["n_sources", "Reports"]];
+  const val = (c, k) => (k === "country" ? (c.place ? S.data.countries[c.place.country]?.name || c.place.country : "") : c[k] ?? "");
+  const draw = () => {
+    const rows = cases.filter((c) => !q || JSON.stringify([c.summary, c.places, c.agencies, c.species]).toLowerCase().includes(q))
+      .sort((a, b) => { const x = val(a, key), y = val(b, key); return (x > y ? 1 : x < y ? -1 : 0) * dir; });
+    root.innerHTML = `<div class="filters">
+        <input type="search" id="t-q" placeholder="Filter cases…" aria-label="Filter cases" value="${esc(q)}" style="min-width:240px">
+        <span class="muted" style="font-size:12.5px">${rows.length} of ${cases.length} cases · ${cases.filter((c) => !c.place).length} have no mappable place</span>
+        <span style="flex:1"></span>
+        <a class="btn" href="data/cases.csv" download>Download CSV</a>
+      </div>
+      <div style="padding:10px 16px 18px;overflow:auto">
+      <table aria-label="All cases"><thead><tr>${cols.map(([k, l]) => `<th scope="col" aria-sort="${key === k ? (dir > 0 ? "ascending" : "descending") : "none"}">
+        <button class="sort" data-k="${k}">${l}${key === k ? (dir > 0 ? " ↑" : " ↓") : ""}</button></th>`).join("")}</tr></thead>
+      <tbody>${rows.map((c) => `<tr><td class="num">${esc(c.date || "")}</td>
+        <td><button class="linkish" data-case="${c.id}">${esc(c.summary)}</button></td>
+        <td><span class="status ${c.verification === "single" ? "info" : "good"}">${esc(VER_LABEL[c.verification] || "")}</span></td>
+        <td>${esc(val(c, "country")) || '<span class="muted">not mapped</span>'}</td><td class="num">${c.n_sources}</td></tr>`).join("")}</tbody></table></div>`;
+    root.querySelector("#t-q").addEventListener("input", (e) => { q = e.target.value.toLowerCase(); const pos = e.target.selectionStart; draw(); const i = root.querySelector("#t-q"); i.focus(); i.setSelectionRange(pos, pos); });
+    root.querySelectorAll(".sort").forEach((b) => b.addEventListener("click", () => { dir = key === b.dataset.k ? -dir : 1; key = b.dataset.k; draw(); root.querySelector(`.sort[data-k="${key}"]`)?.focus(); }));
+    root.querySelectorAll("[data-case]").forEach((b) => b.addEventListener("click", () => go({ kind: "case", id: b.dataset.case })));
+  };
+  draw();
+}
+
+// ------------------------------------------------------------------ about
+export function mountAbout(root) {
+  const m = S.data.meta || {};
+  const v = m.verification || {}, cov = m.coverage || {};
+  root.innerHTML = `<div class="prose" style="max-width:80ch">
+    <h3 style="margin-top:0">The open atlas of illegal wildlife trade</h3>
+    <p>WildTrace maps seizures, arrests and convictions involving wild fauna and flora, from ivory and pangolins to rosewood and agarwood. Every case links back to its public sources and states how strong its evidence is. The link-analysis workbench runs on your own data in your browser.</p>
+    <h3>How reliable is a case?</h3>
+    <p><b>Validated</b> (${v.validated || 0}): checked by a person against its sources. <b>Official source</b> (${v.official || 0}): at least one government, customs, police or judicial release. <b>Corroborated</b> (${v.corroborated || 0}): two or more independent outlets. <b>Single report</b> (${v.single || 0}): one outlet; treat as a lead.</p>
+    <p>${cov.mapped || 0} cases have a city- or district-level place, ${cov.country_only || 0} only a country, and ${cov.unmapped || 0} none. Coverage follows the newsrooms and government sites searched, so counts show where wildlife crime is <i>reported</i>, not where it happens.</p>
+    <h3>Who runs it</h3>
+    <p>An open-source research project, maintained on GitHub by <a href="https://github.com/tarunv13" target="_blank" rel="noopener">@tarunv13</a>. It builds on the OWT labelled set of online listings and on the observatories listed under Network. Code and method: <a href="https://github.com/tarunv13/wildtrace" target="_blank" rel="noopener">github.com/tarunv13/wildtrace</a>.</p>
+    <h3>Use and cite</h3>
+    <p>Data: <b>CC BY 4.0</b>. Code: MIT. Suggested citation:</p>
+    <p class="box mono" style="font-size:12.5px">${esc(m.cite || "WildTrace. The open atlas of illegal wildlife trade.")}</p>
+    <div class="row"><a class="btn primary" href="data/cases.csv" download>Download all cases (CSV)</a>
+      <a class="btn" href="https://github.com/tarunv13/wildtrace/issues/new?title=Correction%3A%20&labels=correction" target="_blank" rel="noopener">Report a correction</a></div>
+    <p class="muted" style="font-size:12.5px;margin-top:12px">Last updated ${esc(m.built || "")}. Refreshed weekly. No analytics, cookies or accounts.</p>
+  </div>`;
 }

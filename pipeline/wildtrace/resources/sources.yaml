@@ -12,6 +12,17 @@
 # read them before turning a source on. Check the status fields before relying on any source.
 
 sources:
+  - id: official
+    name: Official enforcement releases (government, customs, police, judiciary)
+    url: null
+    access: rss
+    feed: null
+    enabled: true
+    role: [enforcement, validation]
+    region: global
+    terms: "Public releases by government bodies; searched per domain (gov.br, gob.mx, go.id, gov.in, justice.gov, info.gov.hk ...)"
+    notes: "Highest source tier. A case with an official source is marked 'Official source'."
+
   - id: gdelt
     name: GDELT DOC 2.0 news index
     url: https://www.gdeltproject.org/
@@ -163,9 +174,9 @@ sources:
     notes: "Uses whatever upstream tools `agent-reach doctor` reports as healthy."
 
   - id: wcs_owt
-    name: WCS India Online Wildlife Trade (OWT) labelled set
+    name: OWT labelled set (Python script)
     url: null
     access: private
     enabled: true
     role: [training-data, online-trade]
-    notes: "1,274 labelled YouTube listings (R/IR). Trains the relevance model. Only aggregates are published."
+    notes: "1,274 labelled YouTube listings (trade / irrelevant) loaded by classify/dataset.py; trains the relevance model. Only aggregates are published."
