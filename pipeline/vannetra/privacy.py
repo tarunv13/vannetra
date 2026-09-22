@@ -25,6 +25,7 @@ _HANDLE = re.compile(r"(?<![\w@])@[A-Za-z0-9_.]{3,30}")
 _WA_LINK = re.compile(r"(?:https?://)?(?:wa\.me|chat\.whatsapp\.com|t\.me)/\S+", re.I)
 
 # Fields that may carry identities and must never reach web/data.
+HASH_KEYS = {"id", "record_id"}  # generated hex identifiers, never free text
 BLOCKED_KEYS = {"channel", "channelname", "channel_name", "author", "persons", "person", "phone", "email", "uploader", "uploader_id"}
 
 
@@ -53,5 +54,7 @@ def assert_public_safe(rows: Iterable[dict[str, Any]], where: str = "") -> None:
         if bad_keys:
             raise ValueError(f"{where}[{i}] carries blocked field(s) {sorted(bad_keys)}")
         for k, v in row.items():
+            if k in HASH_KEYS:
+                continue  # hex digests can contain 10-digit runs that look like phone numbers
             if isinstance(v, str) and find_pii(v):
                 raise ValueError(f"{where}[{i}].{k} contains contact details: {find_pii(v)[:2]}")

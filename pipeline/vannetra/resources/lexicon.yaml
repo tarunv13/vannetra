@@ -18,6 +18,9 @@ groups:
     products: [scales, live, meat]
     terms:
       en: [pangolin, pangolins, pangolin scales, pangolin scale, scaly anteater]
+      pt: [pangolim, escamas de pangolim]
+      es: [pangolín, escamas de pangolín]
+      fr: [écailles de pangolin, pangolins saisis]
       hi_latn: [vajrakit, bajarkit, bajrakapta, bajra kapta, vajrakit chilka, pangolin chilka]  # owt
       hi: [पैंगोलिन, वज्रकीट]
       te_latn: [alugu, alugu chippalu, adavi volgo]  # owt
@@ -79,6 +82,9 @@ groups:
     products: [live, meat, calipee]
     terms:
       en: [star tortoise, star tortoises, softshell turtle, softshell turtles, flapshell turtle, tortoise, tortoises, turtle, turtles]
+      pt: [tartarugas, jabutis, quelônios, ovos de tartaruga]
+      es: [tortugas, huevos de tortuga, caguama]
+      fr: [tortues]
       hi_latn: [kachua, kachhua]
       hi: [कछुआ, कछुए]
       vi: [rùa]
@@ -108,6 +114,9 @@ groups:
     products: [ivory, tusk, "gajmukta (fake pearl)"]
     terms:
       en: [ivory, elephant tusk, elephant tusks, elephant pearl]  # owt
+      pt: [marfim, presas de elefante]
+      es: [marfil, colmillos de elefante]
+      fr: [ivoire, défenses d'éléphant]
       hi_latn: [gajmukta, gajamukta, hathi dant, haathi daant]  # owt
       hi: [हाथी दांत, गजमुक्ता]
       vi: [ngà voi]
@@ -140,6 +149,9 @@ groups:
     products: [horn]
     terms:
       en: [rhino horn, rhino horns, rhinoceros horn, rhino poaching, rhino poachers]
+      pt: [chifre de rinoceronte, chifres de rinoceronte]
+      es: [cuerno de rinoceronte, cuernos de rinoceronte]
+      fr: [corne de rhinocéros, cornes de rhinocéros]
       hi_latn: [gainda seeng]
       hi: [गैंडे का सींग]
       vi: [sừng tê giác]
@@ -153,12 +165,15 @@ groups:
       en: [owl smuggling, owls seized, owl trade, owls rescued, owl seized]
       hi: [उल्लू]
   birds:
-    label: Parakeets & songbirds
-    taxa: [Psittacula spp., Gracula religiosa]
+    label: Parrots & songbirds
+    taxa: [Psittacula spp., Gracula religiosa, Psittacus erithacus, Ara spp., Amazona spp., Passeriformes]
     cites: "II"
     products: [live]
     terms:
-      en: [parakeets, parrots seized, munias, hill myna, birds seized, bird trade, bird trappers]
+      en: [parakeets, parrots seized, munias, hill myna, birds seized, bird trade, bird trappers, african grey, african greys, grey parrots, macaw, macaws, songbirds seized, wild birds rescued]
+      pt: [aves silvestres, pássaros silvestres, araras, papagaios, curiós, trinca-ferros]
+      es: [aves silvestres, guacamayas, loros, pericos]
+      fr: [perroquets gris, oiseaux sauvages]
       hi: [तोते]
   red_sanders:
     label: Red sanders
@@ -177,15 +192,21 @@ groups:
     products: [fins, gill plates, dried]
     terms:
       en: [shark fin, shark fins, manta gill, sea cucumber, sea cucumbers, seahorse, seahorses, sea horses]
+      pt: [barbatanas de tubarão, pepino-do-mar, cavalos-marinhos]
+      es: [aletas de tiburón, pepino de mar, caballitos de mar]
+      fr: [ailerons de requin, concombres de mer, hippocampes]
       vi: [vây cá mập, hải sâm, cá ngựa]
       id_ms: [sirip hiu, teripang]
   primates:
     label: Primates
-    taxa: [Nycticebus spp., Macaca spp., Pongo spp., Hoolock spp.]
+    taxa: [Nycticebus spp., Macaca spp., Pongo spp., Hoolock spp., Pan spp., Gorilla spp., Sapajus spp., Callithrix spp.]
     cites: "I/II"
     products: [live]
     terms:
-      en: [slow loris, slow lorises, orangutan, orangutans, gibbon, gibbons, langur, langurs]
+      en: [slow loris, slow lorises, orangutan, orangutans, gibbon, gibbons, langur, langurs, chimpanzee, chimpanzees, gorilla, gorillas, bonobo, marmosets, capuchin monkeys]
+      pt: [macacos-prego, saguis, micos]
+      es: [monos araña, titíes]
+      fr: [chimpanzé, chimpanzés, gorille, gorilles]
       id_ms: [kukang]
   hornbill:
     label: Hornbills
@@ -212,6 +233,83 @@ groups:
       en: [mongoose hair, mongoose brushes, mongoose hair brushes]
       hi: [नेवला]
 
+  jaguar:
+    label: Jaguar
+    taxa: [Panthera onca]
+    cites: "I"
+    products: [fangs, skin, paste]
+    terms:
+      en: [jaguar fangs, jaguar teeth, jaguar skin, jaguar parts, jaguar poaching, jaguar trafficking]
+      es: [colmillos de jaguar, piel de jaguar, caza de jaguar]
+      pt: [dentes de onça, pele de onça, caça de onça]
+  lion:
+    label: Lion (bone & parts)
+    taxa: [Panthera leo]
+    cites: "II"
+    products: [bones, claws, skin, teeth]
+    terms:
+      en: [lion bones, lion bone, lion claws, lion skin, lion teeth, lion parts, lion poaching]
+      fr: [os de lion, griffes de lion]
+  cheetah:
+    label: Cheetah
+    taxa: [Acinonyx jubatus]
+    cites: "I"
+    products: [live cubs, skin]
+    terms:
+      en: [cheetah cubs, cheetah cub, cheetah smuggling, cheetah trafficking, cheetah skin]
+  totoaba:
+    label: Totoaba (swim bladder)
+    taxa: [Totoaba macdonaldi]
+    cites: "I"
+    products: [swim bladder]
+    terms:
+      en: [totoaba, totoaba bladder, totoaba swim bladder, totoaba maw]
+      es: [buche de totoaba, vejiga de totoaba]
+  eels:
+    label: Eels
+    taxa: [Anguilla anguilla, Anguilla spp.]
+    cites: "II"
+    products: [live glass eels]
+    terms:
+      en: [glass eels, glass eel, elvers, eel smuggling, eel trafficking]
+      es: [angulas]
+      fr: [civelles]
+  abalone:
+    label: Abalone
+    taxa: [Haliotis midae, Haliotis spp.]
+    cites: null
+    products: [dried, live]
+    terms:
+      en: [abalone, perlemoen, abalone poaching]
+  rosewood:
+    label: Rosewood & timber
+    taxa: [Dalbergia spp., Pterocarpus erinaceus]
+    cites: "II"
+    products: [logs, furniture]
+    terms:
+      en: [rosewood, rosewood logs, dalbergia, kosso timber, illegal timber, illegal logging]
+      es: [palo de rosa, madera ilegal, tala ilegal]
+      pt: [pau-rosa, madeira ilegal, extração ilegal de madeira]
+      fr: [bois de rose, bois illégal]
+  agarwood:
+    label: Agarwood (oud)
+    taxa: [Aquilaria spp., Gyrinops spp.]
+    cites: "II"
+    products: [chips, oil]
+    terms:
+      en: [agarwood, agar wood, oud wood, agarwood chips]
+      id_ms: [gaharu, kayu gaharu]
+      hi: [अगरवुड]
+  pythons_reptiles:
+    label: Pythons & reptile skins
+    taxa: [Python spp., Crocodylidae, Varanus salvator]
+    cites: "I/II"
+    products: [skins, live]
+    terms:
+      en: [python skins, python skin, reptile skins, crocodile skins, snake skins seized]
+      es: [pieles de reptil]
+      pt: [peles de cobra, peles de jacaré]
+
 # Words that signal a trade listing (supply side) rather than a news report.
 sale_cues:
   en: [for sale, price, buy, sell, seller, whatsapp, call, contact, genuine, real test, tester, available, wholesale]
@@ -220,10 +318,10 @@ sale_cues:
 
 # Words that signal an enforcement event (the news side).
 enforcement_cues:
-  seizure: [seized, seizure, seize, seizes, recovered, confiscated, intercepted, haul, bust, busted, smuggling, smuggled, जब्त, bắt giữ, disita]
-  arrest: [arrested, arrest, arrests, held, nabbed, detained, apprehended, गिरफ्तार, ditangkap, ditahan]
-  conviction: [convicted, sentenced, jailed, imprisonment, rigorous imprisonment, सजा, dihukum]
-  rescue: [rescued, released into the wild, rehabilitated]
+  seizure: [seized, seizure, seize, seizes, recovered, confiscated, intercepted, haul, bust, busted, smuggling, smuggled, trafficking, जब्त, bắt giữ, disita, ของกลาง, apreensão, apreende, apreendidos, apreendidas, tráfico de animais, decomiso, decomisan, incautan, incautación, incautaron, tráfico de fauna, saisie, saisies, saisi, trafic]
+  arrest: [arrested, arrest, arrests, held, nabbed, detained, apprehended, गिरफ्तार, ditangkap, ditahan, จับกุม, preso, presos, presa, detenido, detenidos, capturados, arrêté, arrêtés, interpellés]
+  conviction: [convicted, sentenced, jailed, imprisonment, rigorous imprisonment, सजा, dihukum, condenado, condenados, sentenciado, condamné]
+  rescue: [rescued, released into the wild, rehabilitated, resgata, resgatados, resgatadas, rescatan, rescatados]
   bail: [bail granted, granted bail, acquitted, discharged]
 
 agencies:

@@ -177,3 +177,9 @@ def test_case_place_is_the_most_cited_specific_place():
     evs = [extract(rec(f"Orangutans rescued in Balasore forest, report {i}", published="2026-09-08")) for i in range(3)]
     evs.append(extract(rec("Rescued orangutans shifted to Nandankanan zoo, smuggling probe on", published="2026-09-10")))
     assert summarise(evs)["place"]["name"] == "Balasore"
+
+
+def test_hash_ids_are_not_mistaken_for_phone_numbers():
+    assert_public_safe([{"id": "a6774353051b", "summary": "Seizure · Pangolin · Lagos"}])
+    with pytest.raises(ValueError):
+        assert_public_safe([{"id": "x", "summary": "call 6774353051"}])

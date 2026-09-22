@@ -25,7 +25,7 @@ def _collect(a) -> None:
     print("RSS feeds")
     print("  ->", write_jsonl(feeds.collect_feeds(), "feeds"))
     if a.gnews:
-        eds = [c for c in feeds.GNEWS_EDITIONS if c.split("-")[0] in countries]
+        eds = list(feeds.GNEWS_EDITIONS) if "ALL" in countries else [c for c in feeds.GNEWS_EDITIONS if c.split("-")[0] in countries]
         print(f"Google News RSS: {eds}")
         print("  ->", write_jsonl(feeds.collect_gnews(eds), "gnews"))
     if a.youtube:

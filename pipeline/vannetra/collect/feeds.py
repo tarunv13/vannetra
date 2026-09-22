@@ -61,7 +61,7 @@ def registry() -> dict:
 def collect_feeds() -> list[Record]:
     recs = []
     for s in registry().get("sources", []):
-        if s.get("access") != "rss" or not s.get("enabled", True):
+        if s.get("access") != "rss" or not s.get("enabled", True) or not s.get("feed"):
             continue
         r = get(s["feed"])
         got = parse(r.content, s["id"], s.get("country", ""), s.get("kind", "news")) if r is not None and r.ok else []
@@ -73,27 +73,51 @@ def collect_feeds() -> list[Record]:
     return recs
 
 
-GNEWS_EDITIONS = {  # (hl, gl, ceid)
-    "IN": ("en-IN", "IN", "IN:en"), "IN-hi": ("hi", "IN", "IN:hi"),
-    "TH": ("en", "TH", "TH:en"), "VN": ("vi", "VN", "VN:vi"), "ID": ("id", "ID", "ID:id"),
-    "MY": ("en-MY", "MY", "MY:en"), "PH": ("en-PH", "PH", "PH:en"), "SG": ("en-SG", "SG", "SG:en"),
+GNEWS_EDITIONS = {  # edition: (hl, gl, ceid, lexicon language key)
+    # South & Southeast Asia
+    "IN": ("en-IN", "IN", "IN:en", "en"), "IN-hi": ("hi", "IN", "IN:hi", "hi"),
+    "TH": ("en", "TH", "TH:en", "en"), "VN": ("vi", "VN", "VN:vi", "vi"), "ID": ("id", "ID", "ID:id", "id_ms"),
+    "MY": ("en-MY", "MY", "MY:en", "en"), "PH": ("en-PH", "PH", "PH:en", "en"), "SG": ("en-SG", "SG", "SG:en", "en"),
+    # Africa (source and transit)
+    "ZA": ("en-ZA", "ZA", "ZA:en", "en"), "NG": ("en-NG", "NG", "NG:en", "en"), "KE": ("en-KE", "KE", "KE:en", "en"),
+    "UG": ("en-UG", "UG", "UG:en", "en"), "SN": ("fr", "SN", "SN:fr", "fr"),
+    # Latin America (source)
+    "BR": ("pt-BR", "BR", "BR:pt-419", "pt"), "MX": ("es-419", "MX", "MX:es-419", "es"), "CO": ("es-419", "CO", "CO:es-419", "es"),
+    "PE": ("es-419", "PE", "PE:es-419", "es"), "AR": ("es-419", "AR", "AR:es-419", "es"),
+    # Demand and transit markets
+    "US": ("en-US", "US", "US:en", "en"), "GB": ("en-GB", "GB", "GB:en", "en"), "FR": ("fr", "FR", "FR:fr", "fr"),
+    "AU": ("en-AU", "AU", "AU:en", "en"), "HK": ("en-HK", "HK", "HK:en", "en"),
+}
+LOCAL_CUES = {
+    "en": "(seized OR arrested OR smuggling OR trafficking)", "hi": "(जब्त OR गिरफ्तार OR तस्करी)",
+    "vi": "(bắt giữ OR buôn lậu)", "id_ms": "(disita OR ditangkap OR penyelundupan)",
+    "pt": "(apreensão OR apreendidos OR resgata OR tráfico)", "es": "(decomiso OR incautan OR detenidos OR tráfico)",
+    "fr": "(saisie OR arrêtés OR trafic)",
 }
 
 
 def collect_gnews(editions: list[str] | None = None, when: str = "30d") -> list[Record]:
     """Google News RSS search. OPT-IN: Google's feed terms allow personal,
     non-commercial use only. Enable deliberately (``--gnews``) for research runs,
-    and publish only derived facts (event, species, place), never the feed itself."""
+    and publish only derived facts (event, species, place), never the feed itself.
+    Each edition is searched in its own language where the lexicon has terms."""
     recs = []
+    lex = lexicon.load()["groups"]
     for ed in editions or ["IN"]:
-        hl, gl, ceid = GNEWS_EDITIONS[ed]
-        lang = "hi" if ed.endswith("-hi") else "vi" if ed == "VN" else "id_ms" if ed in ("ID", "MY") else "en"
-        for gid, terms in lexicon.search_terms().items():
-            local = [t for t in (lexicon.load()["groups"][gid]["terms"].get(lang) or [])][:3] or terms[:3]
-            q = "(" + " OR ".join(f'"{t}"' for t in local) + ") (seized OR arrested OR smuggling OR जब्त) when:" + when
+        hl, gl, ceid, lang = GNEWS_EDITIONS[ed]
+        cue = LOCAL_CUES.get(lang, LOCAL_CUES["en"])
+        for gid, g in lex.items():
+            local = [t for t in (g["terms"].get(lang) or []) if len(t) > 3][:3]
+            if not local and lang != "en":
+                continue  # nothing to say in this language: the English editions cover it
+            terms = local or [t for t in g["terms"].get("en", []) if len(t) > 4][:3]
+            if not terms:
+                continue
+            q = "(" + " OR ".join(f'"{t}"' for t in terms) + f") {cue} when:{when}"
             url = f"https://news.google.com/rss/search?q={quote_plus(q)}&hl={hl}&gl={gl}&ceid={ceid}"
             r = get(url, delay=3, check_robots=False)
             got = parse(r.content, "gnews", gl, "news", q) if r is not None and r.ok else []
-            print(f"  gnews {ed} {gid}: {len(got)}")
+            if got:
+                print(f"  gnews {ed} {gid}: {len(got)}")
             recs += got
     return recs

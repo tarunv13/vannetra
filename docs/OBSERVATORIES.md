@@ -1,7 +1,7 @@
 # The observatory network
 
-VanNetra is one observatory among many. This document explains what the others
-do, how each one feeds VanNetra's pipeline and design, and which principles the
+Pugmark is one observatory among many. This document explains what the others
+do, how each one feeds Pugmark's pipeline and design, and which principles the
 project takes from them. The machine-readable registry is
 [`pipeline/vannetra/resources/observatories.yaml`](../pipeline/vannetra/resources/observatories.yaml).
 The site's **Network** section renders it.
@@ -12,7 +12,7 @@ The registry combines three inputs:
 
 1. the project owner's spreadsheet `illegal_wildlife_trade_observatories_comprehensive_2026.xlsx` (15 rows),
 2. notes from a Google Gemini conversation (September 2026),
-3. VanNetra's own collector registry (`sources.yaml`).
+3. Pugmark's own collector registry (`sources.yaml`).
 
 Inputs 1 and 2 were produced by a language model, so on 2026-09-22 every entry
 was re-checked. The HTTP status was tested, and the page was read to see whether
@@ -31,7 +31,7 @@ and shown on its card:
 | Wildlife Sentinel | aviation reporting app | no official page found: kept as **unverified** |
 | Codewords ("striped T-shirt", "four-wheeler", "teh", "penny" …) | "verified public list" | no primary source found: **watchlist only** |
 
-## How each kind of observatory feeds VanNetra
+## How each kind of observatory feeds Pugmark
 
 | Stage | What happens | Observatories that inform it |
 |---|---|---|

@@ -40,7 +40,9 @@ PEOPLE_HI = re.compile(r"(?<![ऀ-ॿ\d])(\d+|" + "|".join(HINDI_NUM) + r")\s+(?
 # "Six Arrested", "2 held", "three nabbed"
 PEOPLE_SHORT = re.compile(rf"\b(\d+|{'|'.join(k for k in WORDNUM if len(k) > 2)})\s+(?:arrested|held|nabbed|detained|booked)\b", re.I)
 ROUTE = re.compile(rf"\b(?:from|originating in|sourced from)\s+({_PN})\s+(?:to|towards|for|bound for|destined for)\s+({_PN})")
-DEST = re.compile(rf"\b(?:bound for|destined for|en route to|meant for|to be smuggled (?:in)?to|smuggled (?:in)?to)\s+({_PN})")
+DEST = re.compile(rf"\b(?:bound for|destined for|destined to|en route to|headed (?:for|to)|heading (?:for|to)|meant for|to be sent to|"
+                  rf"to be smuggled (?:in)?to|smuggled (?:in)?to|being taken to|com destino (?:a|ao|à)|con destino (?:a|al)|"
+                  rf"à destination de)\s+({_PN})")
 
 
 AGENCY_CANON = {
@@ -60,6 +62,12 @@ class Place:
     admin1: str
     lat: float
     lon: float
+    pop: int = 0
+
+
+# South and Southeast Asia (dense coverage, towns >= 1,000 people). Elsewhere the
+# gazetteer holds towns >= 15,000, and small one-word towns need their country named.
+ASIA = {"IN", "NP", "BD", "LK", "BT", "PK", "MM", "TH", "VN", "LA", "KH", "MY", "SG", "ID", "PH", "CN", "HK", "AE"}
 
 
 _WORD = re.compile(r"[A-Za-zÀ-ɏ][\w'À-ɏ-]*")
@@ -81,7 +89,8 @@ def _gazetteer_all() -> tuple[dict[str, list[Place]], list[tuple[str, Place]]]:
             continue
         with open(path, encoding="utf-8") as f:
             for r in csv.DictReader(f):
-                p = Place(r["name"], r["type"], r["country"], r["admin1"], float(r["lat"]), float(r["lon"]))
+                p = Place(r["name"], r["type"], r["country"], r["admin1"], float(r["lat"]), float(r["lon"]),
+                          int(r.get("population") or 0) if fname != "gazetteer.csv" else 10**7)
                 if r["type"] == "state" and fname != "gazetteer.csv":
                     # GeoNames state rows exist only to carry native names; point them at
                     # the curated state entry so both spellings resolve to one place.
@@ -148,6 +157,13 @@ def find_places(text: str, country_hint: str = "") -> list[tuple[int, Place]]:
     matches a town called Star."""
     idx = gazetteer()
     words = [(m.start(), m.end(), m.group(0)) for m in _WORD.finditer(text)]
+    # Countries named anywhere in the text disambiguate homonyms elsewhere in it
+    # ("Santa Cruz … Bolivia" is the Bolivian one, not the Philippine town).
+    named_cc = {p.country for w in words for p in idx.get(w[2].lower(), []) if p.type == "country"}
+    for a in range(len(words) - 1):
+        for p in idx.get(f"{words[a][2]} {words[a + 1][2]}".lower(), []):
+            if p.type == "country":
+                named_cc.add(p.country)
     found: dict[str, tuple[int, Place]] = {}
     i = 0
     while i < len(words):
@@ -160,7 +176,11 @@ def find_places(text: str, country_hint: str = "") -> list[tuple[int, Place]]:
             span = text[words[i][0]:words[i + n - 1][1]]
             cands = idx.get(span.lower())
             if cands:
-                pick = next((c for c in cands if c.country == country_hint), cands[0])
+                pick = next((c for c in cands if c.country in named_cc), None) or                     next((c for c in cands if c.country == country_hint), cands[0])
+                # A small one-word town outside Asia is too often an ordinary word ("Time",
+                # "Normal", "Lens"): accept it only when the report also names its country.
+                if n == 1 and pick.type == "city" and pick.country not in ASIA and pick.pop < 100_000                         and pick.country not in named_cc and pick.country != country_hint:
+                    continue
                 hit = (n, pick)
                 break
         if hit:
@@ -300,6 +320,8 @@ def extract(rec: Record) -> Event:
             if not any(a < m.end() and m.start() < b for a, b, _ in hits):
                 hits.append((m.start(), m.end(), m))
     for _, _, m in sorted(hits, key=lambda h: h[0]):  # text order: headline quantities lead
+        if _num(m.group(1)) <= 0:
+            continue
         ev.quantities.append({"value": _num(m.group(1)), "unit": m.group(2).lower()})
         ev.evidence.append(m.group(0))
     m = MONEY.search(text)

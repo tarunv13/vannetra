@@ -168,6 +168,17 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
     for c in cases:
         c["summary"] = scrub(c["summary"])
 
+    # Coordinates for both ends of reported routes (the map draws them as arcs).
+    from .extract.events import gazetteer as _gaz
+    gz = _gaz()
+    def _pt(name):
+        hit = gz.get(name.lower())
+        return [hit[0].lon, hit[0].lat] if hit else None
+    for c in cases:
+        if len(c.get("route") or []) == 2:
+            a, b = _pt(c["route"][0]), _pt(c["route"][1])
+            c["route_coords"] = [a, b] if a and b else None
+
     G = graph.build(cases)
     assert_public_safe(cases, "cases")
 
@@ -199,6 +210,13 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
 
     _dump("cases.json", cases); _dump("cases.geojson", geo); _dump("stats.json", s)
     _dump("species.json", species_meta); _dump("sources.json", registry); _dump("meta.json", meta)
+    # Country index: code -> name + capital point + bounding box of its cases.
+    countries = {}
+    for places in gz.values():
+        for pl in places:
+            if pl.type == "country" and pl.country not in countries:
+                countries[pl.country] = {"name": pl.name, "lon": pl.lon, "lat": pl.lat}
+    _dump("countries.json", countries)
     obs = yaml.safe_load((RESOURCES / "observatories.yaml").read_text(encoding="utf-8"))
     _dump("observatories.json", obs)
     _dump("codewords.json", [{k: v for k, v in c.items()} for c in lexicon.codewords()])

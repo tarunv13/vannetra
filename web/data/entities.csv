@@ -1,243 +1,571 @@
 id,type,label,lat,lon,degree,betweenness
-case:acf76a2149d7,Case,Seizure · Rhinoceros · Biswanath,,,9,0.05502
-species:rhino,Species,Rhinoceros,,,2,0.00333
-location:biswanath,Location,Biswanath,26.7246,93.1453,2,0.00259
-location:assam,Location,Assam,,,4,0.00567
-agency:police,Agency,Police,,,5,0.09939
-outlet:g_plus_news,Outlet,G Plus News,,,2,0.00585
+case:ca0ec9727950,Case,Seizure · Eels · location unknown,,,2,0.00542
+species:eels,Species,Eels,,,3,0.01831
+outlet:actu.fr,Outlet,Actu.fr,,,2,0.00477
+case:8a20d9c303ae,Case,Rescue · Parrots & songbirds · Peru,,,3,0.01009
+species:birds,Species,Parrots & songbirds,,,29,0.23586
+location:peru,Location,Peru,-12.0432,-77.0282,1,0.0
+outlet:mix_vale,Outlet,Mix Vale,,,1,0.0
+case:acf76a2149d7,Case,Seizure · Rhinoceros · Biswanath,,,9,0.02504
+species:rhino,Species,Rhinoceros,,,3,0.00734
+location:biswanath,Location,Biswanath,26.7246,93.1453,2,0.00086
+location:assam,Location,Assam,,,5,0.00612
+agency:police,Agency,Police,,,8,0.13043
+outlet:g_plus_news,Outlet,G Plus News,,,2,0.00121
 outlet:the_assam_tribune,Outlet,The Assam Tribune,,,1,0.0
 outlet:newslivetv.com,Outlet,newslivetv.com,,,1,0.0
-outlet:pratidin_time,Outlet,Pratidin Time,,,2,0.00585
-outlet:sentinelassam.com,Outlet,sentinelassam.com,,,2,0.00333
+outlet:pratidin_time,Outlet,Pratidin Time,,,2,0.00121
+outlet:sentinelassam.com,Outlet,sentinelassam.com,,,2,0.00055
 "outlet:the_sentinel_-_of_this_land,_for_its_people",Outlet,"The Sentinel - of this Land, for its People",,,1,0.0
-case:258ece6e1381,Case,Arrest · Monitor lizard · Pune,,,3,0.02934
-species:monitor_lizard,Species,Monitor lizard,,,5,0.05605
-location:pune,Location,Pune,18.52,73.86,2,0.00867
-location:maharashtra,Location,Maharashtra,,,2,0.00139
-outlet:the_indian_express,Outlet,The Indian Express,,,2,0.03305
-case:8ec3f8856149,Case,Seizure · Tokay gecko · 30 geckos · Golaghat,,,10,0.05851
-species:tokay_gecko,Species,Tokay gecko,,,3,0.00818
-location:golaghat,Location,Golaghat,26.4092,93.9119,2,0.00547
-outlet:india_today_ne,Outlet,India Today NE,,,3,0.00818
-outlet:hub_news,Outlet,Hub News,,,2,0.00553
-outlet:the_times_of_india,Outlet,The Times of India,,,14,0.28253
+case:258ece6e1381,Case,Arrest · Monitor lizard · Pune,,,3,0.01086
+species:monitor_lizard,Species,Monitor lizard,,,5,0.03611
+location:pune,Location,Pune,18.52,73.86,2,0.0041
+location:maharashtra,Location,Maharashtra,,,2,0.00022
+outlet:the_indian_express,Outlet,The Indian Express,,,2,0.01059
+case:7f72eb9db098,Case,Arrest · Abalone · location unknown,,,2,0.00505
+species:abalone,Species,Abalone,,,4,0.02057
+outlet:the_inertia,Outlet,The Inertia,,,1,0.0
+case:dedd4e6f362f,Case,Seizure · Elephant (ivory) · Gabon,,,3,0.00679
+species:elephant,Species,Elephant (ivory),,,34,0.21924
+location:gabon,Location,Gabon,0.3924,9.4536,1,0.0
+outlet:direct_infos_gabon,Outlet,Direct Infos Gabon,,,1,0.0
+case:dfa0386d4056,Case,Seizure · Elephant (ivory) · 3642 kg · location unknown,,,3,0.00534
+outlet:mznews.co.mz,Outlet,mznews.co.mz,,,1,0.0
+commodity:elephant-kg,Commodity,Elephant (ivory) – kg,,,2,0.00046
+case:d7b57a4b4a74,Case,Seizure · Tokay gecko · 30 geckos · Golaghat,,,13,0.02498
+species:tokay_gecko,Species,Tokay gecko,,,3,0.00443
+location:golaghat,Location,Golaghat,26.4092,93.9119,2,0.00092
+agency:customs,Agency,Customs,,,3,0.00171
+agency:forest_department,Agency,Forest Department,,,10,0.06284
+outlet:timesofindia.indiatimes.com,Outlet,timesofindia.indiatimes.com,,,4,0.01233
+outlet:india_today_ne,Outlet,India Today NE,,,2,0.00159
+outlet:hub_news,Outlet,Hub News,,,2,0.00159
+outlet:the_times_of_india,Outlet,The Times of India,,,13,0.07843
 outlet:nagaland_post,Outlet,Nagaland Post,,,1,0.0
 outlet:mid-day,Outlet,Mid-Day,,,1,0.0
-commodity:tokay_gecko-geckos,Commodity,Tokay gecko – geckos,,,2,0.00013
-case:20fa6c4ba6dd,Case,Arrest · Elephant (ivory) · Odisha,,,4,0.04793
-species:elephant,Species,Elephant (ivory),,,9,0.16544
-location:odisha,Location,Odisha,20.95,85.1,5,0.02141
-agency:forest_department,Agency,Forest Department,,,3,0.02588
-outlet:odisha_tv,Outlet,Odisha TV,,,3,0.03771
-case:24b489bdb22d,Case,Seizure · Turtles & tortoises · 18 tortoises · Surat,,,4,0.0176
-species:turtles,Species,Turtles & tortoises,,,14,0.19635
-location:surat,Location,Surat,21.17,72.83,2,0.00052
-location:gujarat,Location,Gujarat,,,3,0.00581
-outlet:the_new_indian_express,Outlet,The New Indian Express,,,4,0.02043
-commodity:turtles-tortoises,Commodity,Turtles & tortoises – tortoises,,,2,0.00041
-case:7f922769cd16,Case,Seizure · Turtles & tortoises · Ahmedabad,,,3,0.01364
-location:ahmedabad,Location,Ahmedabad,23.02,72.57,2,0.00064
+commodity:tokay_gecko-geckos,Commodity,Tokay gecko – geckos,,,2,0.00159
+case:2ac1f7cdaaa2,Case,Seizure · Parrots & songbirds · Alto Alegre,,,3,0.00851
+location:alto_alegre,Location,Alto Alegre,2.8958,-61.4975,2,0.00174
+location:roraima,Location,Roraima,,,1,0.0
+outlet:extraderondonia.com.br,Outlet,Extraderondonia.com.br,,,1,0.0
+case:20fa6c4ba6dd,Case,Arrest · Elephant (ivory) · Odisha,,,4,0.01602
+location:odisha,Location,Odisha,20.95,85.1,6,0.01501
+outlet:odisha_tv,Outlet,Odisha TV,,,3,0.00395
+case:9d1a5e85b3ce,Case,Arrest · Elephant (ivory) · Bouaflé,,,3,0.01108
+location:bouaflé,Location,Bouaflé,6.9904,-5.7442,2,0.00505
+location:sassandra-marahoue,Location,Sassandra-Marahoue,,,1,0.0
+outlet:agence_ivoirienne_de_presse_(aip),Outlet,Agence Ivoirienne de Presse (AIP),,,5,9e-05
+case:7e54199f79d9,Case,Rescue · Parrots & songbirds · Florianópolis,,,3,0.00852
+location:florianópolis,Location,Florianópolis,-27.5967,-48.5492,2,0.00504
+location:santa_catarina,Location,Santa Catarina,,,1,0.0
+outlet:sctododia,Outlet,sctododia,,,1,0.0
+case:a092eb1a99df,Case,Arrest · Turtles & tortoises · Chihuahua,,,3,0.00679
+species:turtles,Species,Turtles & tortoises,,,32,0.36585
+location:chihuahua,Location,Chihuahua,28.6353,-106.0889,1,0.0
+outlet:el_congresista,Outlet,El Congresista,,,1,0.0
+case:4a88229921e8,Case,Seizure · Turtles & tortoises · 18 tortoises · Surat,,,4,0.01282
+location:surat,Location,Surat,21.17,72.83,2,0.00097
+location:gujarat,Location,Gujarat,,,3,0.00159
+outlet:the_new_indian_express,Outlet,The New Indian Express,,,5,0.01928
+commodity:turtles-tortoises,Commodity,Turtles & tortoises – tortoises,,,2,0.00022
+case:20dd00e2cd3d,Case,Seizure · Primates · India,,,3,0.00344
+species:primates,Species,Primates,,,11,0.04373
+location:india,Location,India,22.35,78.67,5,0.00413
+outlet:easterneye,Outlet,EasternEye,,,1,0.0
+case:48ca994d01e7,Case,Seizure · Turtles & tortoises · location unknown,,,2,0.00505
+outlet:tupãcity,Outlet,TupãCity,,,1,0.0
+case:34b0e9231bf3,Case,Arrest · Parrots & songbirds · location unknown,,,2,0.00058
+outlet:repórter_beto_ribeiro,Outlet,Repórter Beto Ribeiro,,,3,2e-05
+case:7f922769cd16,Case,Seizure · Turtles & tortoises · Ahmedabad,,,3,0.00953
+location:ahmedabad,Location,Ahmedabad,23.02,72.57,2,0.00097
 outlet:ahmedabadmirror.com,Outlet,ahmedabadmirror.com,,,1,0.0
-case:f02ca5813399,Case,Arrest · Turtles & tortoises · Odisha,,,3,0.01351
-outlet:jagran.com,Outlet,jagran.com,,,4,0.00764
-case:e2ae0defe434,Case,Seizure · Primates · location unknown,,,2,0.00345
-species:primates,Species,Primates,,,5,0.07318
-case:64c4b612a64f,Case,Arrest · Turtles & tortoises · Belimbing,,,3,0.02476
-location:belimbing,Location,Belimbing,-2.9823,115.3502,2,0.0083
+case:f02ca5813399,Case,Arrest · Turtles & tortoises · Odisha,,,3,0.01294
+outlet:jagran.com,Outlet,jagran.com,,,4,0.00477
+case:123c3466bfdd,Case,Seizure · Rosewood & timber · 1400 tonne · Abuja,,,21,0.09276
+species:rosewood,Species,Rosewood & timber,,,5,0.06534
+location:abuja,Location,Abuja,9.0579,7.4951,2,0.00504
+location:fct,Location,FCT,,,1,0.0
+agency:interpol,Agency,INTERPOL,,,1,0.0
+outlet:vanguard_news,Outlet,Vanguard News,,,1,0.0
+outlet:wansom_ai,Outlet,Wansom AI,,,4,0.0409
+outlet:thecable,Outlet,TheCable,,,1,0.0
+outlet:ait_live,Outlet,AIT LIVE,,,1,0.0
+outlet:tvc_news,Outlet,TVC News,,,1,0.0
+outlet:sahara_reporters,Outlet,Sahara Reporters,,,1,0.0
+outlet:nairametrics,Outlet,Nairametrics,,,1,0.0
+outlet:national_accord_newspaper,Outlet,National Accord Newspaper,,,1,0.0
+outlet:ua.news,Outlet,UA.NEWS,,,1,0.0
+outlet:thefact.ng,Outlet,thefact.ng,,,1,0.0
+outlet:thisdaylive,Outlet,THISDAYLIVE,,,1,0.0
+outlet:premium_times_nigeria,Outlet,Premium Times Nigeria,,,1,0.0
+outlet:thestreetjournal.org,Outlet,thestreetjournal.org,,,1,0.0
+outlet:thestar.ng,Outlet,thestar.ng,,,1,0.0
+outlet:tori_news,Outlet,Tori News,,,1,0.0
+outlet:the_china-global_south_project,Outlet,The China-Global South Project,,,1,0.0
+commodity:rosewood-tonne,Commodity,Rosewood & timber – tonne,,,1,0.0
+case:83b377a8135b,Case,Seizure · Parrots & songbirds · Paulo Afonso,,,6,0.01702
+location:paulo_afonso,Location,Paulo Afonso,-9.4061,-38.2147,2,0.00174
+location:bahia,Location,Bahia,,,1,0.0
+outlet:www.gov.br,Outlet,www.gov.br,,,1,0.0
+outlet:bahia.ba,Outlet,bahia.ba,,,1,0.0
+outlet:folha_do_estado_da_bahia,Outlet,Folha do Estado da Bahia,,,1,0.0
+outlet:se_liga_chapada,Outlet,Se Liga Chapada,,,1,0.0
+case:0b7bdd8b980f,Case,Rescue · Parrots & songbirds · location unknown,,,2,0.00505
+outlet:correio_braziliense,Outlet,Correio Braziliense,,,1,0.0
+case:b0b0a19c8179,Case,Rescue · Parrots & songbirds · São Lourenço da Mata,,,3,0.00852
+location:são_lourenço_da_mata,Location,São Lourenço da Mata,-8.0022,-35.0183,2,0.00174
+location:pernambuco,Location,Pernambuco,,,1,0.0
+outlet:portal_de_prefeitura,Outlet,Portal de Prefeitura,,,1,0.0
+case:54eec680d114,Case,Seizure · Parrots & songbirds · Linhares,,,3,0.00658
+location:linhares,Location,Linhares,-19.3911,-40.0722,2,0.00066
+location:espírito_santo,Location,Espírito Santo,,,2,0.00083
+outlet:colatina_em_ação,Outlet,Colatina em Ação,,,1,0.0
+case:18c7cfde3a79,Case,Conviction · Elephant (ivory) · location unknown,,,2,0.00174
+outlet:kdrtv,Outlet,KDRTV,,,1,0.0
+case:90d3ead851bf,Case,Arrest · Turtles & tortoises · Kuala Lumpur,,,3,0.00545
+location:kuala_lumpur,Location,Kuala Lumpur,3.14,101.69,1,0.0
+outlet:kompas.com,Outlet,Kompas.com,,,3,0.00204
+case:31df77731c2b,Case,Arrest · Turtles & tortoises · Sorong,,,3,0.00719
+location:sorong,Location,Sorong,-0.8796,131.261,2,0.00504
+location:southwest_papua,Location,Southwest Papua,,,1,0.0
+case:5408614510b3,Case,Arrest · Turtles & tortoises · Malang,,,3,0.00852
+location:malang,Location,Malang,-7.9797,112.6304,2,0.00174
+location:east_java,Location,East Java,,,1,0.0
+outlet:disway_malang,Outlet,Disway Malang,,,1,0.0
+case:0f7f2779d5ee,Case,Arrest · Turtles & tortoises · Purworejo,,,3,0.01268
+location:purworejo,Location,Purworejo,-7.7114,110.0103,2,0.00288
+location:central_java,Location,Central Java,,,2,0.00036
+outlet:radar_purworejo,Outlet,Radar Purworejo,,,1,0.0
+case:aa1e17a28717,Case,Arrest · Turtles & tortoises · China,,,3,0.00678
+location:china,Location,China,35.86,104.2,1,0.0
+outlet:merdeka,Outlet,Merdeka,,,1,0.0
+case:375a257611f4,Case,Seizure · Elephant (ivory) · Libreville,,,3,0.00851
+location:libreville,Location,Libreville,0.3924,9.4536,2,0.00174
+location:estuaire,Location,Estuaire,,,1,0.0
+outlet:gabonreview.com,Outlet,Gabonreview.com,,,1,0.0
+case:76c70fb062a4,Case,Seizure · Parrots & songbirds · Miguel Pereira,,,3,0.01724
+location:miguel_pereira,Location,Miguel Pereira,-22.4539,-43.4689,2,0.00505
+location:rio_de_janeiro,Location,Rio de Janeiro,,,1,0.0
+outlet:g1,Outlet,G1,,,4,0.03172
+case:e2ae0defe434,Case,Seizure · Primates · location unknown,,,2,0.00212
+case:462b166cf0b4,Case,Arrest · Turtles & tortoises · Belimbing,,,4,0.0168
+location:belimbing,Location,Belimbing,-2.9823,115.3502,2,0.00505
 location:south_kalimantan,Location,South Kalimantan,,,1,0.0
 outlet:viva.co.id,Outlet,VIVA.co.id,,,1,0.0
-case:912a6be42942,Case,Seizure · Primates · Digha,,,3,0.02476
-location:digha,Location,Digha,21.6278,87.5196,2,0.0083
+outlet:jawa_pos,Outlet,Jawa Pos,,,1,0.0
+case:4241398a9df2,Case,Seizure · Primates · location unknown,,,2,0.00174
+outlet:times_now,Outlet,Times Now,,,1,0.0
+case:fdff665b3141,Case,Arrest · Turtles & tortoises · Makassar,,,18,0.05696
+location:makassar,Location,Makassar,-5.1486,119.4319,2,0.00504
+location:south_sulawesi,Location,South Sulawesi,,,1,0.0
+outlet:antara_news,Outlet,ANTARA News,,,2,0.00338
+outlet:kompas.id,Outlet,Kompas.id,,,2,0.00339
+outlet:metrotvnews.com,Outlet,MetroTVNews.com,,,1,0.0
+outlet:suarasulsel.id,Outlet,Suarasulsel.id,,,1,0.0
+outlet:tribun-timur.com,Outlet,Tribun-timur.com,,,1,0.0
+outlet:cedarnews.net,Outlet,cedarnews.net,,,1,0.0
+outlet:pdiperjuanganbali.id,Outlet,pdiperjuanganbali.id,,,2,0.00339
+outlet:nusabali.com,Outlet,NUSABALI.com,,,1,0.0
+outlet:news.okezone.com,Outlet,news.okezone.com,,,1,0.0
+outlet:afu.id,Outlet,AFU.id,,,1,0.0
+outlet:sorongraya.co,Outlet,Sorongraya.co,,,1,0.0
+outlet:abatanews.com,Outlet,abatanews.com,,,1,0.0
+outlet:portal_papua,Outlet,Portal Papua,,,1,0.0
+outlet:tribun-sulbar.com,Outlet,Tribun-sulbar.com,,,1,0.0
+outlet:idn_times,Outlet,IDN Times,,,1,0.0
+outlet:inews.id,Outlet,iNews.ID,,,2,0.0034
+case:247c1b7e48a9,Case,Seizure · Eels · location unknown,,,3,0.00679
+outlet:ouest-france,Outlet,Ouest-France,,,1,0.0
+outlet:maville.com,Outlet,MaVille.com,,,1,0.0
+case:bdaf2b011a40,Case,Rescue · Parrots & songbirds · location unknown,,,2,0.00174
+outlet:rbatv.com.br,Outlet,rbatv.com.br,,,1,0.0
+case:42c9b640b15d,Case,Rescue · Parrots & songbirds · Cruz Alta,,,4,0.01355
+location:cruz_alta,Location,Cruz Alta,-28.644,-53.6063,2,0.00174
+location:rio_grande_do_sul,Location,Rio Grande do Sul,,,1,0.0
+outlet:rd_foco,Outlet,RD Foco,,,1,0.0
+outlet:carazinho_news,Outlet,Carazinho News,,,1,0.0
+case:85d2392028ce,Case,Arrest · Parrots & songbirds · location unknown,,,3,0.06376
+mode:online,Mode,Online,,,4,0.14186
+outlet:tvbv_online,Outlet,TVBV ONLINE,,,1,0.0
+case:0cb15ec18e39,Case,Seizure · Rosewood & timber · Trairão,,,3,0.01182
+location:trairão,Location,Trairão,-4.5744,-55.9436,2,0.00504
+location:pará,Location,Pará,,,1,0.0
+outlet:portalgurupi.com.br,Outlet,portalgurupi.com.br,,,1,0.0
+case:912a6be42942,Case,Seizure · Primates · Digha,,,3,0.00453
+location:digha,Location,Digha,21.6278,87.5196,3,0.00506
 location:west_bengal,Location,West Bengal,,,1,0.0
 outlet:the_daily_jagran,Outlet,The Daily Jagran,,,1,0.0
-case:f720ab255ab9,Case,Seizure · Primates · Jharkhand,,,3,0.0148
+case:f720ab255ab9,Case,Seizure · Primates · Jharkhand,,,3,0.00611
 location:jharkhand,Location,Jharkhand,23.61,85.28,2,0.00368
 outlet:argus_english,Outlet,Argus English,,,1,0.0
-case:1332d6d98d34,Case,Arrest · Turtles & tortoises · Raja Ampat,,,4,0.03295
-location:raja_ampat,Location,Raja Ampat,-0.5,130.6,2,0.0083
+case:7dfb3179ae46,Case,Seizure · Turtles & tortoises · Raja Ampat,,,30,0.19308
+location:raja_ampat,Location,Raja Ampat,-0.5,130.6,2,0.00174
 location:west_papua,Location,West Papua,,,1,0.0
-outlet:kompas.id,Outlet,Kompas.id,,,1,0.0
+outlet:cnn_indonesia,Outlet,CNN Indonesia,,,1,0.0
+outlet:reqnews.com,Outlet,reqnews.com,,,1,0.0
 outlet:dive_magazine,Outlet,DIVE Magazine,,,1,0.0
-case:c942be9e44ec,Case,Seizure · Pangolin · 352 scales · Malkangiri,,,9,0.06243
-species:pangolin,Species,Pangolin,,,10,0.18723
-location:malkangiri,Location,Malkangiri,18.25,81.95,2,0.00194
+outlet:detiknews,Outlet,detikNews,,,1,0.0
+outlet:detikcom,Outlet,detikcom,,,2,0.0065
+outlet:detiktravel,Outlet,detikTravel,,,1,0.0
+outlet:republika_online,Outlet,Republika Online,,,1,0.0
+outlet:validnews.id,Outlet,Validnews.id,,,1,0.0
+outlet:kumparan.com,Outlet,Kumparan.com,,,1,0.0
+outlet:beritasatu.com,Outlet,BeritaSatu.com,,,1,0.0
+outlet:darilaut.id,Outlet,Darilaut.id,,,1,0.0
+outlet:harapan_rakyat,Outlet,Harapan Rakyat,,,1,0.0
+outlet:tribunstyle.com,Outlet,TribunStyle.com,,,1,0.0
+outlet:disway,Outlet,Disway,,,1,0.0
+outlet:tribunnews.com,Outlet,Tribunnews.com,,,1,0.0
+outlet:sumsel.tribunnews.com,Outlet,sumsel.tribunnews.com,,,1,0.0
+outlet:ntvnews.id,Outlet,ntvnews.id,,,1,0.0
+outlet:tribunkaltim.co,Outlet,Tribunkaltim.co,,,1,0.0
+outlet:video.tribunnews.com,Outlet,video.tribunnews.com,,,1,0.0
+outlet:radarcirebon.tv,Outlet,radarcirebon.tv,,,1,0.0
+outlet:tribunwow.com,Outlet,TribunWow.com,,,1,0.0
+outlet:readers.id,Outlet,Readers.id,,,1,0.0
+outlet:banjarnegaraku,Outlet,Banjarnegaraku,,,1,0.0
+case:5186ec935866,Case,Seizure · Elephant (ivory) · location unknown,,,3,0.00678
+outlet:tf1_info,Outlet,TF1 Info,,,1,0.0
+outlet:tf1+,Outlet,TF1+,,,1,0.0
+case:7aad31d98610,Case,Rescue · Turtles & tortoises · location unknown,,,2,0.00505
+outlet:apnoticias.pe,Outlet,apnoticias.pe,,,1,0.0
+case:ea5886ff462e,Case,Rescue · Turtles & tortoises · Guadalajara,,,3,0.01179
+location:guadalajara,Location,Guadalajara,20.6774,-103.3475,2,0.00505
+location:jalisco,Location,Jalisco,,,1,0.0
+outlet:debate.com.mx,Outlet,debate.com.mx,,,1,0.0
+case:c942be9e44ec,Case,Seizure · Pangolin · 352 scales · Malkangiri,,,10,0.03399
+species:pangolin,Species,Pangolin,,,18,0.17765
+location:malkangiri,Location,Malkangiri,18.25,81.95,2,0.00038
 outlet:pragativadi.com,Outlet,pragativadi.com,,,1,0.0
-outlet:daily_pioneer,Outlet,Daily Pioneer,,,2,0.00838
-outlet:ommcom_news,Outlet,Ommcom News,,,3,0.0139
+outlet:daily_pioneer,Outlet,Daily Pioneer,,,2,0.00191
+outlet:ommcom_news,Outlet,Ommcom News,,,4,0.00486
 outlet:hindustan,Outlet,Hindustan,,,1,0.0
-outlet:theprint_hindi,Outlet,ThePrint Hindi,,,2,0.00257
+outlet:theprint_hindi,Outlet,ThePrint Hindi,,,2,0.00108
 commodity:pangolin-scales,Commodity,Pangolin – scales,,,1,0.0
-case:f48719f59515,Case,Arrest · Turtles & tortoises · 30 tortoises · location unknown,,,3,0.01165
+case:5c2b96107f6a,Case,Seizure · Turtles & tortoises · France,,,3,0.00679
+location:france,Location,France,48.8534,2.3488,1,0.0
+outlet:france_3_régions,Outlet,France 3 Régions,,,1,0.0
+case:f1fd10087674,Case,Seizure · Parrots & songbirds · location unknown,,,2,0.00058
+case:f48719f59515,Case,Arrest · Turtles & tortoises · 30 tortoises · location unknown,,,3,0.00563
 outlet:newvision.co.ug,Outlet,NewVision.co.ug,,,1,0.0
-case:a453459d8c02,Case,Seizure · Turtles & tortoises · Rānchī,,,3,0.01415
-location:rānchī,Location,Rānchī,23.3313,85.3708,2,0.00534
-case:aac12945efc9,Case,Conviction · Elephant (ivory) · Kalimantan,,,4,0.02058
+case:a453459d8c02,Case,Seizure · Turtles & tortoises · Rānchī,,,3,0.00793
+location:rānchī,Location,Rānchī,23.3313,85.3708,2,0.00435
+case:4ca690784cf1,Case,Seizure · Primates · Digha,,,3,0.00431
+outlet:pragativadi,Outlet,Pragativadi,,,3,0.00293
+case:9316ece6cbf5,Case,Seizure · Primates · location unknown,,,3,0.00167
+agency:cbi,Agency,CBI,,,2,0.00054
+case:f85eb2a6adc5,Case,Seizure · Elephant (ivory) · location unknown,,,2,0.00099
+case:aac12945efc9,Case,Conviction · Elephant (ivory) · Kalimantan,,,4,0.00598
 location:kalimantan,Location,Kalimantan,-0.28,114.59,1,0.0
-mode:sea,Mode,Sea,,,2,0.00024
+mode:sea,Mode,Sea,,,2,2e-05
 outlet:borneo_bulletin,Outlet,Borneo Bulletin,,,1,0.0
-case:88dbf923de71,Case,"Seizure · Leopard, Tiger, Turtles & tortoises · location unknown",,,5,0.02203
-species:leopard,Species,Leopard,,,10,0.08221
-species:tiger,Species,Tiger,,,4,0.02332
-agency:dri,Agency,DRI,,,5,0.04329
+case:89deb6940e75,Case,Seizure · Parrots & songbirds · location unknown,,,2,0.00749
+case:8940e93f30c4,Case,Rescue · Parrots & songbirds · Caxias,,,3,0.01399
+location:caxias,Location,Caxias,-4.8589,-43.3561,2,0.00504
+location:maranhão,Location,Maranhão,,,1,0.0
+case:88dfdd3afa7e,Case,Rescue · Turtles & tortoises · Bogotá,,,3,0.00523
+location:bogotá,Location,Bogotá,4.6097,-74.0817,2,0.00174
+location:bogota_d.c.,Location,Bogota D.C.,,,1,0.0
+outlet:el_tiempo,Outlet,El Tiempo,,,1,0.0
+case:88dbf923de71,Case,"Seizure · Leopard, Tiger, Turtles & tortoises · location unknown",,,5,0.01918
+species:leopard,Species,Leopard,,,10,0.03364
+species:tiger,Species,Tiger,,,4,0.00618
+agency:dri,Agency,DRI,,,5,0.02188
 outlet:republic_world,Outlet,Republic World,,,1,0.0
-case:677f09516d1e,Case,Arrest · Elephant (ivory) · location unknown,,,2,0.01276
-case:6f243fcd7adc,Case,Conviction · Elephant (ivory) · Singapore,,,6,0.03293
-location:singapore,Location,Singapore,1.35,103.82,2,0.00016
+case:677f09516d1e,Case,Arrest · Elephant (ivory) · location unknown,,,2,0.00753
+case:6f243fcd7adc,Case,Conviction · Elephant (ivory) · Singapore,,,6,0.0168
+location:singapore,Location,Singapore,1.35,103.82,2,2e-05
 outlet:yahoo,Outlet,Yahoo,,,1,0.0
 outlet:malaymail.com,Outlet,malaymail.com,,,1,0.0
 outlet:the_independent_singapore,Outlet,The Independent Singapore,,,1,0.0
-case:849145a85e67,Case,Conviction · Elephant (ivory) · Singapore,,,3,0.01233
+case:849145a85e67,Case,Conviction · Elephant (ivory) · Singapore,,,3,0.00423
 outlet:cna,Outlet,CNA,,,1,0.0
-case:34bed7aa8d11,Case,Rescue · Parakeets & songbirds · 103 parakeets · Bangladesh,,,4,0.02479
-species:birds,Species,Parakeets & songbirds,,,2,0.03278
+case:34bed7aa8d11,Case,Rescue · Parrots & songbirds · 103 parakeets · Bangladesh,,,4,0.00853
 location:bangladesh,Location,Bangladesh,23.68,90.36,1,0.0
 outlet:bangladesh_sangbad_sangstha_(bss),Outlet,Bangladesh Sangbad Sangstha (BSS),,,1,0.0
-commodity:birds-parakeets,Commodity,Parakeets & songbirds – parakeets,,,1,0.0
-case:177b3e8bc4af,Case,"Arrest · Leopard, Turtles & tortoises · Sidhi",,,4,0.02565
-location:sidhi,Location,Sidhi,24.4038,81.8795,2,0.00356
-location:madhya_pradesh,Location,Madhya Pradesh,,,2,0.00075
-outlet:amar_ujala,Outlet,Amar Ujala,,,4,0.01783
-case:03ba66f09ea9,Case,Arrest · Elephant (ivory) · Tiruppur,,,4,0.10225
-location:tiruppur,Location,Tiruppur,11.1154,77.3546,2,0.0089
-location:tamil_nadu,Location,Tamil Nadu,,,2,0.00305
-outlet:the_hindu,Outlet,The Hindu,,,2,0.00754
-case:a687444fdb7b,Case,"Seizure · Hornbills, Primates · Bangkok",,,7,0.04436
+commodity:birds-parakeets,Commodity,Parrots & songbirds – parakeets,,,1,0.0
+case:177b3e8bc4af,Case,"Arrest · Leopard, Turtles & tortoises · Sidhi",,,4,0.01242
+location:sidhi,Location,Sidhi,24.4038,81.8795,2,0.00314
+location:madhya_pradesh,Location,Madhya Pradesh,,,2,0.00039
+outlet:amar_ujala,Outlet,Amar Ujala,,,4,0.00475
+case:1841529c6d49,Case,Seizure · Primates · Odisha,,,3,0.0022
+case:1ad7121b6d26,Case,Arrest · Abalone · location unknown,,,2,0.00458
+outlet:novanews.co.za,Outlet,novanews.co.za,,,2,0.00579
+case:d686eada9f2c,Case,Seizure · Elephant (ivory) · location unknown,,,2,0.001
+case:14964ce4d82e,Case,Conviction · Parrots & songbirds · location unknown,,,2,0.00174
+outlet:savoir_animal,Outlet,Savoir Animal,,,1,0.0
+case:af8b610b667d,Case,Rescue · Parrots & songbirds · location unknown,,,2,0.0072
+case:0acaf7f37d0a,Case,Arrest · Parrots & songbirds · location unknown,,,2,0.00504
+outlet:band.com.br,Outlet,band.com.br,,,1,0.0
+case:e4390ffa6eca,Case,Arrest · Elephant (ivory) · Tiruppur,,,5,0.03264
+location:tiruppur,Location,Tiruppur,11.1154,77.3546,2,0.00158
+location:tamil_nadu,Location,Tamil Nadu,,,4,0.00163
+outlet:the_hindu,Outlet,The Hindu,,,3,0.00634
+case:a687444fdb7b,Case,"Seizure · Hornbills, Primates · Bangkok",,,7,0.01975
 species:hornbill,Species,Hornbills,,,1,0.0
 location:bangkok,Location,Bangkok,13.76,100.5,1,0.0
-outlet:bangkok_post,Outlet,Bangkok Post,,,1,0.0
+outlet:bangkok_post,Outlet,Bangkok Post,,,2,0.00419
 outlet:pattaya_mail,Outlet,Pattaya Mail,,,1,0.0
 outlet:thaiger,Outlet,Thaiger,,,1,0.0
-case:aa20dadd1708,Case,"Seizure · Leopard, Pangolin, Turtles & tortoises · location unknown",,,4,0.02718
-outlet:pib,Outlet,PIB,,,2,0.00048
-case:701a4c78d8e9,Case,"Seizure · Leopard, Pangolin, Tiger, Tokay gecko, Turtles & tortoises · 180 live · Bengaluru",,,25,0.26807
-location:bengaluru,Location,Bengaluru,12.97,77.59,2,0.01809
-location:karnataka,Location,Karnataka,,,3,0.01282
-outlet:timesofindia.indiatimes.com,Outlet,timesofindia.indiatimes.com,,,1,0.0
-outlet:deccan_herald,Outlet,Deccan Herald,,,1,0.0
-outlet:urbanacres.in,Outlet,urbanacres.in,,,1,0.0
-outlet:orissadiary.com,Outlet,orissadiary.com,,,1,0.0
-outlet:aninews.in,Outlet,aninews.in,,,1,0.0
-outlet:the_news_mill,Outlet,The News Mill,,,2,0.02637
-outlet:inshorts,Outlet,Inshorts,,,2,0.00812
-outlet:theprint,Outlet,ThePrint,,,1,0.0
-commodity:leopard-live,Commodity,Leopard – live,,,1,0.0
-commodity:pangolin-live,Commodity,Pangolin – live,,,1,0.0
-commodity:tiger-live,Commodity,Tiger – live,,,1,0.0
-commodity:tokay_gecko-live,Commodity,Tokay gecko – live,,,1,0.0
-commodity:turtles-live,Commodity,Turtles & tortoises – live,,,1,0.0
-case:aa870014c286,Case,Seizure · Leopard · 2 skins · Nuapada,,,9,0.04463
-location:nuapada,Location,Nuapada,20.6,82.5,3,0.00906
-mode:road,Mode,Road,,,2,0.00297
-outlet:pragativadi,Outlet,Pragativadi,,,1,0.0
-outlet:prameyanews.com,Outlet,prameyanews.com,,,2,0.00422
-commodity:leopard-skins,Commodity,Leopard – skins,,,1,0.0
-case:d36338c0ca13,Case,Seizure · Leopard · Gujarat,,,5,0.02497
-case:9a9040ae9e3c,Case,Seizure · Primates · Balasore,,,31,0.31342
-location:balasore,Location,Balasore,21.4927,86.9335,2,0.00458
+case:aa20dadd1708,Case,"Seizure · Leopard, Pangolin, Turtles & tortoises · location unknown",,,4,0.02821
+outlet:pib,Outlet,PIB,,,2,0.00012
+case:9631a3ef3b77,Case,Seizure · Eels · location unknown,,,2,0.01732
+outlet:dw.com,Outlet,dw.com,,,2,0.01854
+case:d536ff827a3a,Case,Seizure · Turtles & tortoises · Madagascar,,,3,0.00678
+location:madagascar,Location,Madagascar,-18.77,46.87,1,0.0
+outlet:l'express_de_madagascar,Outlet,L'Express de Madagascar,,,1,0.0
+case:9cc38636836d,Case,Seizure · Parrots & songbirds · Vila Velha,,,5,0.07238
+location:vila_velha,Location,Vila Velha,-20.3297,-40.2925,2,0.0052
+outlet:tribuna_online,Outlet,Tribuna Online,,,1,0.0
+outlet:folha_vitória,Outlet,Folha Vitória,,,1,0.0
+case:5210eac1c5f2,Case,Arrest · Rosewood & timber · location unknown,,,2,0.03208
+case:d939f5ea5778,Case,Seizure · Parrots & songbirds · San Juan,,,3,0.01007
+location:san_juan,Location,San Juan,18.4663,-66.1057,1,0.0
+outlet:tiempo_de_san_juan,Outlet,Tiempo de San Juan,,,1,0.0
+case:09e00f227a4f,Case,"Seizure · Rosewood & timber, Turtles & tortoises · location unknown",,,3,0.02709
+outlet:newsmada,Outlet,Newsmada,,,1,0.0
+case:957aeb976ad1,Case,Seizure · Primates · Balasore,,,46,0.17639
+location:balasore,Location,Balasore,21.4927,86.9335,2,0.00069
 agency:coast_guard,Agency,Coast Guard,,,1,0.0
-agency:stf,Agency,STF,,,1,0.0
-agency:wccb,Agency,WCCB,,,1,0.0
+agency:stf,Agency,STF,,,2,0.00353
+agency:wccb,Agency,WCCB,,,3,0.00907
+mode:road,Mode,Road,,,5,0.03436
 outlet:telegraph_india,Outlet,Telegraph India,,,1,0.0
 outlet:etv_bharat,Outlet,ETV Bharat,,,1,0.0
 outlet:ians_live,Outlet,IANS LIVE,,,1,0.0
-outlet:dw.com,Outlet,dw.com,,,1,0.0
+outlet:ndtv,Outlet,NDTV,,,1,0.0
+outlet:hindustantimes.com,Outlet,hindustantimes.com,,,1,0.0
+outlet:bbc,Outlet,BBC,,,1,0.0
 outlet:devdiscourse,Outlet,Devdiscourse,,,1,0.0
 outlet:down_to_earth,Outlet,Down To Earth,,,1,0.0
+outlet:free_press_kashmir,Outlet,Free Press Kashmir,,,1,0.0
+outlet:the_news_mill,Outlet,The News Mill,,,2,0.00724
 outlet:india_today,Outlet,India Today,,,1,0.0
-outlet:moneycontrol.com,Outlet,Moneycontrol.com,,,2,0.00589
+outlet:moneycontrol.com,Outlet,Moneycontrol.com,,,3,0.00907
 outlet:ani_news,Outlet,ANI News,,,1,0.0
 outlet:dainik_tribune,Outlet,Dainik Tribune,,,1,0.0
+outlet:the_guardian,Outlet,The Guardian,,,1,0.0
 outlet:global_news,Outlet,Global News,,,1,0.0
-outlet:ndtv,Outlet,NDTV,,,1,0.0
+outlet:deccan_herald,Outlet,Deccan Herald,,,2,0.00724
 outlet:odisha_reporter,Outlet,Odisha Reporter,,,1,0.0
+outlet:newswav,Outlet,Newswav,,,1,0.0
 outlet:kalinga_tv,Outlet,Kalinga TV,,,1,0.0
-outlet:deccan_chronicle,Outlet,Deccan Chronicle,,,4,0.06876
-outlet:free_press_journal,Outlet,Free Press Journal,,,2,0.00619
+outlet:my_city_links,Outlet,My City Links,,,1,0.0
+outlet:deccan_chronicle,Outlet,Deccan Chronicle,,,4,0.00986
+outlet:organiser,Outlet,Organiser,,,1,0.0
+outlet:opindia.com,Outlet,opindia.com,,,1,0.0
+outlet:free_press_journal,Outlet,Free Press Journal,,,2,0.0017
 outlet:latestly,Outlet,LatestLY,,,1,0.0
+outlet:orissapost.com,Outlet,orissapost.com,,,1,0.0
+outlet:businessnewsthisweek.com,Outlet,businessnewsthisweek.com,,,1,0.0
+outlet:prameyanews.com,Outlet,prameyanews.com,,,2,0.00073
 outlet:adda247,Outlet,Adda247,,,1,0.0
-case:f568f8352fa5,Case,Arrest · Elephant (ivory) · Mangochi,,,4,0.03295
-location:mangochi,Location,Mangochi,-14.48,35.26,2,0.0083
+case:e4e22dbe4be1,Case,Seizure · Leopard · 2 skins · Nuapada,,,9,0.01764
+location:nuapada,Location,Nuapada,20.6,82.5,3,0.00146
+commodity:leopard-skins,Commodity,Leopard – skins,,,1,0.0
+case:d36338c0ca13,Case,Seizure · Leopard · Gujarat,,,5,0.00575
+case:309716423f15,Case,Seizure · Parrots & songbirds · location unknown,,,2,0.00505
+outlet:nsc_total,Outlet,NSC Total,,,1,0.0
+case:80378a06668d,Case,Seizure · Turtles & tortoises · San Miguel,,,5,0.01526
+location:san_miguel,Location,San Miguel,13.4826,-88.1821,2,0.00504
+location:san_miguel_department,Location,San Miguel Department,,,1,0.0
+outlet:meganoticias,Outlet,Meganoticias,,,1,0.0
+outlet:chilevision.cl,Outlet,chilevision.cl,,,1,0.0
+outlet:chicureo_hoy,Outlet,Chicureo Hoy,,,1,0.0
+case:9e45e43c1fa8,Case,Arrest · Turtles & tortoises · location unknown,,,2,0.00504
+outlet:diarioextra.com,Outlet,diarioextra.com,,,1,0.0
+case:f568f8352fa5,Case,Arrest · Elephant (ivory) · Mangochi,,,4,0.0234
+location:mangochi,Location,Mangochi,-14.48,35.26,2,0.00504
 location:southern_region,Location,Southern Region,,,1,0.0
-outlet:wansom_ai,Outlet,Wansom AI,,,1,0.0
 outlet:malawi24,Outlet,Malawi24,,,1,0.0
-case:6e8a8d6ee24d,Case,Arrest · Elephant (ivory) · Idukki,,,3,0.02476
-location:idukki,Location,Idukki,9.85,76.9667,2,0.0083
-location:kerala,Location,Kerala,,,1,0.0
+case:6e8a8d6ee24d,Case,Arrest · Elephant (ivory) · Idukki,,,3,0.01032
+location:idukki,Location,Idukki,9.85,76.9667,2,0.00043
+location:kerala,Location,Kerala,,,2,0.00017
 outlet:onmanorama,Outlet,Onmanorama,,,1,0.0
-case:b996481570b9,Case,Arrest · Tokay gecko · 12 geckos · Sonitpur,,,5,0.01754
-location:sonitpur,Location,Sonitpur,26.7675,92.9643,2,0.00464
-case:52fd05f92132,Case,Arrest · Tiger · Shahdol,,,3,0.01529
-location:shahdol,Location,Shahdol,23.2936,81.3619,2,0.00543
-case:87fa54aada29,Case,Seizure · Musk deer · Sorab,,,3,0.01024
+case:d36fa7acdf40,Case,Seizure · Rosewood & timber · 109 logs · Chiang Rai,,,4,0.00871
+location:chiang_rai,Location,Chiang Rai,19.9086,99.8325,1,0.0
+commodity:rosewood-logs,Commodity,Rosewood & timber – logs,,,1,0.0
+case:c8c035736183,Case,"Seizure · Leopard, Pangolin, Tiger, Tokay gecko, Turtles & tortoises · 12 geckos · Bengaluru",,,27,0.15793
+location:bengaluru,Location,Bengaluru,12.97,77.59,2,0.00616
+location:karnataka,Location,Karnataka,,,3,0.00305
+outlet:urbanacres.in,Outlet,urbanacres.in,,,1,0.0
+outlet:orissadiary.com,Outlet,orissadiary.com,,,1,0.0
+outlet:aninews.in,Outlet,aninews.in,,,1,0.0
+outlet:inshorts,Outlet,Inshorts,,,2,0.00303
+outlet:theprint,Outlet,ThePrint,,,1,0.0
+commodity:leopard-geckos,Commodity,Leopard – geckos,,,1,0.0
+commodity:pangolin-geckos,Commodity,Pangolin – geckos,,,1,0.0
+commodity:tiger-geckos,Commodity,Tiger – geckos,,,1,0.0
+commodity:turtles-geckos,Commodity,Turtles & tortoises – geckos,,,1,0.0
+case:52fd05f92132,Case,Arrest · Tiger · Shahdol,,,3,0.0071
+location:shahdol,Location,Shahdol,23.2936,81.3619,2,0.00228
+case:87fa54aada29,Case,Seizure · Musk deer · Sorab,,,3,0.00645
 species:musk_deer,Species,Musk deer,,,1,0.0
-location:sorab,Location,Sorab,14.3814,75.0918,2,0.00464
-outlet:dainik_bhaskar,Outlet,Dainik Bhaskar,,,4,0.09208
-case:72f9ebe1dce2,Case,Seizure · Red sanders · 20 logs · Nellore,,,7,0.05661
-species:red_sanders,Species,Red sanders,,,2,0.00049
-location:nellore,Location,Nellore,14.44,79.99,2,0.00566
-location:andhra_pradesh,Location,Andhra Pradesh,,,2,0.00025
+location:sorab,Location,Sorab,14.3814,75.0918,2,0.00239
+outlet:dainik_bhaskar,Outlet,Dainik Bhaskar,,,4,0.06804
+case:4efc6026cfab,Case,Seizure · Parrots & songbirds · location unknown,,,2,0.00505
+outlet:portal_o_dia,Outlet,Portal O Dia,,,1,0.0
+case:72f9ebe1dce2,Case,Seizure · Red sanders · 20 logs · Nellore,,,7,0.02064
+species:red_sanders,Species,Red sanders,,,5,0.00724
+location:nellore,Location,Nellore,14.44,79.99,2,0.00326
+location:andhra_pradesh,Location,Andhra Pradesh,,,2,3e-05
 commodity:red_sanders-logs,Commodity,Red sanders – logs,,,1,0.0
-case:de9db9b69f27,Case,Arrest · Parakeets & songbirds · Kushinagar,,,3,0.05233
-location:kushinagar,Location,Kushinagar,26.7413,83.8869,2,0.0039
-location:uttar_pradesh,Location,Uttar Pradesh,,,2,0.00025
-case:cd474874ff08,Case,Arrest · Pangolin · India,,,3,0.01625
-location:india,Location,India,22.35,78.67,4,0.00127
-case:5c160960fe73,Case,Arrest · Turtles & tortoises · Una,,,3,0.01916
-location:una,Location,Una,31.46,76.27,2,0.00679
-location:himachal_pradesh,Location,Himachal Pradesh,,,3,0.01173
-case:c69b0c6e888d,Case,Arrest · Turtles & tortoises · Dharamsala,,,5,0.05203
-location:dharamsala,Location,Dharamsala,32.2201,76.3201,2,0.0114
-case:9c9ea761d806,Case,Arrest · Leopard · location unknown,,,2,0.00546
-case:fa905202ee09,Case,Arrest · Monitor lizard · Pudukkottai,,,4,0.04538
-location:pudukkottai,Location,Pudukkottai,10.3813,78.8214,2,0.00339
-outlet:deccanchronicle.com,Outlet,deccanchronicle.com,,,1,0.0
-case:24f3655a02c7,Case,Arrest · Pangolin · Limpopo,,,6,0.04115
+case:495fdecef89b,Case,Conviction · Elephant (ivory) · Ébolowa,,,3,0.00851
+location:ébolowa,Location,Ébolowa,2.9,11.15,2,0.00504
+location:south,Location,South,,,1,0.0
+outlet:actu_cameroun,Outlet,Actu Cameroun,,,1,0.0
+case:de9db9b69f27,Case,Arrest · Parrots & songbirds · Kushinagar,,,3,0.07707
+location:kushinagar,Location,Kushinagar,26.7413,83.8869,2,0.01855
+location:uttar_pradesh,Location,Uttar Pradesh,,,3,0.01972
+case:6c2dcbfa575d,Case,Seizure · Pangolin · Botswana,,,3,0.01501
+location:botswana,Location,Botswana,-24.6545,25.9086,2,0.00024
+case:cc9b47c1b241,Case,Seizure · Elephant (ivory) · 1.2 tons · Vietnam,,,4,0.00712
+location:vietnam,Location,Vietnam,14.06,108.28,2,0.00048
+outlet:news_-_mongabay,Outlet,news - Mongabay,,,1,0.0
+commodity:elephant-tons,Commodity,Elephant (ivory) – tons,,,1,0.0
+case:99158f51e74b,Case,Seizure · Elephant (ivory) · location unknown,,,2,0.001
+case:ba6cbd60ac05,Case,"Seizure · Elephant (ivory), Pangolin · Cuamba",,,4,0.06069
+location:cuamba,Location,Cuamba,-14.8031,36.5372,2,0.00505
+location:niassa_province,Location,Niassa Province,,,1,0.0
+outlet:club_of_mozambique,Outlet,CLUB OF MOZAMBIQUE,,,1,0.0
+case:9d22005442c6,Case,Seizure · Parrots & songbirds · location unknown,,,2,0.00504
+outlet:rca1.com.br,Outlet,rca1.com.br,,,1,0.0
+case:cd474874ff08,Case,Arrest · Pangolin · India,,,3,0.00506
+case:5c160960fe73,Case,Arrest · Turtles & tortoises · Una,,,3,0.007
+location:una,Location,Una,31.46,76.27,2,0.00081
+location:himachal_pradesh,Location,Himachal Pradesh,,,3,0.00183
+case:90de4de096d3,Case,Seizure · Abalone · Namibia,,,4,0.0212
+location:namibia,Location,Namibia,-22.5594,17.0832,1,0.0
+outlet:wansom.ai,Outlet,wansom.ai,,,1,0.0
+case:c69b0c6e888d,Case,Arrest · Turtles & tortoises · Dharamsala,,,5,0.07246
+location:dharamsala,Location,Dharamsala,32.2201,76.3201,2,0.00161
+case:109cd30ac223,Case,Seizure · Parrots & songbirds · Águas Claras,,,4,0.01354
+location:águas_claras,Location,Águas Claras,-15.8397,-48.0267,2,0.00505
+location:federal_district,Location,Federal District,,,1,0.0
+outlet:bahia_notícias,Outlet,Bahia Notícias,,,1,0.0
+outlet:acorda_cidade,Outlet,Acorda Cidade,,,1,0.0
+case:572e58d74912,Case,Seizure · Parrots & songbirds · location unknown,,,2,0.00174
+outlet:el_sol_de_méxico,Outlet,El Sol de México,,,1,0.0
+case:81e1ba4bfaf3,Case,Arrest · Pangolin · Limpopo,,,6,0.02137
 location:limpopo,Location,Limpopo,-23.4,29.42,1,0.0
-outlet:the_south_african,Outlet,The South African,,,1,0.0
-outlet:novanews.co.za,Outlet,novanews.co.za,,,1,0.0
+outlet:the_south_african,Outlet,The South African,,,2,5e-05
 outlet:briefly_news,Outlet,Briefly News,,,1,0.0
 outlet:african_insider,Outlet,African Insider,,,1,0.0
-case:d2b5a415883b,Case,Seizure · Pangolin · Kānker,,,3,0.10108
-location:kānker,Location,Kānker,20.2719,81.4918,2,0.01857
-location:chhattisgarh,Location,Chhattisgarh,,,3,0.03021
-case:694398508595,Case,Arrest · Tiger · Chhattisgarh,,,6,0.04567
-agency:cbi,Agency,CBI,,,1,0.0
-outlet:freepressjournal.in,Outlet,freepressjournal.in,,,1,0.0
-case:0097982baf54,Case,Seizure · Pangolin · Hanūr,,,3,0.01555
-location:hanūr,Location,Hanūr,12.0874,77.3021,2,0.0018
-case:8349ac620b23,Case,Arrest · Red sanders · Tirupati,,,3,0.01356
-location:tirupati,Location,Tirupati,13.63,79.42,2,0.00282
-case:29fba182737a,Case,Arrest · Monitor lizard · Chākan,,,3,0.01602
-location:chākan,Location,Chākan,18.7606,73.8635,2,0.00095
+case:9c9ea761d806,Case,Arrest · Leopard · location unknown,,,2,0.00098
+case:fa905202ee09,Case,Arrest · Monitor lizard · Pudukkottai,,,4,0.00888
+location:pudukkottai,Location,Pudukkottai,10.3813,78.8214,2,0.00127
+outlet:deccanchronicle.com,Outlet,deccanchronicle.com,,,2,0.00171
+case:2c361c4b5adb,Case,Arrest · Pangolin · Botswana,,,3,0.00325
+case:d2b5a415883b,Case,Seizure · Pangolin · Kānker,,,3,0.06921
+location:kānker,Location,Kānker,20.2719,81.4918,2,0.0017
+location:chhattisgarh,Location,Chhattisgarh,,,3,0.01167
+case:694398508595,Case,Seizure · Tiger · Chhattisgarh,,,6,0.01961
+outlet:freepressjournal.in,Outlet,freepressjournal.in,,,2,0.00145
+case:0097982baf54,Case,Seizure · Pangolin · Hanūr,,,3,0.00428
+location:hanūr,Location,Hanūr,12.0874,77.3021,2,0.00089
+case:8349ac620b23,Case,Arrest · Red sanders · Tirupati,,,3,0.00727
+location:tirupati,Location,Tirupati,13.63,79.42,3,0.00258
+case:29fba182737a,Case,Arrest · Monitor lizard · Chākan,,,3,0.00769
+location:chākan,Location,Chākan,18.7606,73.8635,2,0.00115
 outlet:navbharat_times,Outlet,Navbharat Times,,,1,0.0
-case:bf65ad933bd3,Case,Seizure · Pangolin · Indonesia,,,3,0.01656
+case:6b88c1522c60,Case,Seizure · Turtles & tortoises · location unknown,,,2,0.00252
+outlet:nd_mais,Outlet,ND Mais,,,2,0.0
+case:610f88e2d8cd,Case,Seizure · Primates · location unknown,,,2,0.00174
+outlet:diario_cambio22,Outlet,Diario CAMBIO22,,,1,0.0
+case:bf65ad933bd3,Case,Seizure · Pangolin · Indonesia,,,3,0.00937
 location:indonesia,Location,Indonesia,-0.79,113.92,1,0.0
-outlet:antara_news,Outlet,ANTARA News,,,1,0.0
-case:73938a976378,Case,Arrest · Monitor lizard · Chhattisgarh,,,4,0.02747
-mode:online,Mode,Online,,,1,0.0
-outlet:hindustan_times,Outlet,Hindustan Times,,,2,0.01136
-case:8af70a535b32,Case,Seizure · Turtles & tortoises · India,,,3,0.02057
-case:ff4d629d2103,Case,Seizure · Leopard · India,,,3,0.00575
-case:465fbe735b4e,Case,Arrest · Owls · location unknown,,,2,0.00954
-species:owl,Species,Owls,,,2,0.00452
-case:43c313088957,Case,Arrest · Owls · Agra,,,3,0.01658
-location:agra,Location,Agra,27.1833,78.0167,2,0.00459
-case:fe354cd25193,Case,Arrest · Leopard · 17 claws · Bhadradri Kothagudem,,,7,0.05468
-location:bhadradri_kothagudem,Location,Bhadradri Kothagudem,17.5546,80.6198,2,0.0083
+case:73938a976378,Case,Arrest · Monitor lizard · Chhattisgarh,,,4,0.03877
+outlet:hindustan_times,Outlet,Hindustan Times,,,2,0.00228
+case:8af70a535b32,Case,Seizure · Turtles & tortoises · India,,,3,0.02034
+case:ff4d629d2103,Case,Seizure · Leopard · India,,,3,0.00107
+case:465fbe735b4e,Case,Arrest · Owls · location unknown,,,2,0.00308
+species:owl,Species,Owls,,,2,0.00083
+case:43c313088957,Case,Arrest · Owls · Agra,,,3,0.00389
+location:agra,Location,Agra,27.1833,78.0167,2,0.00089
+case:b0020dca9260,Case,Arrest · Pangolin · 3 ton · Pontianak,,,4,0.00997
+location:pontianak,Location,Pontianak,-0.0319,109.325,2,0.00174
+location:west_kalimantan,Location,West Kalimantan,,,1,0.0
+commodity:pangolin-ton,Commodity,Pangolin – ton,,,1,0.0
+case:a035fc64d51a,Case,Arrest · Parrots & songbirds · location unknown,,,2,0.00505
+outlet:infobae,Outlet,Infobae,,,1,0.0
+case:6774353051b8,Case,Seizure · Jaguar · La Paz,,,3,4e-05
+species:jaguar,Species,Jaguar,,,1,0.0
+location:la_paz,Location,La Paz,24.1423,-110.3132,2,2e-05
+location:baja_california_sur,Location,Baja California Sur,,,1,0.0
+outlet:eju.tv,Outlet,eju.tv,,,1,0.0
+case:0a82197da991,Case,Arrest · Elephant (ivory) · location unknown,,,2,0.00505
+outlet:icilome,Outlet,Icilome,,,1,0.0
+case:e596be6f81dd,Case,Arrest · Elephant (ivory) · location unknown,,,2,0.00505
+outlet:periódico_correo,Outlet,Periódico Correo,,,1,0.0
+case:5fe6f830c62a,Case,Seizure · Abalone · location unknown,,,2,0.00505
+outlet:iol,Outlet,IOL,,,1,0.0
+case:6d17e8762fe9,Case,Seizure · Elephant (ivory) · location unknown,,,2,0.001
+case:e32f00890986,Case,Conviction · Parrots & songbirds · location unknown,,,2,0.00058
+case:fe354cd25193,Case,Arrest · Leopard · 17 claws · Bhadradri Kothagudem,,,7,0.02264
+location:bhadradri_kothagudem,Location,Bhadradri Kothagudem,17.5546,80.6198,2,0.00505
 location:telangana,Location,Telangana,,,1,0.0
-outlet:thehindu.com,Outlet,thehindu.com,,,1,0.0
+outlet:thehindu.com,Outlet,thehindu.com,,,7,0.01431
 outlet:telangana_today,Outlet,Telangana Today,,,1,0.0
 commodity:leopard-claws,Commodity,Leopard – claws,,,1,0.0
-case:4a3eeb399e57,Case,Arrest · Pangolin · Nuapada,,,3,0.01987
-case:5641330d79f7,Case,Arrest · Pangolin · India,,,3,0.01625
-case:84548637adad,Case,Arrest · Leopard · Delhi,,,3,0.01053
+case:4a3eeb399e57,Case,Arrest · Pangolin · Nuapada,,,3,0.00574
+case:5641330d79f7,Case,Arrest · Pangolin · India,,,3,0.00504
+case:53e8606aaa33,Case,Seizure · Rhinoceros · location unknown,,,2,0.00174
+outlet:the_citizen,Outlet,The Citizen,,,1,0.0
+case:b396dc8f3f6b,Case,Rescue · Turtles & tortoises · location unknown,,,2,0.00252
+case:faee9c7e7ec3,Case,Seizure · Tokay gecko · 1 live · Kaziranga,,,4,0.00484
+location:kaziranga,Location,Kaziranga,26.58,93.17,2,0.00022
+commodity:tokay_gecko-live,Commodity,Tokay gecko – live,,,1,0.0
+case:84548637adad,Case,Seizure · Leopard · Delhi,,,5,0.00751
 location:delhi,Location,Delhi,28.61,77.21,1,0.0
-case:ad352b7d4345,Case,Arrest · Monitor lizard · 4 lizards · Pāonta Sāhib,,,4,0.02134
-location:pāonta_sāhib,Location,Pāonta Sāhib,30.4367,77.6246,2,0.00642
+case:4d5d173efcb5,Case,Seizure · Elephant (ivory) · 2 tonnes · Vietnam,,,5,0.02665
+outlet:africanews.com,Outlet,africanews.com,,,1,0.0
+commodity:elephant-tonnes,Commodity,Elephant (ivory) – tonnes,,,1,0.0
+case:f6af6b118c53,Case,Seizure · Elephant (ivory) · 2 tusks · Assam,,,6,0.01283
+commodity:elephant-tusks,Commodity,Elephant (ivory) – tusks,,,2,0.00016
+case:9e87b5560889,Case,Seizure · Pangolin · location unknown,,,3,0.00298
+outlet:dailypost.ng,Outlet,dailypost.ng,,,1,0.0
+case:5000cf277849,Case,Seizure · Red sanders · Arakkonam,,,3,0.00127
+location:arakkonam,Location,Arakkonam,13.0845,79.6705,2,0.00014
+case:c172f3d8fdd3,Case,Arrest · Elephant (ivory) · Nilgiris,,,3,0.00482
+location:nilgiris,Location,Nilgiris,11.46,76.64,2,0.00043
+case:83224d94d1df,Case,Seizure · Pangolin · 3 live · Jakarta,,,5,0.01223
+location:jakarta,Location,Jakarta,-6.21,106.85,1,0.0
+outlet:thestar.com.my,Outlet,thestar.com.my,,,1,0.0
+commodity:pangolin-live,Commodity,Pangolin – live,,,2,7e-05
+case:a728b3b8cb5c,Case,Seizure · Pangolin · 3 live · Semarang,,,4,0.00992
+location:semarang,Location,Semarang,-6.9931,110.4208,2,0.00252
+outlet:thejakartapost.com,Outlet,thejakartapost.com,,,1,0.0
+case:a6d2d60bf053,Case,Arrest · Elephant (ivory) · Kāsaragod,,,5,0.02235
+location:kāsaragod,Location,Kāsaragod,12.4984,74.9896,2,0.00146
+agency:crime_branch,Agency,Crime Branch,,,1,0.0
+case:6cb2c69f6264,Case,Seizure · Elephant (ivory) · location unknown,,,2,0.00298
+case:70d31eee5577,Case,Seizure · Red sanders · Tirupati,,,4,0.00586
+outlet:newindianexpress.com,Outlet,newindianexpress.com,,,1,0.0
+case:5543e8a112f4,Case,Seizure · Red sanders · location unknown,,,2,0.0002
+case:4905e5accad1,Case,Seizure · Pangolin · location unknown,,,2,0.00504
+outlet:news.mongabay.com,Outlet,news.mongabay.com,,,1,0.0
+case:e2a9c82ac5fd,Case,Arrest · Elephant (ivory) · 8.9 kilograms · Bānda,,,5,0.0442
+location:bānda,Location,Bānda,25.4776,80.3349,2,0.02287
+outlet:faceofmalawi.com,Outlet,faceofmalawi.com,,,1,0.0
+commodity:elephant-kilograms,Commodity,Elephant (ivory) – kilograms,,,1,0.0
+case:ad352b7d4345,Case,Seizure · Monitor lizard · 4 lizards · Pāonta Sāhib,,,6,0.03006
+location:pāonta_sāhib,Location,Pāonta Sāhib,30.4367,77.6246,2,0.00114
 outlet:tribuneindia.com,Outlet,tribuneindia.com,,,1,0.0
 commodity:monitor_lizard-lizards,Commodity,Monitor lizard – lizards,,,1,0.0
-case:e3b507d09489,Case,Seizure · Elephant (ivory) · location unknown,,,3,0.03198
+case:e3b507d09489,Case,Seizure · Elephant (ivory) · 15 kg · Sūjāngarh,,,6,0.03161
+location:sūjāngarh,Location,Sūjāngarh,27.7,74.4667,2,0.00505
+location:rajasthan,Location,Rajasthan,,,1,0.0
 outlet:rediff.com,Outlet,rediff.com,,,1,0.0
-case:b7444bd4a007,Case,Arrest · Rhinoceros · 920 g · Sonapur,,,5,0.01956
-location:sonapur,Location,Sonapur,26.12,91.97,2,0.00111
+case:564657fe2077,Case,Arrest · Elephant (ivory) · location unknown,,,2,0.00174
+outlet:lankanewspapers.com,Outlet,lankanewspapers.com,,,1,0.0
+case:b7444bd4a007,Case,Arrest · Rhinoceros · 920 g · Sonapur,,,5,0.01087
+location:sonapur,Location,Sonapur,26.12,91.97,2,0.00021
 commodity:rhino-g,Commodity,Rhinoceros – g,,,1,0.0
+case:6d3ec018cdd3,Case,Arrest · Elephant (ivory) · South Africa,,,3,0.00349
+location:south_africa,Location,South Africa,-30.56,22.94,1,0.0
+outlet:nyasatimes.com,Outlet,nyasatimes.com,,,1,0.0
+case:8228dbdab2da,Case,Arrest · Elephant (ivory) · Malawi,,,3,0.00624
+location:malawi,Location,Malawi,-13.25,34.3,2,0.00036
+outlet:malawivoice.com,Outlet,malawivoice.com,,,1,0.0
+case:7a6584e99566,Case,Seizure · Elephant (ivory) · 781 tusks · Malawi,,,5,0.02067
+outlet:maravipost.com,Outlet,maravipost.com,,,1,0.0

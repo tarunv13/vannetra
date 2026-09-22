@@ -30,6 +30,11 @@ STOP = {
     "Wildlife", "Crime", "Bureau", "Nature", "Green", "Red", "Black", "White", "Blue", "Asian", "Indian", "Bengal",
     "Hindu", "Muslim", "Sikh", "Christian", "March", "May", "June", "July", "August", "Mon", "Sun", "Pan", "Kota",
     "Bus", "Car", "Train", "Truck", "Sea", "Bay", "Lake", "River", "Island", "Hill", "Hills", "Valley", "Park",
+    # common words in the region's languages that are also towns
+    "Harian", "Negara", "Kota", "Pulau", "Desa", "Kabupaten", "Polisi", "Utara", "Selatan", "Barat", "Timur", "Tengah",
+    "Baru", "Lama", "Besar", "Kecil", "Raya", "Jaya", "Indah", "Sari", "Makmur", "Merdeka", "Warga", "Pasar", "Hutan",
+    "Shijie", "Zhongguo", "Renmin", "Xinhua", "Horn", "Time", "Normal", "Republic", "Lens", "Chino", "Nation", "Liberty",
+    "Independence", "Justice", "Mobile", "Enterprise", "Commerce", "Progress", "Union City", "Paradise", "Hope",
     "Reserve", "Sanctuary", "Flora", "Fauna", "Species", "Animal", "Animals", "Endangered", "Temple", "Palace", "Fort", "Chowk", "Gate", "Tank", "Pond", "Well", "Village",
 }
 
@@ -103,6 +108,33 @@ def build() -> int:
         typ = "district" if f[7] == "ADM2" else "city"
         best[(name, "IN")] = (name, typ, "IN", admin1.get(f"IN.{f[10]}", ""), round(float(f[4]), 4),
                               round(float(f[5]), 4), int(f[14] or 0), f[2] if f[2] != name else "", _natives(f[3]))
+
+    # Rest of the world: towns >= 15,000 people (source countries in Africa and Latin
+    # America, demand markets in Europe, North America and the Gulf).
+    zw = zipfile.ZipFile(io.BytesIO(_text(BASE + "cities15000.zip")))
+    capitals: dict[str, tuple] = {}
+    for line in zw.read("cities15000.txt").decode("utf-8").splitlines():
+        f = line.split("	")
+        name, cc, pop = f[1], f[8], int(f[14] or 0)
+        if f[7] == "PPLC":
+            capitals[cc] = (round(float(f[4]), 4), round(float(f[5]), 4))
+        if cc in SCOPE or len(name) < 4 or name.lower() in stop or not name[0].isupper():
+            continue
+        key = (name, cc)
+        if key not in best or pop > best[key][6]:
+            alias = f[2] if f[2] != name and f[2].lower() not in stop else ""
+            best[key] = (name, "city", cc, admin1.get(f"{cc}.{f[10]}", ""), round(float(f[4]), 4),
+                         round(float(f[5]), 4), pop, alias, "")
+
+    # Every country, pinned at its capital (a country-level mention has no better point).
+    for line in _text(BASE + "countryInfo.txt").decode("utf-8").splitlines():
+        if line.startswith("#"):
+            continue
+        f = line.split("	")
+        cc, cname = f[0], f[4]
+        if cc in capitals and (cname, "country") not in best:
+            lat, lon = capitals[cc]
+            best[(cname, "country")] = (cname, "country", cc, "", lat, lon, int(f[7] or 0), "", "")
 
     out = RESOURCES / "gazetteer_geonames.csv"
     with open(out, "w", newline="", encoding="utf-8") as fh:

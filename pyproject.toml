@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vannetra"
+name = "pugmark"
 version = "0.1.0"
-description = "Open-source OSINT observatory and link-analysis workbench for illegal wildlife trade in India and Southeast Asia"
+description = "Pugmark: open-source intelligence map and link-analysis workbench for the global illegal wildlife trade"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
@@ -26,6 +26,7 @@ video = ["yt-dlp>=2024.1"]
 dev = ["pytest>=8"]
 
 [project.scripts]
+pugmark = "vannetra.cli:main"
 vannetra = "vannetra.cli:main"
 
 [tool.setuptools.packages.find]

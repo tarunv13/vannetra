@@ -1,128 +1,80 @@
-# VanNetra · वन नेत्र
+# Pugmark
 
-**An open-source OSINT observatory and link-analysis workbench for illegal wildlife trade in India and Southeast Asia.**
+**Open intelligence on the wildlife trade.** Pugmark is an open-source map of the global illegal wildlife trade: seizures, arrests and convictions, the routes between them, the species and the names they are sold under, and the observatories that watch them. It includes an in-browser link-analysis workbench (an open alternative to i2 Analyst's Notebook) that works on your own data without uploading it.
 
-VanNetra ("eye of the forest") collects open reports of wildlife seizures, arrests and convictions and extracts structured cases from them. It maps the cases and charts the network behind them: species, places, routes, agencies and transport modes. It also brings a trained classifier for spotting online trade listings, built on WCS India's labelled Online Wildlife Trade (OWT) data.
+A *pugmark* is the footprint a tracker reads to follow an animal. Here, the trail is evidence.
 
-It has four parts. Each one works without the others:
-
-| Part | What it is | Where |
-|---|---|---|
-| **Pipeline** | Python: collect → screen → extract → merge → link → publish | `pipeline/vannetra/` |
-| **Classifier** | Relevance model for online trade listings (R/IR), with honest evaluation and a relabel loop | `pipeline/vannetra/classify/` |
-| **Website + WebGIS** | Static site: map, cases, species, trade routes, methods | `web/` |
-| **Workbench** | In-browser link-analysis chart, an open alternative to i2 Analyst's Notebook | `web/js/workbench.js` |
-| **Network** | Registry of 33 observatories, databases, codebooks and reporting apps: each one's function, live status and role in VanNetra | `resources/observatories.yaml`, [`docs/OBSERVATORIES.md`](docs/OBSERVATORIES.md) |
-
-There is no server, database, account or tracking. The site is static files, so it runs on GitHub Pages, any web host, or a laptop with no internet beyond the map tiles.
+**Live:** https://tarunv13.github.io/vannetra/
 
 ---
 
-## Quick start
+## One map, no pages
+
+Everything happens on a single globe. The other surfaces float over it, so you can wander back and forth without losing your place:
+
+| Surface | What it does |
+|---|---|
+| **Globe** | Cases (colour = seizure / arrest / rescue; a hollow marker means the place is only inferred from the publisher), reported routes as arcs, and observatories, with a globe/flat toggle |
+| **Search** (`/`) | One box for cases, species, countries and observatories, with keyboard navigation |
+| **Pulse** | A live summary of what is in view. Every bar is a filter (species, country, kind) |
+| **Inspector** | Case, species, country, observatory or your own entity. Everything links onward, with back/forward and a breadcrumb trail. The URL follows, so any view can be shared |
+| **Timeline** | Cases per week. Drag to pick a period; ▶ glides the map through cases in time order |
+| **Investigate** | Link chart (i2-style) of cases, species, places and agencies, plus **Your data**: import CSV, Excel or JSON, map columns, and see it on the chart and the globe, all in your browser |
+| **Network** | 33 observatories, databases and codebooks, each checked, with what it does and how Pugmark uses it |
+| **Methods** | Pipeline, classifier, privacy and sources |
+
+Case records follow evidence discipline: **documented facts**, **analytical context** and **limits of the evidence** are kept apart. Routes are attributed to the reports ("as reported"), and every case links to its original sources.
+
+## Coverage
+
+- **30 species groups**, from pangolin, ivory, rhino horn, tiger and leopard to jaguar, lion bone, African grey parrots, totoaba, glass eels, abalone, rosewood and agarwood. Terms come in English, Hindi, Telugu, Portuguese, Spanish, French, Vietnamese, Thai and Indonesian/Malay, plus 2,376 names in 66 languages from the open seized-wildlife codebook (Stringham et al. 2021, PMC8579131).
+- **46,000 places**: every town above 15,000 people worldwide, every town above 1,000 in South and Southeast Asia, every Indian district, the key trafficking airports, and Hindi and native-script names (GeoNames, CC BY).
+- **News in 23 Google News editions** (Asia, Africa, Latin America, demand markets) plus GDELT, and YouTube listings collected locally.
+
+## Run it
 
 ```bash
-git clone <this repo> vannetra && cd vannetra
-pip install -e ".[dev]"            # add [embed,video] for sentence-transformers / yt-dlp
-
-# 1. Train the listing classifier on your WCS-OWT CSVs (kept private, never committed)
-export VANNETRA_WCS_OWT_DIR="/path/to/WCS-OWT"      # PowerShell: $env:VANNETRA_WCS_OWT_DIR="..."
-python -m vannetra.cli train --target-recall 0.98
-
-# 2. Collect open news and build the site data
-python -m vannetra.cli run --countries IN,NP,BD,MM,TH,VN,MY,ID,PH
-
-# 3. View the site
-python -m http.server -d web 8000     # open http://localhost:8000
+pip install -e ".[dev,video]"
+export VANNETRA_WCS_OWT_DIR=/path/to/WCS-OWT          # optional: trains the listing classifier
+pugmark train                                          # classifier, channel-grouped evaluation
+pugmark collect --gnews --youtube --countries ALL     # global news + listings
+pugmark build                                          # cases, graph, site data (privacy gate)
+python -m http.server -d web 8000                      # open http://localhost:8000
 ```
 
-Google News (`--gnews`) and YouTube (`--youtube`) are switched on for this project. The first full run (22 Sep 2026) produced 331 news articles and 786 YouTube listings, plus GDELT, which is throttled and stops itself after two refusals. That became **72 cases**. The largest is the Balasore orangutan rescue, merged from 31 reports.
+Other commands: `gazetteer` rebuilds the place index, `codebook <zip>` merges the PMC8579131 names, `cites <folder>` loads the CITES Trade Database, `relabel` merges classifier corrections, and `doctor` checks tools and sources.
 
-Other commands: `codebook <zip>` merges the PMC8579131 multilingual names (45k names, CC BY; download the zip from figshare in a browser), `gazetteer` rebuilds the GeoNames place index, `doctor` lists the available tools and sources, `relabel` merges reviewed labels, and `cites <folder>` loads the CITES Trade Database.
-
-## Pipeline
+## How a report becomes a case
 
 ```
-collect ──► screen ──► extract ──► merge ──► link ──► publish
-GDELT        species    place, route,  1 case per   entity–link   privacy gate
-feeds        lexicon ×  quantity, ₹,   incident     graph +       → web/data/*.json
-YouTube*     enforce-   agency, mode,  (species,    centrality,   + GraphML / CSV
-Agent Reach* ment cues  arrests,       region,      communities   for i2 / Gephi
-CITES bulk              evidence text  ±4 days)
-```
-\* opt-in.
-
-- **Sources** are listed in [`resources/sources.yaml`](pipeline/vannetra/resources/sources.yaml), with access method, terms and on/off state. GDELT is on by default. Google News RSS and YouTube are opt-in because of their terms. Court records (Indian Kanoon) and the TRAFFIC, EIA and WJC reports are registered as manual or request-only sources.
-- **The lexicon** ([`resources/lexicon.yaml`](pipeline/vannetra/resources/lexicon.yaml)) covers 21 species groups in English, Hindi (Devanagari and Latin script), Telugu, Vietnamese, Indonesian/Malay and Thai. It includes the WCS-OWT seller phrases such as *asli kasturi ki kimat*, *hatha jodi*, *do muha saap* and *vajrakit*.
-- **The gazetteer** geocodes offline. A hand-curated file ([`gazetteer.csv`](pipeline/vannetra/resources/gazetteer.csv): states, border towns such as Moreh and Champhai, SE Asian ports) takes priority over a GeoNames extract (`gazetteer_geonames.csv`, about 21,700 places: towns over 1,000 people in 18 countries, plus every Indian district and sub-district seat). Rebuild the extract with `vannetra gazetteer`.
-- **Article ledes.** GDELT returns headlines only, so `build` fetches the opening paragraphs of each enforcement candidate. It respects robots.txt and caches the pages, and stores the text in `data/interim`, which is never published. Pass `--no-fetch` to skip this step.
-- **Agent Reach** ([Panniantong/agent-reach](https://github.com/Panniantong/agent-reach)) is used the way it is designed to be used. `vannetra doctor` asks it which upstream tools are healthy, and the collectors then call those tools (for example yt-dlp) directly.
-
-## Classifier: what "98%" means here
-
-The target is to keep **at least 98% of true trade listings** (recall on R). Among the models that meet it, the one that wrongly flags the fewest irrelevant items wins.
-
-The protocol, in `classify/train.py`:
-1. A 20% test split is locked away first. It is split **by channel**, so a seller's videos never appear on both sides. Without this, near-duplicate titles inflate every score.
-2. Candidate models are compared with repeated StratifiedGroupKFold cross-validation: word TF-IDF, character n-grams, union + cue features, SVM, Naive Bayes, multilingual sentence embeddings, and an ensemble.
-3. The decision threshold is set on out-of-fold probabilities to reach the recall target.
-4. The winner is scored **once** on the locked test set. That is the number reported.
-
-Current result (1,274 videos, 927 R / 347 IR; 29 with conflicting labels held out):
-
-| | 2022 notebook | VanNetra v0.1 (locked test) |
-|---|---|---|
-| R recall | 0.97 | **0.97** (0.98 in CV) |
-| IR correctly rejected | 0.43 | **0.53** |
-| ROC-AUC | – | 0.95 |
-| Protocol | one random split, title only | channel-grouped, title + description |
-
-Multilingual MiniLM embeddings scored *worse* (0.41 IR rejected), because seller jargon is lexical. The learning curve has plateaued. The labels, not the model, now set the ceiling: the review queue shows the same phrasing labelled both ways. [`data/labels/README.md`](data/labels/README.md) is the codebook and the relabel loop:
-
-```bash
-python -m vannetra.cli train      # writes data/labels/review_queue.csv
-# fill new_label = R / IR for rows you have checked
-python -m vannetra.cli relabel    # → corrections.csv
-python -m vannetra.cli train      # compare models/relevance_report.json
+collect ─► screen ─► extract ─► merge ─► link ─► publish
+news,       species ×   species, place,   one case per      entity–link     privacy gate,
+listings,   enforcement route, quantity,  incident, across  graph with      static JSON
+bulk data   cues, minus arrests (count),  languages and     centrality      for the map
+            false cues  agency, mode      story days
 ```
 
-## Workbench (open i2 Analyst's Notebook alternative)
+- **Screening** rejects look-alikes (an ivory-smuggling *film*, "Kasturi" liquor, the Ivory Park township).
+- **Places** come from the report: Hindi words such as कुशीनगर are transliterated and matched by consonant skeleton, and homonyms are resolved by the country the text names. Google News links are not decoded, because its robots.txt forbids it.
+- **Merging** keeps one incident as one case, even when Hindi and English reports share no words. A shared arrest count and date is enough.
 
-- **Entities**: Case, Species, Location, Agency, Commodity, Mode, Outlet. Colour, shape and label encode type, so type is never shown by colour alone. Person, Phone, Account and Vehicle entities exist only for **your local data**.
-- **Analysis**: search, expand, isolate, hide, shortest path (A*), node size by degree or betweenness (brokerage), Louvain communities, and a time filter.
-- **Layouts**: force-directed, concentric by centrality, tree, circle.
-- **Import**: CSV with one row per link (`source,source_type,target,target_type,link_type,date`, the same shape as an i2 ANB import specification), or JSON.
-- **Export**: PNG, GraphML (Gephi/yEd), CSV (i2 ANB/Maltego), Cytoscape JSON.
-- **Privacy**: imported data is stored in your browser's localStorage and never leaves the device.
+## The classifier
 
-## Motion and interaction
+Trained on WCS India's labelled online listings (1,274 videos), evaluated on a test set split by seller channel. At the target of keeping 98% of trade listings it rejects about half of the irrelevant ones. Contradictory labels, not the model, set the ceiling. [`data/labels/README.md`](data/labels/README.md) has the codebook and the relabel loop.
 
-The site's motion system (`web/css/motion.css`, `web/js/motion.js`) is adapted from the OpenHiggsfield studio's motion vocabulary: two easing curves, entrances that bloom, exits faster than entrances, one white plate that glides between tabs, seamless loading sheens, and numbers that count rather than redraw. Sections change through the View Transitions API. **Glide through cases** flies the map through the period's cases in order, with a glass caption and a draining progress line. Picking a case in the list flies the map to it before the report opens. Everything is off under `prefers-reduced-motion`.
+## Privacy
 
-## Privacy and ethics
+Pugmark never publishes a person's name, a phone number, an e-mail address or a seller identity; the build fails if one slips through, and CI checks again. Your imported data lives in your browser's localStorage. There are no analytics, cookies or accounts. See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md).
 
-See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md). In short:
-- The published site **never names a person**. Case summaries are generated from extracted facts, not copied headlines. Arrests are counts.
-- Phones, e-mails, messenger links and handles are scrubbed, and `publish` **fails** if any remain (`privacy.assert_public_safe`, also checked in CI).
-- Seller channel names are used only as a cross-validation grouping key. They are never a feature and never published.
-- There are no analytics or cookies. robots.txt and rate limits are respected.
-
-## Extending to a new country
-
-1. Add place rows to `gazetteer.csv` and local-language terms to `lexicon.yaml`.
-2. Add the country's official feeds to `sources.yaml` (`access: rss`).
-3. Add its code to `--countries`. Tests check that the lexicon still parses and matches.
-
-## Repository layout
+## Repository
 
 ```
-pipeline/vannetra/   collect/ classify/ extract/ graph/ resources/ publish.py cli.py privacy.py
-web/                 index.html css/glass.css js/{app,map,charts,workbench}.js data/ (generated, public)
-data/                raw/ private/ interim/ labels/   (gitignored except labels/README.md)
-models/              relevance.joblib, relevance_report.json (gitignored)
-docs/                ARCHITECTURE.md, ETHICS_PRIVACY.md
-.github/workflows/   ci.yml (tests + privacy gate), update.yml (weekly refresh → Pages)
+pipeline/vannetra/  collectors, classifier, extraction, graph, publishing (Python package; CLI: pugmark)
+web/                the portal: index.html, css/pugmark.css, js/{main,globe,inspector,pulse,timeline,search,investigate,sheets,store}.js
+docs/               ARCHITECTURE, ETHICS_PRIVACY, OBSERVATORIES
+.github/workflows/  tests + privacy gate; weekly refresh; Pages deploy
 ```
 
-## Credits and licence
+## Credits
 
-Code: MIT. Case data is derived from public reports, with links to each original. Training data: WCS India Online Wildlife Trade labelled set (private; aggregates only). News index: [GDELT Project](https://www.gdeltproject.org/). Legal trade: CITES Trade Database (UNEP-WCMC). Places: [GeoNames](https://www.geonames.org/) (CC-BY 4.0). Basemap: [OpenFreeMap](https://openfreemap.org/) / OpenStreetMap contributors. Inspired by WCS Brasil's Global Wildlife Trafficking Observatory and i2 Analyst's Notebook.
+Code MIT. Places: GeoNames (CC BY 4.0). Names codebook: Stringham et al. 2021 (CC BY 4.0). News index: GDELT. Basemap: OpenFreeMap / OpenStreetMap contributors. Motion vocabulary adapted from OpenHiggsfield. Inspired by WCS Brasil's Global Wildlife Trafficking Observatory, C4ADS, TRAFFIC, #WildEye and i2 Analyst's Notebook.
