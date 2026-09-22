@@ -17,7 +17,8 @@ First release archived on Zenodo ([10.5281/zenodo.22902819](https://doi.org/10.5
 - **Open data.** `cases.csv` per-case export, CC BY 4.0, with a citation line and DOI.
 - **Table** and **About** panels; focus moves into a case when it opens.
 - **Report a correction** on every case, opening a pre-filled issue.
-- Social preview image, self-hosted fonts, `CITATION.cff` and `.zenodo.json`.
+- Social preview image, redrawn from the live site by `scripts/make_og.py` on every weekly
+  refresh so its counts stay current; self-hosted fonts; `CITATION.cff` and `.zenodo.json`.
 
 ### Changed
 - The map shows a density glow, pales single-report cases, rings approximate places, scales

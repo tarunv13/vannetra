@@ -142,6 +142,7 @@ pip install -e ".[dev,video]"
 wildtrace collect --official --gnews --countries ALL   # official releases + global news
 wildtrace collect --history 12 --no-gdelt              # one-off: backfill 12 months
 wildtrace build                                        # cases, graph, CSV, site data (privacy gate)
+python scripts/make_og.py                              # redraw the share card with the new counts
 python -m http.server -d web 8000                      # open http://localhost:8000
 ```
 
