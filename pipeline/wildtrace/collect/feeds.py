@@ -99,7 +99,7 @@ LOCAL_CUES = {
 }
 
 
-def collect_gnews(editions: list[str] | None = None, when: str = "30d") -> list[Record]:
+def collect_gnews(editions: list[str] | None = None, when: str = "30d", groups: set[str] | None = None) -> list[Record]:
     """Google News RSS search. OPT-IN: Google's feed terms allow personal,
     non-commercial use only. Enable deliberately (``--gnews``) for research runs,
     and publish only derived facts (event, species, place), never the feed itself.
@@ -110,6 +110,8 @@ def collect_gnews(editions: list[str] | None = None, when: str = "30d") -> list[
         hl, gl, ceid, lang = GNEWS_EDITIONS[ed]
         cue = LOCAL_CUES.get(lang, LOCAL_CUES["en"])
         for gid, g in lex.items():
+            if groups and gid not in groups:   # --groups: aim a run at newly added species groups
+                continue
             local = [t for t in (g["terms"].get(lang) or []) if len(t) > 3][:3]
             if not local and lang != "en":
                 continue  # nothing to say in this language: the English editions cover it

@@ -2674,7 +2674,7 @@
 </node>
 <node id="case:72f9ebe1dce2">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · 20 logs · Nellore</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · 20 logs · Nellore</data>
   <data key="d2">2026-09-04</data>
   <data key="d3">seizure</data>
   <data key="d4">1.0</data>
@@ -2685,6 +2685,12 @@
   <data key="d1">Red sanders</data>
   <data key="d6">II</data>
   <data key="d7">Pterocarpus santalinus</data>
+</node>
+<node id="species:sandalwood">
+  <data key="d0">Species</data>
+  <data key="d1">Sandalwood</data>
+  <data key="d6">–</data>
+  <data key="d7">Santalum album, Santalum spp.</data>
 </node>
 <node id="location:nellore">
   <data key="d0">Location</data>
@@ -2704,6 +2710,10 @@
 <node id="commodity:red_sanders-logs">
   <data key="d0">Commodity</data>
   <data key="d1">Red sanders – logs</data>
+</node>
+<node id="commodity:sandalwood-logs">
+  <data key="d0">Commodity</data>
+  <data key="d1">Sandalwood – logs</data>
 </node>
 <node id="case:495fdecef89b">
   <data key="d0">Case</data>
@@ -4980,7 +4990,7 @@
 </node>
 <node id="case:a6d2d60bf053">
   <data key="d0">Case</data>
-  <data key="d1">Arrest · Elephant (ivory) · Kāsaragod</data>
+  <data key="d1">Arrest · Elephant (ivory), Sandalwood · Kāsaragod</data>
   <data key="d2">2026-07-28</data>
   <data key="d3">arrest</data>
   <data key="d4">0.7</data>
@@ -10667,7 +10677,7 @@
 </node>
 <node id="case:616c924062b1">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · 285 kgs · location unknown</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · 285 kgs · location unknown</data>
   <data key="d2">2026-03-25</data>
   <data key="d3">seizure</data>
   <data key="d4">0.7</data>
@@ -10676,6 +10686,10 @@
 <node id="commodity:red_sanders-kgs">
   <data key="d0">Commodity</data>
   <data key="d1">Red sanders – kgs</data>
+</node>
+<node id="commodity:sandalwood-kgs">
+  <data key="d0">Commodity</data>
+  <data key="d1">Sandalwood – kgs</data>
 </node>
 <node id="case:a50c19cd4cd1">
   <data key="d0">Case</data>
@@ -12273,6 +12287,14 @@
   <data key="d11">Rajasthan</data>
   <data key="d12">district</data>
 </node>
+<node id="case:3971e1fdce32">
+  <data key="d0">Case</data>
+  <data key="d1">Seizure · Sandalwood · location unknown</data>
+  <data key="d2">2026-02-06</data>
+  <data key="d3">seizure</data>
+  <data key="d4">0.6</data>
+  <data key="d5">1</data>
+</node>
 <node id="case:f17e302abab9">
   <data key="d0">Case</data>
   <data key="d1">Seizure · Wildlife (unspecified) · location unknown</data>
@@ -12384,7 +12406,7 @@
 </node>
 <node id="case:75befe515403">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · Andhra Pradesh</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · Andhra Pradesh</data>
   <data key="d2">2026-01-29</data>
   <data key="d3">seizure</data>
   <data key="d4">0.85</data>
@@ -12769,7 +12791,7 @@
 </node>
 <node id="case:85e74bc7240f">
   <data key="d0">Case</data>
-  <data key="d1">Arrest · Red sanders · location unknown</data>
+  <data key="d1">Arrest · Red sanders, Sandalwood · location unknown</data>
   <data key="d2">2026-01-10</data>
   <data key="d3">arrest</data>
   <data key="d4">0.6</data>
@@ -13494,7 +13516,7 @@
 </node>
 <node id="case:eae0ede4f436">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · Bengaluru</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · Bengaluru</data>
   <data key="d2">2025-12-04</data>
   <data key="d3">seizure</data>
   <data key="d4">0.7</data>
@@ -14190,7 +14212,7 @@
 </node>
 <node id="case:0d8b5eab1b81">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · Kalyān</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · Kalyān</data>
   <data key="d2">2025-11-09</data>
   <data key="d3">seizure</data>
   <data key="d4">0.85</data>
@@ -14853,7 +14875,7 @@
 </node>
 <node id="case:28f52b199372">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · 10 tonnes · Delhi</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · 10 tonnes · Delhi</data>
   <data key="d2">2025-10-07</data>
   <data key="d3">seizure</data>
   <data key="d4">1.0</data>
@@ -14863,9 +14885,13 @@
   <data key="d0">Commodity</data>
   <data key="d1">Red sanders – tonnes</data>
 </node>
+<node id="commodity:sandalwood-tonnes">
+  <data key="d0">Commodity</data>
+  <data key="d1">Sandalwood – tonnes</data>
+</node>
 <node id="case:ca056d978827">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · 10 tonnes · Tirupati</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · 10 tonnes · Tirupati</data>
   <data key="d2">2025-10-07</data>
   <data key="d3">seizure</data>
   <data key="d4">0.8</data>
@@ -15196,13 +15222,25 @@
   <data key="d4">0.7</data>
   <data key="d5">1</data>
 </node>
+<node id="case:4abbbacd73c4">
+  <data key="d0">Case</data>
+  <data key="d1">Seizure · Sandalwood · 5 tonnes · location unknown</data>
+  <data key="d2">2025-09-20</data>
+  <data key="d3">seizure</data>
+  <data key="d4">0.7</data>
+  <data key="d5">1</data>
+</node>
 <node id="case:7cbed3890e8a">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · 4000 kg · Maharashtra</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · 4000 kg · Maharashtra</data>
   <data key="d2">2025-09-19</data>
   <data key="d3">seizure</data>
   <data key="d4">0.8</data>
   <data key="d5">1</data>
+</node>
+<node id="commodity:sandalwood-kg">
+  <data key="d0">Commodity</data>
+  <data key="d1">Sandalwood – kg</data>
 </node>
 <node id="case:86c6f371b330">
   <data key="d0">Case</data>
@@ -15801,7 +15839,7 @@
 </node>
 <node id="case:93857dd965a6">
   <data key="d0">Case</data>
-  <data key="d1">Arrest · Red sanders · Kadapa</data>
+  <data key="d1">Arrest · Red sanders, Sandalwood · Kadapa</data>
   <data key="d2">2025-08-10</data>
   <data key="d3">arrest</data>
   <data key="d4">0.7</data>
@@ -15954,7 +15992,7 @@
 </node>
 <node id="case:0cddb044adef">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · location unknown</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · location unknown</data>
   <data key="d2">2025-07-13</data>
   <data key="d3">seizure</data>
   <data key="d4">0.6</data>
@@ -16750,7 +16788,7 @@
 </node>
 <node id="case:d1367c4b3b6a">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · Kalyān</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · Kalyān</data>
   <data key="d2">2025-02-07</data>
   <data key="d3">seizure</data>
   <data key="d4">0.7</data>
@@ -16775,7 +16813,7 @@
 </node>
 <node id="case:25c782864a3e">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · India</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · India</data>
   <data key="d2">2025-02-06</data>
   <data key="d3">seizure</data>
   <data key="d4">0.7</data>
@@ -17572,7 +17610,7 @@
 </node>
 <node id="case:8298f9c719f9">
   <data key="d0">Case</data>
-  <data key="d1">Seizure · Red sanders · India</data>
+  <data key="d1">Seizure · Red sanders, Sandalwood · India</data>
   <data key="d2">2024-09-03</data>
   <data key="d3">seizure</data>
   <data key="d4">0.7</data>
@@ -17908,7 +17946,7 @@
 </node>
 <node id="case:e7e9ee71a3c1">
   <data key="d0">Case</data>
-  <data key="d1">Arrest · Red sanders · Delhi</data>
+  <data key="d1">Arrest · Red sanders, Sandalwood · Delhi</data>
   <data key="d2">2024-06-09</data>
   <data key="d3">arrest</data>
   <data key="d4">0.7</data>
@@ -18584,6 +18622,13 @@
   <data key="d16">2026-02-06</data>
   <data key="d17">f5e12a8155e3</data>
 </edge>
+<edge source="outlet:the_new_indian_express" target="case:3971e1fdce32">
+  <data key="d13">reported</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-02-06</data>
+  <data key="d16">2026-02-06</data>
+  <data key="d17">3971e1fdce32</data>
+</edge>
 <edge source="outlet:the_new_indian_express" target="case:75befe515403">
   <data key="d13">reported</data>
   <data key="d14">2</data>
@@ -18919,6 +18964,13 @@
   <data key="d15">2025-10-06</data>
   <data key="d16">2025-10-06</data>
   <data key="d17">c7ce3049d62b</data>
+</edge>
+<edge source="agency:police" target="case:4abbbacd73c4">
+  <data key="d13">acted_in</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-09-20</data>
+  <data key="d16">2025-09-20</data>
+  <data key="d17">4abbbacd73c4</data>
 </edge>
 <edge source="agency:police" target="case:f7b5e65d12be">
   <data key="d13">acted_in</data>
@@ -26060,6 +26112,13 @@
   <data key="d16">2026-09-04</data>
   <data key="d17">72f9ebe1dce2</data>
 </edge>
+<edge source="case:72f9ebe1dce2" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-09-04</data>
+  <data key="d16">2026-09-04</data>
+  <data key="d17">72f9ebe1dce2</data>
+</edge>
 <edge source="case:72f9ebe1dce2" target="location:nellore">
   <data key="d13">occurred_at</data>
   <data key="d14">1</data>
@@ -26068,6 +26127,13 @@
   <data key="d17">72f9ebe1dce2</data>
 </edge>
 <edge source="case:72f9ebe1dce2" target="commodity:red_sanders-logs">
+  <data key="d13">seized</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-09-04</data>
+  <data key="d16">2026-09-04</data>
+  <data key="d17">72f9ebe1dce2</data>
+</edge>
+<edge source="case:72f9ebe1dce2" target="commodity:sandalwood-logs">
   <data key="d13">seized</data>
   <data key="d14">1</data>
   <data key="d15">2026-09-04</data>
@@ -29939,6 +30005,13 @@
   <data key="d17">ca250bc83b95</data>
 </edge>
 <edge source="case:a6d2d60bf053" target="species:elephant">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-07-28</data>
+  <data key="d16">2026-07-28</data>
+  <data key="d17">a6d2d60bf053</data>
+</edge>
+<edge source="case:a6d2d60bf053" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2026-07-28</data>
@@ -38471,7 +38544,21 @@
   <data key="d16">2026-03-25</data>
   <data key="d17">616c924062b1</data>
 </edge>
+<edge source="case:616c924062b1" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-03-25</data>
+  <data key="d16">2026-03-25</data>
+  <data key="d17">616c924062b1</data>
+</edge>
 <edge source="case:616c924062b1" target="commodity:red_sanders-kgs">
+  <data key="d13">seized</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-03-25</data>
+  <data key="d16">2026-03-25</data>
+  <data key="d17">616c924062b1</data>
+</edge>
+<edge source="case:616c924062b1" target="commodity:sandalwood-kgs">
   <data key="d13">seized</data>
   <data key="d14">1</data>
   <data key="d15">2026-03-25</data>
@@ -40739,6 +40826,13 @@
   <data key="d16">2026-02-06</data>
   <data key="d17">3db844d236e2</data>
 </edge>
+<edge source="case:3971e1fdce32" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-02-06</data>
+  <data key="d16">2026-02-06</data>
+  <data key="d17">3971e1fdce32</data>
+</edge>
 <edge source="case:f17e302abab9" target="species:wildlife_general">
   <data key="d13">involves</data>
   <data key="d14">1</data>
@@ -40887,6 +40981,13 @@
   <data key="d17">22744f7e1bfc</data>
 </edge>
 <edge source="case:75befe515403" target="species:red_sanders">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-01-29</data>
+  <data key="d16">2026-01-29</data>
+  <data key="d17">75befe515403</data>
+</edge>
+<edge source="case:75befe515403" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2026-01-29</data>
@@ -41496,6 +41597,13 @@
   <data key="d17">5e77f09f92d3</data>
 </edge>
 <edge source="case:85e74bc7240f" target="species:red_sanders">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2026-01-10</data>
+  <data key="d16">2026-01-10</data>
+  <data key="d17">85e74bc7240f</data>
+</edge>
+<edge source="case:85e74bc7240f" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2026-01-10</data>
@@ -42517,6 +42625,13 @@
   <data key="d16">2025-12-04</data>
   <data key="d17">eae0ede4f436</data>
 </edge>
+<edge source="case:eae0ede4f436" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-12-04</data>
+  <data key="d16">2025-12-04</data>
+  <data key="d17">eae0ede4f436</data>
+</edge>
 <edge source="case:eae0ede4f436" target="location:bengaluru">
   <data key="d13">occurred_at</data>
   <data key="d14">1</data>
@@ -43168,6 +43283,13 @@
   <data key="d16">2025-11-16</data>
   <data key="d17">03b217f84b4f</data>
 </edge>
+<edge source="outlet:the_eastleigh_voice" target="case:4abbbacd73c4">
+  <data key="d13">reported</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-09-20</data>
+  <data key="d16">2025-09-20</data>
+  <data key="d17">4abbbacd73c4</data>
+</edge>
 <edge source="outlet:the_eastleigh_voice" target="case:982d991d5779">
   <data key="d13">reported</data>
   <data key="d14">1</data>
@@ -43463,6 +43585,13 @@
   <data key="d17">5497da3654ee</data>
 </edge>
 <edge source="case:0d8b5eab1b81" target="species:red_sanders">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-11-09</data>
+  <data key="d16">2025-11-09</data>
+  <data key="d17">0d8b5eab1b81</data>
+</edge>
+<edge source="case:0d8b5eab1b81" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2025-11-09</data>
@@ -44428,6 +44557,13 @@
   <data key="d16">2025-10-07</data>
   <data key="d17">28f52b199372</data>
 </edge>
+<edge source="case:28f52b199372" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-10-07</data>
+  <data key="d16">2025-10-07</data>
+  <data key="d17">28f52b199372</data>
+</edge>
 <edge source="case:28f52b199372" target="location:delhi">
   <data key="d13">occurred_at</data>
   <data key="d14">1</data>
@@ -44442,7 +44578,21 @@
   <data key="d16">2025-10-07</data>
   <data key="d17">28f52b199372</data>
 </edge>
+<edge source="case:28f52b199372" target="commodity:sandalwood-tonnes">
+  <data key="d13">seized</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-10-07</data>
+  <data key="d16">2025-10-07</data>
+  <data key="d17">28f52b199372</data>
+</edge>
 <edge source="case:ca056d978827" target="species:red_sanders">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-10-07</data>
+  <data key="d16">2025-10-07</data>
+  <data key="d17">ca056d978827</data>
+</edge>
+<edge source="case:ca056d978827" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2025-10-07</data>
@@ -44457,6 +44607,13 @@
   <data key="d17">ca056d978827</data>
 </edge>
 <edge source="case:ca056d978827" target="commodity:red_sanders-tonnes">
+  <data key="d13">seized</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-10-07</data>
+  <data key="d16">2025-10-07</data>
+  <data key="d17">ca056d978827</data>
+</edge>
+<edge source="case:ca056d978827" target="commodity:sandalwood-tonnes">
   <data key="d13">seized</data>
   <data key="d14">1</data>
   <data key="d15">2025-10-07</data>
@@ -44890,7 +45047,28 @@
   <data key="d16">2025-09-21</data>
   <data key="d17">ded487436f34</data>
 </edge>
+<edge source="case:4abbbacd73c4" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-09-20</data>
+  <data key="d16">2025-09-20</data>
+  <data key="d17">4abbbacd73c4</data>
+</edge>
+<edge source="case:4abbbacd73c4" target="commodity:sandalwood-tonnes">
+  <data key="d13">seized</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-09-20</data>
+  <data key="d16">2025-09-20</data>
+  <data key="d17">4abbbacd73c4</data>
+</edge>
 <edge source="case:7cbed3890e8a" target="species:red_sanders">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-09-19</data>
+  <data key="d16">2025-09-19</data>
+  <data key="d17">7cbed3890e8a</data>
+</edge>
+<edge source="case:7cbed3890e8a" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2025-09-19</data>
@@ -44905,6 +45083,13 @@
   <data key="d17">7cbed3890e8a</data>
 </edge>
 <edge source="case:7cbed3890e8a" target="commodity:red_sanders-kg">
+  <data key="d13">seized</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-09-19</data>
+  <data key="d16">2025-09-19</data>
+  <data key="d17">7cbed3890e8a</data>
+</edge>
+<edge source="case:7cbed3890e8a" target="commodity:sandalwood-kg">
   <data key="d13">seized</data>
   <data key="d14">1</data>
   <data key="d15">2025-09-19</data>
@@ -45835,6 +46020,13 @@
   <data key="d16">2025-08-10</data>
   <data key="d17">93857dd965a6</data>
 </edge>
+<edge source="case:93857dd965a6" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-08-10</data>
+  <data key="d16">2025-08-10</data>
+  <data key="d17">93857dd965a6</data>
+</edge>
 <edge source="case:93857dd965a6" target="location:kadapa">
   <data key="d13">occurred_at</data>
   <data key="d14">1</data>
@@ -46053,6 +46245,13 @@
   <data key="d17">0e136c162e1c</data>
 </edge>
 <edge source="case:0cddb044adef" target="species:red_sanders">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-07-13</data>
+  <data key="d16">2025-07-13</data>
+  <data key="d17">0cddb044adef</data>
+</edge>
+<edge source="case:0cddb044adef" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2025-07-13</data>
@@ -47130,6 +47329,13 @@
   <data key="d16">2025-02-07</data>
   <data key="d17">d1367c4b3b6a</data>
 </edge>
+<edge source="case:d1367c4b3b6a" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-02-07</data>
+  <data key="d16">2025-02-07</data>
+  <data key="d17">d1367c4b3b6a</data>
+</edge>
 <edge source="case:d1367c4b3b6a" target="location:kalyān">
   <data key="d13">occurred_at</data>
   <data key="d14">1</data>
@@ -47159,6 +47365,13 @@
   <data key="d17">456b594051bd</data>
 </edge>
 <edge source="case:25c782864a3e" target="species:red_sanders">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2025-02-06</data>
+  <data key="d16">2025-02-06</data>
+  <data key="d17">25c782864a3e</data>
+</edge>
+<edge source="case:25c782864a3e" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2025-02-06</data>
@@ -48250,6 +48463,13 @@
   <data key="d16">2024-09-03</data>
   <data key="d17">8298f9c719f9</data>
 </edge>
+<edge source="case:8298f9c719f9" target="species:sandalwood">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2024-09-03</data>
+  <data key="d16">2024-09-03</data>
+  <data key="d17">8298f9c719f9</data>
+</edge>
 <edge source="case:8298f9c719f9" target="location:india">
   <data key="d13">occurred_at</data>
   <data key="d14">1</data>
@@ -48734,6 +48954,13 @@
   <data key="d17">c22d2c37836e</data>
 </edge>
 <edge source="case:e7e9ee71a3c1" target="species:red_sanders">
+  <data key="d13">involves</data>
+  <data key="d14">1</data>
+  <data key="d15">2024-06-09</data>
+  <data key="d16">2024-06-09</data>
+  <data key="d17">e7e9ee71a3c1</data>
+</edge>
+<edge source="case:e7e9ee71a3c1" target="species:sandalwood">
   <data key="d13">involves</data>
   <data key="d14">1</data>
   <data key="d15">2024-06-09</data>

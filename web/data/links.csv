@@ -24,6 +24,7 @@ outlet:the_new_indian_express,case:392d725a8e2f,reported,1,2026-04-20,2026-04-20
 outlet:the_new_indian_express,case:8cce8ce1a78c,reported,1,2026-03-09,2026-03-09
 outlet:the_new_indian_express,case:691936aec42d,reported,1,2026-03-02,2026-03-02
 outlet:the_new_indian_express,case:f5e12a8155e3,reported,1,2026-02-06,2026-02-06
+outlet:the_new_indian_express,case:3971e1fdce32,reported,1,2026-02-06,2026-02-06
 outlet:the_new_indian_express,case:75befe515403,reported,2,2026-01-29,2026-01-29
 outlet:the_new_indian_express,case:fa9b399f5698,reported,1,2026-01-28,2026-01-28
 outlet:the_new_indian_express,case:60e1d3946d90,reported,1,2025-12-05,2025-12-05
@@ -72,6 +73,7 @@ agency:police,case:e5b15c70bdb5,acted_in,1,2025-10-26,2025-10-26
 agency:police,case:6fb94bfbb99e,acted_in,1,2025-10-23,2025-10-23
 agency:police,case:28f52b199372,acted_in,1,2025-10-07,2025-10-07
 agency:police,case:c7ce3049d62b,acted_in,1,2025-10-06,2025-10-06
+agency:police,case:4abbbacd73c4,acted_in,1,2025-09-20,2025-09-20
 agency:police,case:f7b5e65d12be,acted_in,1,2025-06-25,2025-06-25
 agency:police,case:6970f177789e,acted_in,1,2025-05-14,2025-05-14
 agency:police,case:7efb5310e99a,acted_in,1,2025-01-11,2025-01-11
@@ -1092,8 +1094,10 @@ case:4efc6026cfab,species:birds,involves,1,2026-09-05,2026-09-05
 outlet:portal_o_dia,case:4efc6026cfab,reported,1,2026-09-05,2026-09-05
 outlet:portal_o_dia,case:de175a2d5fba,reported,1,2026-06-19,2026-06-19
 case:72f9ebe1dce2,species:red_sanders,involves,1,2026-09-04,2026-09-04
+case:72f9ebe1dce2,species:sandalwood,involves,1,2026-09-04,2026-09-04
 case:72f9ebe1dce2,location:nellore,occurred_at,1,2026-09-04,2026-09-04
 case:72f9ebe1dce2,commodity:red_sanders-logs,seized,1,2026-09-04,2026-09-04
+case:72f9ebe1dce2,commodity:sandalwood-logs,seized,1,2026-09-04,2026-09-04
 location:nellore,location:andhra_pradesh,within,1,2026-09-04,2026-09-04
 case:495fdecef89b,species:elephant,involves,1,2026-09-04,2026-09-04
 case:495fdecef89b,location:ébolowa,occurred_at,1,2026-09-04,2026-09-04
@@ -1647,6 +1651,7 @@ case:ca250bc83b95,commodity:pangolin-live,seized,1,2026-07-28,2026-07-28
 outlet:the_jakarta_post,case:ca250bc83b95,reported,1,2026-07-28,2026-07-28
 outlet:thestar.com.my,case:ca250bc83b95,reported,1,2026-07-28,2026-07-28
 case:a6d2d60bf053,species:elephant,involves,1,2026-07-28,2026-07-28
+case:a6d2d60bf053,species:sandalwood,involves,1,2026-07-28,2026-07-28
 case:a6d2d60bf053,location:kāsaragod,occurred_at,1,2026-07-28,2026-07-28
 location:kāsaragod,location:kerala,within,1,2026-07-28,2026-07-28
 agency:crime_branch,case:a6d2d60bf053,acted_in,1,2026-07-28,2026-07-28
@@ -2865,7 +2870,9 @@ case:ecfbdbd766cd,species:abalone,involves,1,2026-03-26,2026-03-26
 case:a6a34fd6da3a,species:wildlife_general,involves,1,2026-03-26,2026-03-26
 outlet:tvperú,case:a6a34fd6da3a,reported,1,2026-03-26,2026-03-26
 case:616c924062b1,species:red_sanders,involves,1,2026-03-25,2026-03-25
+case:616c924062b1,species:sandalwood,involves,1,2026-03-25,2026-03-25
 case:616c924062b1,commodity:red_sanders-kgs,seized,1,2026-03-25,2026-03-25
+case:616c924062b1,commodity:sandalwood-kgs,seized,1,2026-03-25,2026-03-25
 case:a50c19cd4cd1,species:wildlife_general,involves,1,2026-03-25,2026-03-25
 case:a50c19cd4cd1,commodity:wildlife_general-kilos,seized,1,2026-03-25,2026-03-25
 outlet:yvke_mundial,case:a50c19cd4cd1,reported,1,2026-03-25,2026-03-25
@@ -3189,6 +3196,7 @@ case:3db844d236e2,species:turtles,involves,1,2026-02-06,2026-02-06
 case:3db844d236e2,location:bundi,occurred_at,1,2026-02-06,2026-02-06
 case:3db844d236e2,commodity:turtles-tortoises,seized,1,2026-02-06,2026-02-06
 location:bundi,location:rajasthan,within,1,2026-02-06,2026-02-06
+case:3971e1fdce32,species:sandalwood,involves,1,2026-02-06,2026-02-06
 case:f17e302abab9,species:wildlife_general,involves,1,2026-02-06,2026-02-06
 outlet:the_conversation,case:f17e302abab9,reported,1,2026-02-06,2026-02-06
 case:d07e8e376e94,species:elephant,involves,1,2026-02-05,2026-02-05
@@ -3211,6 +3219,7 @@ case:e9595b17854b,species:red_sanders,involves,1,2026-01-30,2026-01-30
 case:22744f7e1bfc,species:turtles,involves,1,2026-01-30,2026-01-30
 outlet:lampung.indozone.id,case:22744f7e1bfc,reported,1,2026-01-30,2026-01-30
 case:75befe515403,species:red_sanders,involves,1,2026-01-29,2026-01-29
+case:75befe515403,species:sandalwood,involves,1,2026-01-29,2026-01-29
 case:75befe515403,location:andhra_pradesh,occurred_at,1,2026-01-29,2026-01-29
 case:1c9821813bdc,species:wildlife_general,involves,1,2026-01-29,2026-01-29
 case:1c9821813bdc,location:mexico,occurred_at,1,2026-01-29,2026-01-29
@@ -3298,6 +3307,7 @@ case:dade7d6038d1,commodity:birds-parakeets,seized,1,2026-01-11,2026-01-11
 case:5e77f09f92d3,species:monitor_lizard,involves,1,2026-01-10,2026-01-10
 case:5e77f09f92d3,mode:online,via,1,2026-01-10,2026-01-10
 case:85e74bc7240f,species:red_sanders,involves,1,2026-01-10,2026-01-10
+case:85e74bc7240f,species:sandalwood,involves,1,2026-01-10,2026-01-10
 case:454d07f2554f,species:wildlife_general,involves,1,2026-01-10,2026-01-10
 case:523f0f7da15b,species:wildlife_general,involves,1,2026-01-08,2026-01-08
 outlet:gov.uk,case:523f0f7da15b,reported,1,2026-01-08,2026-01-08
@@ -3443,6 +3453,7 @@ case:661a9b2cfca6,species:wildlife_general,involves,1,2025-12-05,2025-12-05
 case:31b0fa1badd9,species:elephant,involves,1,2025-12-04,2025-12-04
 case:31b0fa1badd9,commodity:elephant-tusks,seized,1,2025-12-04,2025-12-04
 case:eae0ede4f436,species:red_sanders,involves,1,2025-12-04,2025-12-04
+case:eae0ede4f436,species:sandalwood,involves,1,2025-12-04,2025-12-04
 case:eae0ede4f436,location:bengaluru,occurred_at,1,2025-12-04,2025-12-04
 case:f2d9a749ba86,species:primates,involves,1,2025-12-04,2025-12-04
 case:f2d9a749ba86,location:alexandra,occurred_at,1,2025-12-04,2025-12-04
@@ -3536,6 +3547,7 @@ case:453029b44c77,location:arequipa,occurred_at,1,2025-11-17,2025-11-17
 case:03b217f84b4f,species:elephant,involves,1,2025-11-16,2025-11-16
 case:03b217f84b4f,commodity:elephant-kg,seized,1,2025-11-16,2025-11-16
 outlet:the_eastleigh_voice,case:03b217f84b4f,reported,1,2025-11-16,2025-11-16
+outlet:the_eastleigh_voice,case:4abbbacd73c4,reported,1,2025-09-20,2025-09-20
 outlet:the_eastleigh_voice,case:982d991d5779,reported,1,2025-01-02,2025-01-02
 case:fe7bc7510f94,species:wildlife_general,involves,1,2025-11-16,2025-11-16
 outlet:ctv_news,case:fe7bc7510f94,reported,1,2025-11-16,2025-11-16
@@ -3579,6 +3591,7 @@ case:5497da3654ee,species:abalone,involves,1,2025-11-10,2025-11-10
 case:5497da3654ee,location:george,occurred_at,1,2025-11-10,2025-11-10
 location:george,location:western_cape,within,1,2025-11-10,2025-11-10
 case:0d8b5eab1b81,species:red_sanders,involves,1,2025-11-09,2025-11-09
+case:0d8b5eab1b81,species:sandalwood,involves,1,2025-11-09,2025-11-09
 case:0d8b5eab1b81,location:kalyān,occurred_at,1,2025-11-09,2025-11-09
 case:4d5fd1f125bf,species:abalone,involves,1,2025-11-09,2025-11-09
 case:4d5fd1f125bf,location:cape_town,occurred_at,1,2025-11-09,2025-11-09
@@ -3716,11 +3729,15 @@ case:48556d7c4c47,species:tiger,involves,1,2025-10-10,2025-10-10
 case:cbc972ac601a,species:wildlife_general,involves,1,2025-10-09,2025-10-09
 case:5f676631449c,species:wildlife_general,involves,1,2025-10-08,2025-10-08
 case:28f52b199372,species:red_sanders,involves,1,2025-10-07,2025-10-07
+case:28f52b199372,species:sandalwood,involves,1,2025-10-07,2025-10-07
 case:28f52b199372,location:delhi,occurred_at,1,2025-10-07,2025-10-07
 case:28f52b199372,commodity:red_sanders-tonnes,seized,1,2025-10-07,2025-10-07
+case:28f52b199372,commodity:sandalwood-tonnes,seized,1,2025-10-07,2025-10-07
 case:ca056d978827,species:red_sanders,involves,1,2025-10-07,2025-10-07
+case:ca056d978827,species:sandalwood,involves,1,2025-10-07,2025-10-07
 case:ca056d978827,location:tirupati,occurred_at,1,2025-10-07,2025-10-07
 case:ca056d978827,commodity:red_sanders-tonnes,seized,1,2025-10-07,2025-10-07
+case:ca056d978827,commodity:sandalwood-tonnes,seized,1,2025-10-07,2025-10-07
 case:125cdc16485f,species:wildlife_general,involves,1,2025-10-06,2025-10-06
 outlet:ipam_amazônia,case:125cdc16485f,reported,1,2025-10-06,2025-10-06
 case:f699be0d563b,species:rosewood,involves,1,2025-10-06,2025-10-06
@@ -3782,9 +3799,13 @@ case:ee83b5e86a4a,mode:online,via,1,2025-09-22,2025-09-22
 case:cd2ae3f5242c,species:wildlife_general,involves,1,2025-09-22,2025-09-22
 case:ded487436f34,species:leopard,involves,1,2025-09-21,2025-09-21
 case:ded487436f34,location:mumbai,occurred_at,1,2025-09-21,2025-09-21
+case:4abbbacd73c4,species:sandalwood,involves,1,2025-09-20,2025-09-20
+case:4abbbacd73c4,commodity:sandalwood-tonnes,seized,1,2025-09-20,2025-09-20
 case:7cbed3890e8a,species:red_sanders,involves,1,2025-09-19,2025-09-19
+case:7cbed3890e8a,species:sandalwood,involves,1,2025-09-19,2025-09-19
 case:7cbed3890e8a,location:maharashtra,occurred_at,1,2025-09-19,2025-09-19
 case:7cbed3890e8a,commodity:red_sanders-kg,seized,1,2025-09-19,2025-09-19
+case:7cbed3890e8a,commodity:sandalwood-kg,seized,1,2025-09-19,2025-09-19
 case:86c6f371b330,species:wildlife_general,involves,1,2025-09-19,2025-09-19
 case:86c6f371b330,location:patna,occurred_at,1,2025-09-19,2025-09-19
 case:edc3da156591,species:wildlife_general,involves,1,2025-09-18,2025-09-18
@@ -3917,6 +3938,7 @@ case:de8acc730d6d,location:porto,occurred_at,1,2025-08-15,2025-08-15
 outlet:integrity_magazine,case:de8acc730d6d,reported,1,2025-08-15,2025-08-15
 outlet:integrity_magazine,case:c1f23c833b45,reported,1,2024-07-11,2024-07-11
 case:93857dd965a6,species:red_sanders,involves,1,2025-08-10,2025-08-10
+case:93857dd965a6,species:sandalwood,involves,1,2025-08-10,2025-08-10
 case:93857dd965a6,location:kadapa,occurred_at,1,2025-08-10,2025-08-10
 location:kadapa,location:andhra_pradesh,within,1,2025-08-10,2025-08-10
 case:c142850a205d,species:birds,involves,1,2025-08-08,2025-08-08
@@ -3949,6 +3971,7 @@ case:0e136c162e1c,location:oriximiná,occurred_at,1,2025-07-14,2025-07-14
 location:oriximiná,location:pará,within,1,2025-07-14,2025-07-14
 outlet:prefeitura_municipal_oriximiná,case:0e136c162e1c,reported,1,2025-07-14,2025-07-14
 case:0cddb044adef,species:red_sanders,involves,1,2025-07-13,2025-07-13
+case:0cddb044adef,species:sandalwood,involves,1,2025-07-13,2025-07-13
 case:efbe0abe046a,species:birds,involves,1,2025-07-10,2025-07-10
 case:0c90f7e55834,species:wildlife_general,involves,1,2025-07-08,2025-07-08
 case:0c90f7e55834,location:fortaleza,occurred_at,1,2025-07-08,2025-07-08
@@ -4102,11 +4125,13 @@ case:1457e5301cb6,species:birds,involves,1,2025-02-12,2025-02-12
 case:1457e5301cb6,location:guaratinguetá,occurred_at,1,2025-02-12,2025-02-12
 location:guaratinguetá,location:são_paulo,within,1,2025-02-12,2025-02-12
 case:d1367c4b3b6a,species:red_sanders,involves,1,2025-02-07,2025-02-07
+case:d1367c4b3b6a,species:sandalwood,involves,1,2025-02-07,2025-02-07
 case:d1367c4b3b6a,location:kalyān,occurred_at,1,2025-02-07,2025-02-07
 case:456b594051bd,species:red_sanders,involves,1,2025-02-06,2025-02-06
 case:456b594051bd,location:annamayya,occurred_at,1,2025-02-06,2025-02-06
 location:annamayya,location:andhra_pradesh,within,1,2025-02-06,2025-02-06
 case:25c782864a3e,species:red_sanders,involves,1,2025-02-06,2025-02-06
+case:25c782864a3e,species:sandalwood,involves,1,2025-02-06,2025-02-06
 case:25c782864a3e,location:india,occurred_at,1,2025-02-06,2025-02-06
 case:6483ae50a15e,species:birds,involves,1,2025-02-06,2025-02-06
 case:6483ae50a15e,location:conselheiro_lafaiete,occurred_at,1,2025-02-06,2025-02-06
@@ -4262,6 +4287,7 @@ case:73d4efb00095,species:abalone,involves,1,2024-09-15,2024-09-15
 case:36dcc76f1571,species:red_sanders,involves,1,2024-09-13,2024-09-13
 case:b3a37625bad4,species:wildlife_general,involves,1,2024-09-12,2024-09-12
 case:8298f9c719f9,species:red_sanders,involves,1,2024-09-03,2024-09-03
+case:8298f9c719f9,species:sandalwood,involves,1,2024-09-03,2024-09-03
 case:8298f9c719f9,location:india,occurred_at,1,2024-09-03,2024-09-03
 case:6de98d18dc8d,species:shark_ray,involves,1,2024-08-27,2024-08-27
 outlet:la_jornada,case:6de98d18dc8d,reported,1,2024-08-27,2024-08-27
@@ -4332,6 +4358,7 @@ location:banjarsari,location:west_java,within,1,2024-06-15,2024-06-15
 case:8c9759b82b7d,species:abalone,involves,1,2024-06-13,2024-06-13
 case:c22d2c37836e,species:abalone,involves,1,2024-06-10,2024-06-10
 case:e7e9ee71a3c1,species:red_sanders,involves,1,2024-06-09,2024-06-09
+case:e7e9ee71a3c1,species:sandalwood,involves,1,2024-06-09,2024-06-09
 case:e7e9ee71a3c1,location:delhi,occurred_at,1,2024-06-09,2024-06-09
 case:e7e9ee71a3c1,mode:air,via,1,2024-06-09,2024-06-09
 case:6dea1ca73729,species:shark_ray,involves,1,2024-06-09,2024-06-09
