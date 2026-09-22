@@ -2,11 +2,28 @@
   "title": "WildTrace: the open atlas of illegal wildlife trade",
   "upload_type": "software",
   "description": "<p>An open-source map of the global illegal wildlife trade in fauna and flora: seizures, arrests and convictions from public reports, each case graded by the strength of its evidence (validated, official, corroborated, single report), with an in-browser link-analysis workbench. The archived release includes the pipeline code (MIT) and the published case data in <code>web/data/</code> (CC BY 4.0). No person accused is named.</p>",
-  "creators": [{ "name": "Verma, Tarun" }],
-  "license": "MIT",
-  "keywords": ["illegal wildlife trade", "wildlife trafficking", "OSINT", "CITES", "link analysis", "conservation"],
-  "related_identifiers": [
-    { "identifier": "https://tarunv13.github.io/wildtrace/", "relation": "isDocumentedBy", "resource_type": "other" }
+  "creators": [
+    {
+      "name": "Verma, Tarun Kumar",
+      "orcid": "0009-0009-4130-2455"
+    }
   ],
-  "notes": "Data files under web/data/ are licensed CC BY 4.0; code is MIT."
+  "license": "MIT",
+  "keywords": [
+    "illegal wildlife trade",
+    "wildlife trafficking",
+    "OSINT",
+    "CITES",
+    "link analysis",
+    "conservation"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://tarunv13.github.io/wildtrace/",
+      "relation": "isDocumentedBy",
+      "resource_type": "other"
+    }
+  ],
+  "notes": "Data files under web/data/ are licensed CC BY 4.0; code is MIT.",
+  "access_right": "open"
 }

@@ -1,108 +1,257 @@
+<div align="center">
+
+<img src="docs/img/logo.svg" width="104" alt="WildTrace logo">
+
 # WildTrace
 
+**The open atlas of illegal wildlife trade.**
+
+One map of seizures, arrests and convictions worldwide, in fauna and flora, with every case
+graded by the strength of its evidence, and a link-analysis workbench that runs in your browser.
+
+[![CI](https://github.com/tarunv13/wildtrace/actions/workflows/ci.yml/badge.svg)](https://github.com/tarunv13/wildtrace/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/tarunv13/wildtrace)](https://github.com/tarunv13/wildtrace/releases)
+[![License: MIT](https://img.shields.io/badge/code-MIT-blue)](LICENSE)
+[![Data: CC BY 4.0](https://img.shields.io/badge/data-CC%20BY%204.0-green)](#data-licence-and-citation)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22902819.svg)](https://doi.org/10.5281/zenodo.22902819)
 
-**The open atlas of illegal wildlife trade.** WildTrace is an open-source map of the global illegal wildlife trade: seizures, arrests and convictions, the routes between them, the species and the names they are sold under, and the observatories that watch them. It includes an in-browser link-analysis workbench (an open alternative to i2 Analyst's Notebook) that works on your own data without uploading it.
+[Open the Atlas](https://tarunv13.github.io/wildtrace/) ·
+[Who it's for](#who-its-for) ·
+[How much to trust a case](#how-much-to-trust-a-case) ·
+[Download the data](https://tarunv13.github.io/wildtrace/data/cases.csv) ·
+[Run it yourself](#run-it-yourself) ·
+[How to cite](#how-to-cite) ·
+[Contributing](CONTRIBUTING.md)
 
-*Wild* covers everything CITES calls "wild fauna and flora": ivory and orchids, pangolins and rosewood. *Trace* is what investigators do and what the trade leaves behind. The map at its centre is **the Atlas**. Tagline: **Follow the trade.**
+</div>
 
-**Live:** https://tarunv13.github.io/wildtrace/
+<p align="center">
+  <img src="docs/img/atlas.png" alt="The WildTrace globe with clustered case markers across Africa, South Asia and South America, a summary panel on the left and a timeline along the bottom" width="100%">
+  <br>
+  <sub>The Atlas: 1,251 cases in 59 countries. Colour is the kind of event, paler dots are single reports, the glow is density of reporting.</sub>
+</p>
 
 ---
 
-## One map, no pages
+## Why WildTrace
 
-Everything happens on a single globe. The other surfaces float over it, so you can wander back and forth without losing your place:
+- **Every case says how well it is evidenced.** Validated, official, corroborated or single
+  report, shown on the map, in the case panel and in the CSV. A case built on one local news
+  story never looks like a case confirmed by a customs release.
+- **It is honest about its gaps.** The map says how many cases it could not place, and states
+  plainly that counts show where wildlife crime is *reported*, not where it happens.
+- **Fauna and flora.** Ivory, pangolin and rhino horn, but also rosewood, agarwood and red
+  sanders, in 31 species groups and nine languages.
+- **Anyone can challenge a case.** Every case panel has a Report a correction link. Reviewers
+  record the outcome in a file in this repository, and rejected cases disappear at the next build.
+- **The data is yours.** One CSV, CC BY 4.0, with the JSON behind the map beside it. No account,
+  no API key, no analytics, no cookies.
+- **Nobody accused is named.** No names, phone numbers, addresses or seller identities are ever
+  published. The build fails if one gets through, and CI checks again.
+
+|  | WildTrace | Commercial and closed IWT dashboards |
+| --- | --- | --- |
+| Cost | Free | Licence, subscription or membership |
+| Source code | Open (MIT) | Closed |
+| Case-level data | CSV and JSON, CC BY 4.0 | Aggregates or on request |
+| Evidence grading per case | Yes, four levels | Rare; usually one confidence figure or none |
+| Link analysis | In the browser, free | i2 Analyst's Notebook and similar, paid |
+| Your own data | Stays in your browser | Uploaded to a server |
+| Scope | Global, fauna and flora | Often one region or one taxon |
+
+WildTrace is young, and it does not replace the field's reference datasets. It points to them
+instead: the [observatory network](docs/OBSERVATORIES.md) lists 33 datasets, dashboards and
+codebooks, with what each holds and its access terms. The CITES Trade Database, ETIS, LEMIS,
+UNODC World WISE and TRAFFIC's portal hold records WildTrace will never match.
+
+## Who it's for
+
+| You are | What WildTrace gives you |
+| --- | --- |
+| Investigative journalism | A searchable base of public seizures with every source link, and a link chart to find what connects them |
+| Enforcement and customs analysis | Reported routes, transport modes, commodities and the agencies named, exportable as CSV, GraphML or JSON |
+| NGOs and conservation programmes | A global picture with country and species filters, free to embed, fork or re-host |
+| Researchers and students | A citable dataset with a DOI, an open method, and a classifier trained on a published labelled set |
+| Policy and CITES work | Where trade in a listed species is being reported, and how strong that reporting is |
+| Anyone with their own spreadsheet | Import CSV, Excel or JSON into the workbench and chart it against the public data, all in your browser |
+
+## The Atlas
+
+Everything happens on one globe. The other surfaces float over it, so you can wander without
+losing your place.
 
 | Surface | What it does |
-|---|---|
-| **Globe** | Cases (colour = seizure / arrest / rescue; paler = single report; a ring = approximate place), a density glow, reported routes as arcs once a report states one, and observatories. Globe/flat toggle, slow rotation (stops when you touch it), legend toggle |
-| **Search** (`/`) | One box for cases, species, countries and observatories, with keyboard navigation |
-| **Pulse** | A live summary of what is in view. Every bar is a filter (species, country, kind) |
-| **Inspector** | Case, species, country, observatory or your own entity. Everything links onward, with back/forward and a breadcrumb trail. The URL follows, so any view can be shared |
-| **Timeline** | Cases per week. Drag to pick a period; ▶ glides the map through cases in time order |
-| **Investigate** | Link chart (i2-style) of cases, species, places and agencies, plus **Your data**: import CSV, Excel or JSON, map columns, and see it on the chart and the globe, all in your browser |
-| **Network** | 33 observatories, databases and codebooks, each checked, with what it does and how WildTrace uses it |
-| **Table** | Every case in a sortable, filterable, keyboard-friendly table, with CSV download |
-| **About** | What the evidence labels mean, coverage, who runs it, licence, how to cite, how to report a correction |
-| **Methods** | Pipeline, classifier, privacy and sources |
+| --- | --- |
+| **Globe** | Cases by kind, a density glow, reported routes as arcs, observatories. Globe or flat, slow rotation, legend toggle |
+| **Search** (`/`) | Cases, species, countries and observatories in one box |
+| **Pulse** | A live summary of what is in view; every bar is a filter |
+| **Inspector** | A case, species, country or observatory, with back and forward and a shareable link |
+| **Timeline** | Cases per week. Drag to pick a period; ▶ glides through them in time order |
+| **Table** | Every case, sortable and filterable, with CSV download |
+| **Investigate** | A link chart of cases, species, places and agencies, plus your own imported data |
+| **Network** | The 33 observatories, databases and codebooks, each checked, with how WildTrace uses them |
+| **Methods** and **About** | Pipeline, classifier, evidence definitions, coverage, licence and citation |
 
-Case records follow evidence discipline: **documented facts**, **analytical context** and **limits of the evidence** are kept apart. Routes are attributed to the reports ("as reported"), and every case links to its original sources.
+<p align="center">
+  <img src="docs/img/case.png" alt="A case panel for a seizure in Bengaluru: an Official source badge, CITES-listed species chips, and sections for documented facts, analytical context and limits of the evidence" width="100%">
+  <br>
+  <sub>A case record keeps documented facts, analytical context and the limits of the evidence apart. Arrests are counts only; no person is named.</sub>
+</p>
+
+<p align="center">
+  <img src="docs/img/investigate.png" alt="The Investigate link chart showing the best-connected 175 entities: cases as red squares joined to species, places and agencies" width="100%">
+  <br>
+  <sub>Investigate opens on the best-connected part of the network. Isolate, expand, find the shortest path between two entities, then export to PNG, GraphML, CSV or JSON.</sub>
+</p>
+
+<p align="center">
+  <img src="docs/img/table.png" alt="The All cases table: date, case, evidence badge, country and number of reports, with a Download CSV button" width="100%">
+  <br>
+  <sub>Every case as a table, sortable by any column, with the evidence grade beside it and "not mapped" stated rather than hidden.</sub>
+</p>
 
 ## How much to trust a case
 
-Every case carries one verification status, shown on the map, in the case panel and in the CSV:
+Every case carries one status:
 
 | Status | Meaning |
-|---|---|
-| **Validated** | A person checked it against its sources (recorded in [`validations.yaml`](pipeline/wildtrace/resources/validations.yaml), with reviewer, date and note) |
-| **Official** | At least one report is a government, customs, police, prosecutor or court release (tiered by domain in `sources_tier.py`) |
+| --- | --- |
+| **Validated** | A person checked it against its sources, recorded in [`validations.yaml`](pipeline/wildtrace/resources/validations.yaml) with reviewer, date and note |
+| **Official** | At least one report is a government, customs, police, prosecutor or court release |
 | **Corroborated** | Two or more independent outlets report it |
 | **Single report** | One outlet only: a lead, not a finding |
 
-Anyone can challenge a case: every case panel has **Report a correction**, which opens a pre-filled GitHub issue. Reviewers mark a case `validated` or `rejected` in `validations.yaml`; rejected cases are dropped at the next build.
+As of the current build: **187 official, 140 corroborated, 924 single report**. Three in four
+cases still rest on one outlet, and **557 of 1,251 cases name no place** at all. Those numbers are
+on the site, not buried here, because a map that hides them would be misleading.
 
-The map shows where wildlife crime is *reported* in the newsrooms and government sites searched, not where it happens. Cases whose reports name no place are counted but not drawn, and the Pulse says how many are pinned.
+Found a mistake? Use **Report a correction** on any case, which opens a pre-filled issue.
 
 ## Data, licence and citation
 
-- **Download:** [`web/data/cases.csv`](https://tarunv13.github.io/wildtrace/data/cases.csv) (one row per case, with status, place, species and source links) and the JSON behind the map in `web/data/`.
+- **Download:** [`cases.csv`](https://tarunv13.github.io/wildtrace/data/cases.csv), one row per
+  case, with status, place, species and source links. The JSON behind the map sits beside it in
+  [`web/data/`](web/data).
 - **Licence:** data CC BY 4.0, code MIT.
-- **Cite:** Verma, T. (2026). *WildTrace: the open atlas of illegal wildlife trade.* Zenodo. https://doi.org/10.5281/zenodo.22902819. That DOI always points to the latest version; cite [10.5281/zenodo.22902820](https://doi.org/10.5281/zenodo.22902820) for v1.2.1 exactly. GitHub's "Cite this repository" button reads [`CITATION.cff`](CITATION.cff).
+- **Coverage:** 1,251 cases, 59 countries, 1,752 public reports, 2024-01-15 to 2026-09-22.
 
-## Coverage
-
-- **30 species groups**, from pangolin, ivory, rhino horn, tiger and leopard to jaguar, lion bone, African grey parrots, totoaba, glass eels, abalone, rosewood and agarwood. Terms come in English, Hindi, Telugu, Portuguese, Spanish, French, Vietnamese, Thai and Indonesian/Malay, plus 2,376 names in 66 languages from the open seized-wildlife codebook (Stringham et al. 2021, PMC8579131).
-- **46,000 places**: every town above 15,000 people worldwide, every town above 1,000 in South and Southeast Asia, every Indian district, the key trafficking airports, and Hindi and native-script names (GeoNames, CC BY).
-- **Official sources first:** releases from 25 government, enforcement and judicial domains worldwide (gov.br, gob.mx, go.id, gov.in, nic.in, gov.za, go.ke, justice.gov, fws.gov, gov.uk, gouv.fr, INTERPOL, the EU and more), searched in their own language.
-- **News in 23 Google News editions** (Asia, Africa, Latin America, demand markets), with a month-by-month history backfill, plus GDELT and YouTube listings collected locally.
-- The [observatory network](docs/OBSERVATORIES.md) lists the validated datasets behind the field (the CITES Trade Database, LEMIS, ETIS, UNODC World WISE and SHERLOC, the TRAFFIC Wildlife Trade Portal, C4ADS, WCS Brasil's observatory and others), with their access terms. WildTrace links to them rather than republishing what their licences restrict.
-
-## Run it
+## Run it yourself
 
 ```bash
 pip install -e ".[dev,video]"
-export WILDTRACE_WCS_OWT_DIR=/path/to/WCS-OWT          # optional: trains the listing classifier
-wildtrace train                                          # classifier, channel-grouped evaluation
 wildtrace collect --official --gnews --countries ALL   # official releases + global news
-wildtrace collect --history 12 --no-gdelt               # one-off: backfill 12 months
-wildtrace build                                          # cases, graph, CSV, site data (privacy gate)
+wildtrace collect --history 12 --no-gdelt              # one-off: backfill 12 months
+wildtrace build                                        # cases, graph, CSV, site data (privacy gate)
 python -m http.server -d web 8000                      # open http://localhost:8000
 ```
 
-Other commands: `gazetteer` rebuilds the place index, `codebook <zip>` merges the PMC8579131 names, `cites <folder>` loads the CITES Trade Database, `relabel` merges classifier corrections, and `doctor` checks tools and sources.
+Optional: `export WILDTRACE_WCS_OWT_DIR=/path/to/OWT` trains the listing classifier on the OWT
+labelled set. Other commands: `gazetteer` rebuilds the place index, `codebook <zip>` merges the
+PMC8579131 names, `cites <folder>` loads the CITES Trade Database, `relabel` merges classifier
+corrections, `doctor` checks tools and sources.
 
 ## How a report becomes a case
 
 ```
 collect ─► screen ─► extract ─► merge ─► link ─► publish
-news,       species ×   species, place,   one case per      entity–link     privacy gate,
-listings,   enforcement route, quantity,  incident, across  graph with      static JSON
-bulk data   cues, minus arrests (count),  languages and     centrality      for the map
+official,   species ×   species, place,   one case per      entity–link     privacy gate,
+news,       enforcement route, quantity,  incident, across  graph with      static JSON
+listings    cues, minus arrests (count),  languages and     centrality      and CSV
             false cues  agency, mode      story days
 ```
 
-- **Screening** rejects look-alikes (an ivory-smuggling *film*, "Kasturi" liquor, the Ivory Park township).
-- **Places** come from the report: Hindi words such as कुशीनगर are transliterated and matched by consonant skeleton, and homonyms are resolved by the country the text names. Google News links are not decoded, because its robots.txt forbids it.
-- **Merging** keeps one incident as one case, even when Hindi and English reports share no words. A shared arrest count and date is enough.
+- **Screening** rejects look-alikes: an ivory-smuggling *film*, "Kasturi" liquor, the Ivory Park
+  township.
+- **Places** come from the report. Hindi words such as कुशीनगर are transliterated and matched by
+  consonant skeleton, and homonyms are settled by the country the text names. Google News links
+  are not decoded, because its robots.txt forbids it.
+- **Merging** keeps one incident as one case even when Hindi and English reports share no words.
+- **Sources** are tiered by domain, so an official release is recognised as one.
+
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) has the data contracts and design choices.
+
+## Coverage
+
+- **31 species groups**: pangolin, ivory, rhino horn, tiger, leopard, jaguar, lion bone, African
+  grey parrots, totoaba, glass eels, abalone, rosewood, agarwood, red sanders and more, in
+  English, Hindi, Telugu, Portuguese, Spanish, French, Vietnamese, Thai and Indonesian/Malay,
+  plus 2,376 names in 66 languages from the open seized-wildlife codebook (Stringham et al. 2021).
+- **46,000 places**: every town above 15,000 people worldwide, every town above 1,000 in South
+  and Southeast Asia, every Indian district, key trafficking airports, and native-script names.
+- **Sources**: 25 government, enforcement and judicial domains worldwide, 23 Google News editions
+  with a month-by-month backfill, GDELT, and YouTube listings collected locally.
 
 ## The classifier
 
-Trained on the OWT labelled set (1,274 labelled online listings, loaded by `classify/dataset.py`), evaluated on a test set split by seller channel. At the target of keeping 98% of trade listings it rejects about half of the irrelevant ones. Contradictory labels, not the model, set the ceiling. [`data/labels/README.md`](data/labels/README.md) has the codebook and the relabel loop.
+Trained on the OWT labelled set (1,274 labelled online listings), evaluated on a test set split by
+seller channel. At the target of keeping 98% of trade listings it rejects about half of the
+irrelevant ones. Contradictory labels, not the model, set the ceiling.
+[`data/labels/README.md`](data/labels/README.md) has the codebook and the relabel loop.
 
 ## Privacy
 
-WildTrace never publishes a person's name, a phone number, an e-mail address or a seller identity; the build fails if one slips through, and CI checks again. Your imported data lives in your browser's localStorage. There are no analytics, cookies or accounts, and fonts are self-hosted, so opening the site contacts no font service. The link-chart and Excel libraries load only when you open Investigate. See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md).
+WildTrace never publishes a person's name, a phone number, an e-mail address or a seller
+identity; the build fails if one slips through, and CI checks again. Imported data stays in your
+browser's local storage. No analytics, cookies or accounts, and fonts are self-hosted, so opening
+the site contacts no third party. See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md).
+
+## Roadmap
+
+Ideas, not promises. Discuss them in [Issues](https://github.com/tarunv13/wildtrace/issues).
+
+- [ ] Court judgments and prosecution outcomes (SHERLOC, Indian Kanoon)
+- [ ] More history: backfill beyond 12 months, and official archives before 2024
+- [ ] More validated cases, and a published reviewer log
+- [ ] Better placement of country-only cases
+- [ ] Seizure quantities normalised to comparable units
+- [ ] A shareable saved view (filters and period in one link)
+
+## Known limitations
+
+- Three in four cases rest on a single report, and 557 name no place.
+- Coverage is thinner before late 2025, and reporting is uneven between countries and languages,
+  so the map reflects newsrooms and government sites as much as the trade.
+- Only two cases so far state a route, because reports rarely name origin and destination.
+- Google News links are not decoded, so some sources show the aggregator rather than the outlet.
+
+## How to cite
+
+If WildTrace helps your work, please cite it. Use the **Cite this repository** button
+(it reads [`CITATION.cff`](CITATION.cff)) or copy one of these.
+
+**APA 7**
+
+> Verma, T. K. (2026). *WildTrace: the open atlas of illegal wildlife trade* (Version 1.2.1) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22902819
+
+**BibTeX**
+
+```bibtex
+@software{verma_wildtrace_2026,
+  author  = {Verma, Tarun Kumar},
+  title   = {WildTrace: the open atlas of illegal wildlife trade},
+  year    = {2026},
+  version = {1.2.1},
+  doi     = {10.5281/zenodo.22902819},
+  url     = {https://github.com/tarunv13/wildtrace},
+  license = {MIT}
+}
+```
+
+The DOI above always resolves to the latest version. For this exact release, cite
+[10.5281/zenodo.22902820](https://doi.org/10.5281/zenodo.22902820).
 
 ## Repository
 
 ```
-pipeline/wildtrace/  collectors, classifier, extraction, graph, publishing (Python package; CLI: wildtrace)
-web/                the portal: index.html, css/wildtrace.css, js/{main,globe,inspector,pulse,timeline,search,investigate,sheets,store}.js
-docs/               ARCHITECTURE, ETHICS_PRIVACY, OBSERVATORIES
-.github/workflows/  tests + privacy gate; weekly refresh; Pages deploy
+pipeline/wildtrace/  collectors, classifier, extraction, graph, publishing (CLI: wildtrace)
+web/                 the portal: index.html, css/, js/, data/
+docs/                ARCHITECTURE, ETHICS_PRIVACY, OBSERVATORIES, screenshots
+.github/workflows/   tests + privacy gate; weekly refresh; Pages deploy
 ```
 
 ## Credits
 
-Code MIT; data CC BY 4.0. Places: GeoNames (CC BY 4.0). Names codebook: Stringham et al. 2021 (CC BY 4.0). News index: GDELT. Basemap: OpenFreeMap / OpenStreetMap contributors. Motion vocabulary adapted from OpenHiggsfield. Inspired by WCS Brasil's Global Wildlife Trafficking Observatory, C4ADS, TRAFFIC, #WildEye and i2 Analyst's Notebook.
+Code MIT; data CC BY 4.0. Places: GeoNames (CC BY 4.0). Names codebook: Stringham et al. 2021
+(CC BY 4.0). News index: GDELT. Basemap: OpenFreeMap / OpenStreetMap contributors. Motion
+vocabulary adapted from OpenHiggsfield. Inspired by WCS Brasil's Global Wildlife Trafficking
+Observatory, C4ADS, TRAFFIC, #WildEye and i2 Analyst's Notebook.

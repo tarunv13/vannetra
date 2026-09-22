@@ -4,8 +4,8 @@ title: "WildTrace: the open atlas of illegal wildlife trade"
 type: software
 authors:
   - family-names: Verma
-    given-names: Tarun
-    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    given-names: "Tarun Kumar"
+    orcid: "https://orcid.org/0009-0009-4130-2455"
 repository-code: "https://github.com/tarunv13/wildtrace"
 url: "https://tarunv13.github.io/wildtrace/"
 license: MIT

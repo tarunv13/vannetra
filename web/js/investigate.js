@@ -60,6 +60,7 @@ export function mountChart(root, { onLocalChange, focus } = {}) {
       <div class="sec"><h3>Size by</h3></div>
       <select id="wb-size" style="width:100%"><option value="degree">Connections (degree)</option><option value="betweenness">Brokerage (betweenness)</option><option value="none">Equal</option></select>
       <label class="type-row" style="margin-top:8px"><input type="checkbox" id="wb-comm"> Colour by community</label>
+      <label class="type-row"><input type="checkbox" id="wb-core"> Busiest entities only</label>
       <div class="note" style="margin-top:12px">Public chart: cases, species, places, agencies, outlets. It holds no people. Entities you import stay in this browser.</div>
     </div>
     <div class="wb-canvas"><div class="wb-tools">
@@ -99,16 +100,31 @@ export function mountChart(root, { onLocalChange, focus } = {}) {
     ...(name === "cose" ? { nodeRepulsion: 9000, idealEdgeLength: 70, numIter: 900, randomize: true } : {}),
     ...(name === "concentric" ? { concentric: (n) => n.data("degree") || n.degree(false), levelWidth: () => 3, minNodeSpacing: 14 } : {}) }).run();
   const boxes = () => [...root.querySelectorAll(".wb-side input[type=checkbox][value]")];
+  // A whole-network chart of thousands of entities reads as a hairball. Open on the
+  // best-connected core instead, and let the chart be opened out from there.
+  const CORE = 220;
+  const core = new Set(cy.nodes().sort((a, b) => (b.data("degree") || b.degree(false)) - (a.data("degree") || a.degree(false)))
+    .slice(0, CORE).map((n) => n.id()));
+  const coreBox = root.querySelector("#wb-core");
+  coreBox.checked = !focus && cy.nodes().length > CORE * 1.5;
   const apply = () => {
     const on = new Set(boxes().filter((b) => b.checked).map((b) => b.value));
     cy.batch(() => {
-      cy.nodes().forEach((n) => n.toggleClass("hidden", !on.has(n.data("type")) || n.hasClass("user-hidden")));
+      cy.nodes().forEach((n) => n.toggleClass("hidden", !on.has(n.data("type")) || n.hasClass("user-hidden")
+        || (coreBox.checked && !core.has(n.id()) && !n.data("local"))));
       cy.edges().forEach((e) => e.toggleClass("hidden", e.source().hasClass("hidden") || e.target().hasClass("hidden")));
     });
-    root.querySelector("#wb-stats").textContent = `${fmt(cy.nodes(":visible").length)} entities · ${fmt(cy.edges(":visible").length)} links`;
+    if (coreBox.checked) {  // in the core view, an entity with nothing left to connect to is noise
+      cy.batch(() => cy.nodes(":visible").forEach((n) => { if (!n.connectedEdges(":visible").length) n.addClass("hidden"); }));
+    }
+    const vis = cy.nodes(":visible").length;
+    root.querySelector("#wb-stats").textContent = coreBox.checked
+      ? `${fmt(vis)} of ${fmt(cy.nodes().length)} entities · ${fmt(cy.edges(":visible").length)} links · untick "Busiest entities only" for the whole network`
+      : `${fmt(vis)} entities · ${fmt(cy.edges(":visible").length)} links`;
   };
   boxes().forEach((b) => b.addEventListener("change", apply));
-  apply(); run(all.length > 2500 ? "concentric" : "cose");
+  coreBox.addEventListener("change", () => { apply(); run(root.querySelector("#wb-layout").value); });
+  apply(); run(cy.nodes(":visible").length > 900 ? "concentric" : "cose");
   root.querySelector("#wb-layout").addEventListener("input", (e) => run(e.target.value));
   root.querySelector("#wb-size").addEventListener("input", (e) => { sizeKey.v = e.target.value; cy.style().update(); });
   root.querySelector("#wb-comm").addEventListener("change", (e) => {
