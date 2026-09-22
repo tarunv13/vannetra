@@ -46,7 +46,7 @@ The map shows where wildlife crime is *reported* in the newsrooms and government
 
 - **Download:** [`web/data/cases.csv`](https://tarunv13.github.io/wildtrace/data/cases.csv) (one row per case, with status, place, species and source links) and the JSON behind the map in `web/data/`.
 - **Licence:** data CC BY 4.0, code MIT.
-- **Cite:** WildTrace (2026). *The open atlas of illegal wildlife trade.* https://tarunv13.github.io/wildtrace/ (accessed *date*).
+- **Cite:** Verma, T. (2026). *WildTrace: the open atlas of illegal wildlife trade.* Zenodo. DOI to follow with the first archived release; until then https://tarunv13.github.io/wildtrace/. GitHub's "Cite this repository" button reads [`CITATION.cff`](CITATION.cff).
 
 ## Coverage
 

@@ -25,6 +25,18 @@ MIN_DATE = "2024-01-01"
 NOT_EVENTS = {"cordis.europa.eu", "op.europa.eu", "eur-lex.europa.eu", "data.europa.eu", "researchgate.net", "frontiersin.org", "sciencedirect.com"}
 
 
+
+def _cite() -> str:
+    """Citation line for the site. Uses the Zenodo DOI once CITATION.cff records one."""
+    try:
+        cff = yaml.safe_load((Path(__file__).resolve().parents[2] / "CITATION.cff").read_text(encoding="utf-8")) or {}
+    except OSError:
+        cff = {}
+    doi = cff.get("doi")
+    where = f"https://doi.org/{doi}" if doi else "https://tarunv13.github.io/wildtrace/"
+    return (f"Verma, T. ({time.strftime('%Y')}). WildTrace: the open atlas of illegal wildlife trade. {where} "
+            f"(data built {time.strftime('%Y-%m-%d')}).")
+
 def _dump(name: str, obj) -> Path:
     p = WEB_DATA / name
     p.write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":"), default=str), encoding="utf-8")
@@ -238,7 +250,7 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
     s = stats(cases)
     meta = {"built": time.strftime("%Y-%m-%d %H:%M"), "records_seen": len(recs), "news_records": len(news),
             "licence": "CC BY 4.0 (data) · MIT (code)",
-            "cite": f"WildTrace ({time.strftime('%Y')}). The open atlas of illegal wildlife trade. https://tarunv13.github.io/wildtrace/ (data built {time.strftime('%Y-%m-%d')}).",
+            "cite": _cite(),
             "coverage": {"mapped": sum(1 for c in cases if c.get("place") and c["place"]["type"] != "country"),
                          "country_only": sum(1 for c in cases if c.get("place") and c["place"]["type"] == "country"),
                          "unmapped": sum(1 for c in cases if not c.get("place"))},

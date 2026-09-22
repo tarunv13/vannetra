@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use WildTrace or its data, please cite it as below. Data CC BY 4.0, code MIT."
+title: "WildTrace: the open atlas of illegal wildlife trade"
+type: software
+authors:
+  - family-names: Verma
+    given-names: Tarun
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+repository-code: "https://github.com/tarunv13/wildtrace"
+url: "https://tarunv13.github.io/wildtrace/"
+license: MIT
+# doi: filled in after Zenodo mints one for the first GitHub release
+keywords:
+  - illegal wildlife trade
+  - wildlife trafficking
+  - OSINT
+  - CITES
+  - link analysis
+  - conservation
+abstract: >-
+  An open-source map of the global illegal wildlife trade in fauna and flora.
+  A Python pipeline collects public reports (official government, enforcement
+  and judicial releases first, then news), screens and extracts seizures,
+  arrests and convictions, merges reports into cases, grades each case as
+  validated, official, corroborated or single-report, and publishes a static
+  atlas with an in-browser link-analysis workbench. No person accused is named.
