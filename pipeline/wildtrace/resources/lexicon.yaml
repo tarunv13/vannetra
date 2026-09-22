@@ -287,7 +287,7 @@ groups:
     cites: "II"
     products: [logs, furniture]
     terms:
-      en: [rosewood, rosewood logs, dalbergia, kosso timber, illegal timber, illegal logging]
+      en: [rosewood, rosewood logs, dalbergia, kosso timber, illegal timber, illegal logging, Dalbergia cochinchinensis, Dalbergia latifolia, Dalbergia odorifera, Dalbergia nigra, Dalbergia oliveri, Pterocarpus erinaceus, Swietenia macrophylla, Khaya senegalensis, Cedrela odorata, Afzelia quanzensis]
       es: [palo de rosa, madera ilegal, tala ilegal]
       pt: [pau-rosa, madeira ilegal, extração ilegal de madeira]
       fr: [bois de rose, bois illégal]
@@ -297,7 +297,7 @@ groups:
     cites: "II"
     products: [chips, oil]
     terms:
-      en: [agarwood, agar wood, oud wood, agarwood chips]
+      en: [agarwood, agar wood, oud wood, agarwood chips, Aquilaria malaccensis, Aquilaria sinensis]
       id_ms: [gaharu, kayu gaharu]
       hi: [अगरवुड]
   pythons_reptiles:
@@ -316,7 +316,7 @@ groups:
     cites: "I/II"
     products: [live plants, tubers, salep]
     terms:
-      en: [wild orchid, wild orchids, orchid seized, orchid smuggling, lady's slipper orchid, salep, sahlep, orchid tubers]
+      en: [wild orchid, wild orchids, orchid seized, orchid smuggling, lady's slipper orchid, salep, sahlep, orchid tubers, Dactylorhiza hatagirea, Cymbidium aloifolium, Rhynchostylis gigantea]
       hi: [जंगली ऑर्किड, सालमपंजा, सालम पंजा]
       es: [orquídea silvestre, orquídeas silvestres, tráfico de orquídeas]
       pt: [orquídea silvestre, orquídeas silvestres]
@@ -338,7 +338,7 @@ groups:
     cites: "I/II"
     products: [live plants, seeds]
     terms:
-      en: [cycad, cycads, encephalartos, cycad theft, cycad poaching, sago palm seized]
+      en: [cycad, cycads, encephalartos, cycad theft, cycad poaching, sago palm seized, Zamia pseudoparasitica, Cycas panzhihuaensis, Encephalartos transvenosus, Encephalartos lebomboensis]
       es: [cícadas]
       pt: [cicas apreendidas]
   carnivorous_plants:
@@ -347,7 +347,7 @@ groups:
     cites: "I/II"
     products: [live plants]
     terms:
-      en: [nepenthes, pitcher plant, pitcher plants, venus flytrap, sarracenia, flytrap poaching]
+      en: [nepenthes, pitcher plant, pitcher plants, venus flytrap, sarracenia, flytrap poaching, Dionaea muscipula, Sarracenia purpurea]
       id_ms: [kantong semar]
   medicinal_plants:
     label: Medicinal & aromatic plants
@@ -355,7 +355,7 @@ groups:
     cites: "I/II"
     products: [roots, bark, herbs]
     terms:
-      en: [medicinal plants seized, kuth roots, jatamansi, wild ginseng, american ginseng poaching, prunus africana bark, taxus bark, yew bark seized, sarpagandha]
+      en: [medicinal plants seized, kuth roots, jatamansi, wild ginseng, american ginseng poaching, prunus africana bark, taxus bark, yew bark seized, sarpagandha, Paris polyphylla, Panax quinquefolius, Prunus africana, Fritillaria cirrhosa, Warburgia salutaris, Eucomis autumnalis, Securidaca longepedunculata]
       hi: [जड़ी बूटी तस्करी, कुठ, जटामांसी, सर्पगंधा]
       es: [plantas medicinales decomisadas]
       pt: [plantas medicinais apreendidas]
@@ -366,7 +366,7 @@ groups:
     cites: "–"
     products: [logs, oil, chips]
     terms:
-      en: [sandalwood, sandalwood logs, sandalwood smuggling, sandalwood seized, santalum]
+      en: [sandalwood, sandalwood logs, sandalwood smuggling, sandalwood seized, santalum, Santalum album, Osyris lanceolata]
       hi: [चंदन, चंदन तस्करी, चंदन की लकड़ी]
       te: [చందనం]
       id_ms: [kayu cendana]
