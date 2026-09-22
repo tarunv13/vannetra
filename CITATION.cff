@@ -9,7 +9,16 @@ authors:
 repository-code: "https://github.com/tarunv13/wildtrace"
 url: "https://tarunv13.github.io/wildtrace/"
 license: MIT
-# doi: filled in after Zenodo mints one for the first GitHub release
+doi: 10.5281/zenodo.22902819
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22902819
+    description: "Concept DOI: all versions, resolves to the latest"
+  - type: doi
+    value: 10.5281/zenodo.22902820
+    description: "Version 1.2.1"
+version: 1.2.1
+date-released: "2026-09-22"
 keywords:
   - illegal wildlife trade
   - wildlife trafficking

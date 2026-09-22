@@ -1,5 +1,7 @@
 # WildTrace
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22902819.svg)](https://doi.org/10.5281/zenodo.22902819)
+
 **The open atlas of illegal wildlife trade.** WildTrace is an open-source map of the global illegal wildlife trade: seizures, arrests and convictions, the routes between them, the species and the names they are sold under, and the observatories that watch them. It includes an in-browser link-analysis workbench (an open alternative to i2 Analyst's Notebook) that works on your own data without uploading it.
 
 *Wild* covers everything CITES calls "wild fauna and flora": ivory and orchids, pangolins and rosewood. *Trace* is what investigators do and what the trade leaves behind. The map at its centre is **the Atlas**. Tagline: **Follow the trade.**
@@ -46,7 +48,7 @@ The map shows where wildlife crime is *reported* in the newsrooms and government
 
 - **Download:** [`web/data/cases.csv`](https://tarunv13.github.io/wildtrace/data/cases.csv) (one row per case, with status, place, species and source links) and the JSON behind the map in `web/data/`.
 - **Licence:** data CC BY 4.0, code MIT.
-- **Cite:** Verma, T. (2026). *WildTrace: the open atlas of illegal wildlife trade.* Zenodo. DOI to follow with the first archived release; until then https://tarunv13.github.io/wildtrace/. GitHub's "Cite this repository" button reads [`CITATION.cff`](CITATION.cff).
+- **Cite:** Verma, T. (2026). *WildTrace: the open atlas of illegal wildlife trade.* Zenodo. https://doi.org/10.5281/zenodo.22902819. That DOI always points to the latest version; cite [10.5281/zenodo.22902820](https://doi.org/10.5281/zenodo.22902820) for v1.2.1 exactly. GitHub's "Cite this repository" button reads [`CITATION.cff`](CITATION.cff).
 
 ## Coverage
 
