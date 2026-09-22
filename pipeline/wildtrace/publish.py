@@ -54,6 +54,55 @@ def score_records(recs):
     return dict(zip([r.id for r in recs], predict(texts, bundle).round(4))) if texts else {}
 
 
+
+def trivia(cases: list[dict], species_meta: dict) -> list[dict]:
+    """Cards for the trivia box: sourced report figures, plus a few facts derived
+    from this dataset.
+
+    A derived card states something about WildTrace's own collected cases, never
+    about the world, and is computed here from the same list the site publishes,
+    so a figure cannot drift from what a reader can count in cases.csv. Each one
+    carries the caveat that collection, not the trade, decides what is in it.
+    """
+    cards = yaml.safe_load((RESOURCES / "trivia.yaml").read_text(encoding="utf-8"))["cards"]
+    for c in cards:
+        c["kind"] = "reported"
+    n = len(cases)
+    if not n:
+        return cards
+    ours, caveat = [], ("Counted in WildTrace's own cases, which come from the newsrooms and "
+                       "government sites searched, in the languages searched. It shows where "
+                       "wildlife crime is reported, not where it happens.")
+    counts: dict[str, int] = {}
+    for c in cases:
+        for sp in c.get("species", []):
+            if sp == lexicon.GENERAL:  # the catch-all group says nothing worth a card
+                continue
+            counts[sp] = counts.get(sp, 0) + 1
+    top = max(counts.items(), key=lambda kv: kv[1], default=None)
+    if top and top[1] > 1:
+        label = species_meta.get(top[0], {}).get("label", top[0])
+        ours.append({"id": "wt_top_species", "art": "bars", "kind": "ours",
+                     "fact": f"{label} appears in more WildTrace cases than any other group",
+                     "detail": f"{top[1]} of {n:,} cases name it, from {len({c['place']['country'] for c in cases if c.get('place') and c.get('place', {}).get('country')})} countries in all.",
+                     "caveat": caveat})
+    single = sum(1 for c in cases if c.get("verification") == "single")
+    if single:
+        ours.append({"id": "wt_single", "art": "clock", "kind": "ours",
+                     "fact": f"{round(100 * single / n)}% of cases here rest on a single report",
+                     "detail": f"{single:,} of {n:,} cases have one outlet behind them. Treat those as leads: "
+                               "the map pales them, and the evidence filter separates them out.",
+                     "caveat": caveat})
+    unmapped = sum(1 for c in cases if not c.get("place"))
+    if unmapped:
+        ours.append({"id": "wt_unmapped", "art": "web", "kind": "ours",
+                     "fact": f"{unmapped:,} cases name no place at all",
+                     "detail": f"Of {n:,} cases, {unmapped:,} could not be put on the map because no report "
+                               "names a town, district or country. They are counted, not drawn.",
+                     "caveat": caveat})
+    return cards + ours
+
+
 def stats(cases: list[dict]) -> dict:
     by = lambda f: Counter(x for c in cases for x in f(c))
     month = Counter((c["date"] or "")[:7] for c in cases if c.get("date"))
@@ -274,6 +323,7 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
     obs = yaml.safe_load((RESOURCES / "observatories.yaml").read_text(encoding="utf-8"))
     _dump("observatories.json", obs)
     _dump("codewords.json", [{k: v for k, v in c.items()} for c in lexicon.codewords()])
+    _dump("trivia.json", trivia(cases, species_meta))
     # CI has no private data or model: keep the last published aggregates instead of blanking them.
     ts = trade_signals()
     old_ts = WEB_DATA / "trade_signals.json"

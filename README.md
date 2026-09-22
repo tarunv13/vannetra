@@ -45,7 +45,7 @@ graded by the strength of its evidence, and a link-analysis workbench that runs 
 - **Anyone can challenge a case.** Every case panel has a Report a correction link. Reviewers
   record the outcome in a file in this repository, and rejected cases disappear at the next build.
 - **The data is yours.** One CSV, CC BY 4.0, with the JSON behind the map beside it. No account,
-  no API key, no analytics, no cookies.
+  no API key, no account. Usage is measured with Microsoft Clarity, which is stated on the site.
 - **Nobody accused is named.** No names, phone numbers, addresses or seller identities are ever
   published. The build fails if one gets through, and CI checks again.
 
@@ -85,8 +85,10 @@ losing your place.
 | **Globe** | Cases by kind, a density glow, reported routes as arcs, observatories. Globe or flat, slow rotation, legend toggle |
 | **Search** (`/`) | Cases, species, countries and observatories in one box |
 | **Pulse** | A live summary of what is in view; every bar is a filter |
-| **Inspector** | A case, species, country or observatory, with back and forward and a shareable link |
+| **Inspector** | A written account of the case, then the documented facts, analytical context and limits of the evidence, with every source listed. Back, forward and a shareable link |
 | **Timeline** | Cases per week. Drag to pick a period; ▶ glides through them in time order |
+| **Why this matters** | A collapsible trivia box: the scale of the trade, each figure from a named report you can open, plus facts counted from WildTrace's own cases |
+| **Tour** | A one-minute walkthrough that spotlights each part of the live interface. Runs once for a new reader, replayable from the Tour button |
 | **Table** | Every case, sortable and filterable, with CSV download |
 | **Investigate** | A link chart of cases, species, places and agencies, plus your own imported data |
 | **Network** | The 33 observatories, databases and codebooks, each checked, with how WildTrace uses them |
@@ -193,8 +195,14 @@ irrelevant ones. Contradictory labels, not the model, set the ceiling.
 
 WildTrace never publishes a person's name, a phone number, an e-mail address or a seller
 identity; the build fails if one slips through, and CI checks again. Imported data stays in your
-browser's local storage. No analytics, cookies or accounts, and fonts are self-hosted, so opening
-the site contacts no third party. See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md).
+browser's local storage and is never uploaded. There are no accounts, and fonts are self-hosted.
+
+The site does measure how it is used, with **Microsoft Clarity**: clicks, scrolling and session
+replays, which set cookies and send data to Microsoft. Text is masked, so what you type in the
+search box is not carried into a replay, and Clarity is skipped for browsers sending a Global
+Privacy Control signal. Remove `data-clarity` from `web/index.html` in a fork and nothing loads.
+See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md) and Microsoft's
+[privacy statement](https://privacy.microsoft.com/privacystatement).
 
 ## Roadmap
 

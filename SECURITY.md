@@ -19,8 +19,13 @@ request. Report it privately as above and it will be removed and rebuilt.
 ## What stays on your machine
 
 Anything you import in **Investigate** is held in your browser's local storage and is never
-uploaded. Clearing it from the panel removes it. The site has no accounts, analytics or cookies,
-and self-hosts its fonts, so opening it contacts no third party beyond the map tiles.
+uploaded. Clearing it from the panel removes it. The site has no accounts and self-hosts its fonts.
+
+It does run **Microsoft Clarity**, which records interactions and session replays and sets
+cookies. Clarity is loaded with text masking on, so typed text such as a search query is not
+carried into a replay, and it is skipped when the browser sends a Global Privacy Control signal.
+If that matters for your work, block `clarity.ms`, use a private window, or run the site
+yourself: deleting `data-clarity` from `web/index.html` removes it completely.
 
 ## Raw collection data
 

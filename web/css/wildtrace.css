@@ -362,3 +362,68 @@ body:not(.inspecting) .mapctl { right: var(--gutter); }
   .lens { padding: 0 10px; }
 }
 @media (max-width: 1320px) { .lens .n { display: none; } }
+
+/* v1.3: trivia box ------------------------------------------------------------------
+   Docked bottom-left, under Pulse. Motion follows the OpenHiggsfield vocabulary already
+   in use here: cards arrive on --ease, the box leaves faster than it enters on
+   --ease-exit, and nothing loops except the live dot. */
+.trivia { position: fixed; left: calc(var(--gutter) + 376px); bottom: calc(var(--dock) + 24px); width: 340px; z-index: 11;
+  border-radius: var(--r); padding: 4px 4px 8px; animation: drop 460ms var(--ease-slide) both; }
+.tv-head { padding: 8px 8px 2px; }
+.tv-toggle { display: flex; align-items: center; gap: 9px; width: 100%; border: 0; background: transparent; cursor: pointer;
+  padding: 6px 8px; border-radius: var(--r-sm); font: 600 13.5px/1 var(--font); color: var(--ink);
+  transition: background 200ms var(--ease); }
+.tv-toggle:hover { background: rgba(15, 26, 23, 0.05); }
+.tv-toggle b { flex: 1; text-align: left; font-weight: 600; }
+.tv-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--trade); animation: tvpulse 2.6s ease-in-out infinite; }
+.tv-toggle .chev { width: 16px; height: 16px; color: var(--ink-3); transition: transform 260ms var(--ease); }
+.trivia.folded .tv-toggle .chev { transform: rotate(180deg); }
+.trivia.folded .tv-body, .trivia.folded .tv-foot { display: none; }
+.trivia.folded { width: 230px; }
+.tv-body { padding: 2px 12px 0; }
+.tv-art { height: 76px; display: grid; place-items: center; margin: 2px 0 10px; border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--ground) 60%, #fff); }
+.tv-art svg { width: 168px; height: 68px; }
+.tv-body h3 { font: 600 16.5px/1.25 var(--display); letter-spacing: -0.01em; margin: 0 0 6px; text-wrap: balance; }
+.tv-body p { font-size: 13px; line-height: 1.5; color: var(--ink-2); margin: 0 0 8px; }
+.tv-src { font-size: 11.5px !important; color: var(--ink-3) !important; }
+.tv-src a { color: var(--place-ink); }
+.tv-tag { display: inline-block; background: color-mix(in srgb, var(--species) 14%, transparent); color: var(--species-ink);
+  border-radius: 999px; padding: 2px 8px; font-weight: 600; margin-right: 4px; }
+.tv-foot { display: flex; align-items: center; gap: 8px; padding: 2px 12px 4px; }
+.tv-count { flex: 1; font-size: 11.5px; color: var(--ink-3); text-align: center; }
+.tv-prev { width: 34px; padding: 0; }
+@keyframes drop { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes tvpulse { 0%, 100% { opacity: .45; transform: scale(.8); } 50% { opacity: 1; transform: scale(1); } }
+@media (max-width: 1320px) { .trivia { left: var(--gutter); } .pulse.folded ~ .trivia { left: calc(var(--gutter) + 60px); } }
+@media (max-width: 1180px) { .trivia { display: none; } }
+
+/* v1.3: guided walkthrough ----------------------------------------------------------
+   A dimming veil with a hole cut over the element being explained, so the reader is
+   looking at the live interface. The veil fades; the hole travels on --ease-slide. */
+.tour { position: fixed; inset: 0; z-index: 60; animation: fade 220ms var(--ease) both; }
+.tour.out { animation: fade 160ms var(--ease-exit) reverse both; }
+.tour-veil { position: absolute; inset: 0; background: rgba(15, 26, 23, 0.44); backdrop-filter: blur(1.5px); }
+.tour-cut { position: absolute; border-radius: var(--r); box-shadow: 0 0 0 9999px rgba(15, 26, 23, 0.44), 0 0 0 2px var(--accent) inset;
+  pointer-events: none; transition: left 420ms var(--ease-slide), top 420ms var(--ease-slide),
+    width 420ms var(--ease-slide), height 420ms var(--ease-slide); }
+.tour-cut:not([hidden]) ~ .tour-veil, .tour:has(.tour-cut:not([hidden])) .tour-veil { opacity: 0; }
+.tour-card { position: absolute; width: 372px; max-width: calc(100vw - 28px); padding: 18px 18px 14px; border-radius: var(--r);
+  background: var(--glass-2); box-shadow: var(--shadow); }
+.tour-step { font-size: 11px; letter-spacing: 0.04em; color: var(--ink-3); text-transform: uppercase; }
+.tour-card h2 { font: 700 20px/1.2 var(--display); letter-spacing: -0.02em; margin: 6px 0 8px; text-wrap: balance; }
+.tour-card p { font-size: 13.5px; line-height: 1.55; color: var(--ink-2); margin: 0 0 14px; }
+.tour-nav { display: flex; gap: 8px; align-items: center; }
+.btn.primary { background: var(--invest); color: #fff; border-color: transparent; }
+.btn.primary:hover { background: var(--invest-ink); }
+body.touring .trivia, body.touring .legend { pointer-events: none; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* v1.3: the case account — the story of the case before the structured evidence blocks */
+.account { margin: 12px 0 14px; }
+.account p { font-size: 14px; line-height: 1.6; color: var(--ink); margin: 0 0 9px; }
+.account p:first-child::first-line { font-weight: 500; }
+.account p:last-child { color: var(--ink-3); font-size: 13px; }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0; }
+.facts dt { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-3); padding-top: 2px; }
+.facts dd { margin: 0; font-size: 13px; color: var(--ink); }

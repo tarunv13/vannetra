@@ -211,3 +211,31 @@ def test_og_card_counts_are_one_argument():
     assert "({ cases, countries }) =>" in src
     assert re.search(r"pg\.evaluate\(OVERLAY, \{", src)
     assert "${cases} cases" in src and "${countries} countries" in src
+
+
+def test_trivia_cards_are_checkable():
+    """Sourced cards must carry a source; derived cards must match the data they
+    describe, since a trivia box is exactly where a wrong number goes unnoticed."""
+    import json
+    from pathlib import Path
+    from wildtrace.publish import trivia
+    web = Path(__file__).resolve().parents[1] / "web" / "data"
+    cases = json.loads((web / "cases.json").read_text(encoding="utf-8"))
+    species = json.loads((web / "species.json").read_text(encoding="utf-8"))
+    cards = trivia(cases, species if isinstance(species, dict) else {})
+    reported = [c for c in cards if c["kind"] == "reported"]
+    assert len(reported) >= 8
+    for c in reported:
+        assert c["source"]["url"].startswith("https://") and c["source"]["year"] >= 2019
+        assert c["fact"] and c["detail"]
+    ours = {c["id"]: c for c in cards if c["kind"] == "ours"}
+    n = len(cases)
+    single = sum(1 for c in cases if c.get("verification") == "single")
+    unmapped = sum(1 for c in cases if not c.get("place"))
+    assert f"{single:,} of {n:,}" in ours["wt_single"]["detail"]
+    assert str(round(100 * single / n)) + "%" in ours["wt_single"]["fact"]
+    assert f"{unmapped:,} cases name no place" in ours["wt_unmapped"]["fact"]
+    for c in ours.values():
+        assert "reported, not where it happens" in c["caveat"]
+    # the catch-all group is never the headline species
+    assert "unspecified" not in ours.get("wt_top_species", {}).get("fact", "").lower()

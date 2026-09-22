@@ -29,7 +29,31 @@ the data.
 - CITES appendix labels apply to whole groups. Readers are told to check Species+ for individual taxa and populations.
 - Media-derived seizure data is biased towards charismatic species, English-language outlets and places with active reporters. A map of reported seizures shows where enforcement and reporting happen, which is not the same as where trafficking happens. Say so when you use it.
 
-## 4. Security
+## 4. Measuring how the site is used
+
+WildTrace runs **Microsoft Clarity** on the published site. Clarity records interactions (clicks,
+scrolling, pointer movement), replays sessions, and sets cookies; the data is processed by
+Microsoft under its
+[privacy statement](https://privacy.microsoft.com/privacystatement).
+
+This is a deliberate trade-off, and one worth naming: readers of a wildlife-crime map include
+journalists and investigators, and a session replay shows what someone searched for and which
+cases they opened. The mitigations are:
+
+- **Text masking is on.** Clarity is initialised with strict masking, so text typed into the
+  search box is not carried into a replay.
+- **Global Privacy Control is honoured.** Browsers sending that signal load no analytics at all.
+- **Nothing you import is touched.** Data imported into Investigate stays in local storage; it is
+  never uploaded, by Clarity or anything else.
+- **Removable in one edit.** The project id lives in `data-clarity` on `<body>` in
+  `web/index.html`. Delete it and a fork, or a self-hosted copy, runs with no analytics.
+- **Stated where readers are.** The About panel says Clarity runs, and links to Microsoft's
+  privacy statement, rather than burying it here.
+
+If you re-deploy WildTrace for a community where this is not acceptable, remove the attribute.
+Nothing else in the site depends on it.
+
+## 5. Security
 
 - Static site: no server-side attack surface and no user accounts.
 - External scripts come only from jsDelivr, with pinned versions.

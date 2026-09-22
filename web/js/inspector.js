@@ -18,6 +18,47 @@ const VER = {
 const TIER = { official: "Official", ngo: "NGO", media: "Media" };
 const correction = (c) => `https://github.com/tarunv13/wildtrace/issues/new?labels=correction&title=${encodeURIComponent(`Correction: case ${c.id}`)}&body=${encodeURIComponent(
   `Case: ${c.summary}\nID: ${c.id}\nLink: ${location.origin}${location.pathname}#case/${c.id}\n\nWhat is wrong, and the source that shows it:\n`)}`;
+
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const longDate = (d) => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || "");
+  return m ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : "an unrecorded date";
+};
+const WORDS = ["no", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+const count = (n) => (n <= 10 ? WORDS[n] : String(n));
+const listOf = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+const KIND_VERB = { seizure: "A seizure", arrest: "An arrest or conviction", other: "A rescue or report" };
+
+/** A plain-language account of the case, assembled from what the reports actually stated.
+ *  It repeats nothing the reader cannot check in the sources listed below, and every
+ *  attribution ("as the reports state") is kept, because none of it is independently verified. */
+function narrative(c, place, qs) {
+  const sp = c.species.map(spLabel).filter(Boolean);
+  const where = place
+    ? `${place.name}${place.admin1 && place.admin1 !== place.name ? `, ${place.admin1}` : ""}${place.country ? `, ${ccName(place.country)}` : ""}`
+    : "";
+  const out = [];
+  out.push(`${KIND_VERB[KIND(c.kind)] || "A case"} involving ${sp.length ? listOf(sp).toLowerCase() : "wildlife"} was first reported on `
+    + `${longDate(c.date)}${where ? `, in ${esc(where)}` : ", with no place named in any report"}.`);
+  if (qs.length) out.push(`The reports give the quantity as ${listOf(qs)}.`);
+  if (c.people_arrested) {
+    out.push(`${count(c.people_arrested)} ${c.people_arrested === 1 ? "person was" : "people were"} reported arrested. `
+      + `WildTrace records the number only, never who they are, and an arrest is not a conviction.`);
+  }
+  if (c.agencies.length) out.push(`${listOf(c.agencies.map(esc))} ${c.agencies.length > 1 ? "are" : "is"} named as acting in the reports.`);
+  if (c.modes.length) out.push(`Transport named: ${listOf(c.modes.map(esc))}.`);
+  if (c.route?.length === 2) {
+    out.push(`The consignment is described as moving from <b>${esc(c.route[0])}</b> to <b>${esc(c.route[1])}</b>, as stated in the reports. `
+      + `An origin and destination given by a source are not the same as an established route.`);
+  }
+  const how = c.verification === "validated" ? "and a reviewer has checked the case against them"
+    : c.verification === "official" ? "at least one of them an official government, customs, police or judicial release"
+    : c.verification === "corroborated" ? `from ${c.n_outlets || 2} independent outlets`
+    : "from a single outlet, so it stands as a lead rather than an established fact";
+  out.push(`It is drawn from ${count(c.n_sources).toLowerCase()} report${c.n_sources > 1 ? "s" : ""}, ${how}.`);
+  return out;
+}
+
 const days = (a, b) => Math.abs((new Date(a) - new Date(b)) / 864e5);
 const link = (kind, id, label, sub = "") => `<button class="link-row" data-go="${kind}|${esc(id)}"><span>${label}</span><span class="muted" style="font-size:12px">${sub}</span></button>`;
 const caseLink = (c) => link("case", c.id, `<span style="display:inline-flex;gap:8px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:${KIND_COLOR[KIND(c.kind)]}"></span>${esc(c.summary)}</span>`, esc(c.date || ""));
@@ -55,13 +96,18 @@ function caseView(id) {
   const related = S.data.cases.filter((o) => o.id !== c.id && o.species.some((s) => c.species.includes(s)) && o.date && c.date && days(o.date, c.date) <= 45)
     .sort((a, b) => days(a.date, c.date) - days(b.date, c.date)).slice(0, 6);
   const sameCountry = place ? S.data.cases.filter((o) => o.place?.country === place.country && o.species.some((s) => c.species.includes(s))).length : 0;
-  const qs = (c.quantities || (c.quantity ? [c.quantity] : [])).map((q) => `${fmt(q.value)} ${esc(q.unit)}`);
+  const qs = [...new Set((c.quantities || (c.quantity ? [c.quantity] : [])).map((q) => `${fmt(q.value)} ${esc(q.unit)}`))];
+  // The same figures as the account above, laid out to be scanned or copied rather than read.
   const facts = [
-    `${KIND_LABEL[KIND(c.kind)]} involving ${c.species.map(spLabel).join(", ") || "wildlife"}${place && c.place_basis !== "outlet" ? ` in ${esc(place.name)}${place.admin1 && place.admin1 !== place.name ? `, ${esc(place.admin1)}` : ""}` : ""}, first reported ${esc(c.date || "on an unknown date")}.`,
-    qs.length ? `Quantities reported: ${qs.join(" · ")}.` : "",
-    c.people_arrested ? `${c.people_arrested} ${c.people_arrested === 1 ? "person" : "people"} arrested (count only; WildTrace never names people).` : "",
-    c.agencies.length ? `Agencies named: ${c.agencies.map(esc).join(", ")}.` : "",
-    c.value_inr ? `Value as reported: ${inr(c.value_inr)}.` : "",
+    ["Reported", esc(c.date || "date unknown")],
+    ["Event", esc(KIND_LABEL[KIND(c.kind)])],
+    ["Species", c.species.map(spLabel).map(esc).join(", ") || "Wildlife, unspecified"],
+    ["Place", place ? `${esc(place.name)}${place.admin1 && place.admin1 !== place.name ? `, ${esc(place.admin1)}` : ""}${place.country ? `, ${esc(ccName(place.country))}` : ""}` : "Not named in any report"],
+    qs.length ? ["Quantity", qs.join(" · ")] : null,
+    c.people_arrested ? ["Arrested", `${c.people_arrested} (count only)`] : null,
+    c.agencies.length ? ["Agencies", c.agencies.map(esc).join(", ")] : null,
+    c.value_inr ? ["Value as reported", inr(c.value_inr)] : null,
+    ["Reports", `${c.n_sources} from ${c.n_outlets || 1} outlet${(c.n_outlets || 1) > 1 ? "s" : ""}`],
   ].filter(Boolean);
   const context = [
     c.route?.length === 2 ? `The reports describe movement from <b>${esc(c.route[0])}</b> to <b>${esc(c.route[1])}</b>. This route is as stated in the reports, not independently established.` : "",
@@ -80,7 +126,9 @@ function caseView(id) {
       ${c.species.map((s) => `<button class="chip" data-go="species|${s}" style="border-color:rgba(33,138,91,.3)">${esc(spLabel(s))} <span class="muted">CITES ${esc(S.data.species[s]?.cites || "–")}</span></button>`).join("")}
       ${place ? `<button class="chip" data-go="country|${esc(place.country)}">${esc(ccName(place.country))}</button>` : ""}
     </div>
-    <div class="box"><h4>Documented facts</h4>${facts.map((f) => `<p style="margin:0 0 6px">${f}</p>`).join("")}</div>
+    <div class="account">${narrative(c, place, qs).map((t) => `<p>${t}</p>`).join("")}</div>
+    <div class="box"><h4>Documented facts</h4>
+      <dl class="facts">${facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl></div>
     ${context.length ? `<div class="box"><h4>Analytical context</h4>${context.map((f) => `<p style="margin:0 0 6px">${f}</p>`).join("")}</div>` : ""}
     <div class="box limit"><h4>Limits of the evidence</h4>
       <p style="margin:0 0 6px">${precision}</p>

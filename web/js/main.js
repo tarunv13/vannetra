@@ -6,6 +6,9 @@ import { local, localEntity, localPoints, mountChart, mountImport } from "./inve
 import { renderPulse } from "./pulse.js";
 import { mountSearch } from "./search.js";
 import { mountAbout, mountMethods, mountNetwork, mountTable } from "./sheets.js";
+import { mountTrivia, openTrivia } from "./trivia.js";
+import { startTour } from "./tour.js";
+import { startAnalytics } from "./analytics.js";
 import { renderTimeline } from "./timeline.js";
 import { S, back, closeTrail, emit, filtered, fromHash, fwd, go, load, loadGraph, on } from "./store.js";
 
@@ -183,6 +186,10 @@ async function boot() {
   // Never let a slow tile server trap the page behind the splash.
   setTimeout(() => $("#boot").classList.add("done"), 6000);
   mountSearch($("#omni"), $("#q"), $("#omni-results"));
+  // The trivia box and the walkthrough come after the first paint: neither should delay the map.
+  startAnalytics();
+  mountTrivia($("#trivia-root")).then(() => setTimeout(() => startTour({ auto: true }), 1200));
+  $("#tour-btn").addEventListener("click", () => { openTrivia(); startTour(); });
   renderPulse($("#pulse-body")); renderTimeline($("#tl"));
   on((what) => {
     if (what === "filters") { renderPulse($("#pulse-body")); renderTimeline($("#tl")); drawMap(); }
