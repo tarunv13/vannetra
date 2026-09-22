@@ -30,7 +30,10 @@ export function caseMap(el, geojson, { onSelect, center = [90, 18], zoom = 3.3 }
       paint: {
         "circle-color": ["match", ["get", "kg"], "seizure", KIND_COLOR.seizure, "arrest", KIND_COLOR.arrest, KIND_COLOR.other],
         "circle-radius": ["interpolate", ["linear"], ["get", "n_sources"], 1, 6, 5, 9, 12, 12],
-        "circle-stroke-color": "#ffffff", "circle-stroke-width": 2, "circle-opacity": 0.92,
+        // Places inferred from the publisher's region are drawn hollow: a hint, not a fix.
+        "circle-stroke-color": ["match", ["get", "basis"], "outlet", ["match", ["get", "kg"], "seizure", KIND_COLOR.seizure, "arrest", KIND_COLOR.arrest, KIND_COLOR.other], "#ffffff"],
+        "circle-stroke-width": ["match", ["get", "basis"], "outlet", 2.5, 2],
+        "circle-opacity": ["match", ["get", "basis"], "outlet", 0.25, 0.92],
       } });
 
     map.on("click", "clusters", async (e) => {
@@ -43,7 +46,7 @@ export function caseMap(el, geojson, { onSelect, center = [90, 18], zoom = 3.3 }
       map.getCanvas().style.cursor = "pointer";
       const p = e.features[0].properties;
       popup.setLngLat(e.features[0].geometry.coordinates)
-        .setHTML(`<div class="small muted">${esc(p.date || "undated")} · ${esc(KIND_LABEL[p.kg])}</div><b>${esc(p.summary)}</b><div class="small muted">${p.n_sources} source(s) · click for case report</div>`)
+        .setHTML(`<div class="small muted">${esc(p.date || "undated")} · ${esc(KIND_LABEL[p.kg])}</div><b>${esc(p.summary)}</b><div class="small muted">${p.n_sources} source(s)${p.basis === "outlet" ? " · place inferred from publisher" : ""} · click for case report</div>`)
         .addTo(map);
     });
     map.on("mouseleave", "points", () => { map.getCanvas().style.cursor = ""; popup.remove(); });

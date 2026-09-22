@@ -41,6 +41,27 @@ def _text(url: str) -> bytes:
     return r.content
 
 
+# Scripts used by news and sellers in the observatory's region. Native-script names
+# come from GeoNames' alternatenames, so Hindi, Odia, Bengali, Thai … headlines
+# geocode as well as English ones.
+NATIVE_RANGES = [(0x0900, 0x0DFF), (0x0E00, 0x0EFF), (0x1000, 0x109F), (0x1780, 0x17FF)]
+
+
+def _is_native(name: str) -> bool:
+    letters = [c for c in name if not c.isspace() and c not in "-'."]
+    return bool(letters) and all(any(a <= ord(c) <= b for a, b in NATIVE_RANGES) for c in letters)
+
+
+def _natives(altnames: str) -> str:
+    """Native-script alternate names, >= 3 characters, de-duplicated."""
+    seen = []
+    for n in (altnames or "").split(","):
+        n = n.strip()
+        if len(n) >= 3 and _is_native(n) and n not in seen:
+            seen.append(n)
+    return ";".join(seen[:12])
+
+
 def build() -> int:
     admin1 = {}
     for line in _text(BASE + "admin1CodesASCII.txt").decode("utf-8").splitlines():
@@ -61,13 +82,19 @@ def build() -> int:
         key = (name, cc)
         if key not in best or pop > best[key][6]:  # keep the most populous homonym per country
             alias = f[2] if f[2] != name and f[2].lower() not in stop else ""
-            best[key] = (name, "city", cc, a1, round(float(f[4]), 4), round(float(f[5]), 4), pop, alias)
+            best[key] = (name, "city", cc, a1, round(float(f[4]), 4), round(float(f[5]), 4), pop, alias, _natives(f[3]))
 
     # India: every district / sub-district seat and district centroid, whatever its
     # recorded population (GeoNames stores 0 for many district towns, e.g. Malkangiri).
     zin = zipfile.ZipFile(io.BytesIO(_text(BASE + "IN.zip")))
     for line in zin.read("IN.txt").decode("utf-8").splitlines():
         f = line.split("	")
+        if f[7] == "ADM1":  # states: keep only their native names, attached to the curated entry
+            state = f[1].replace("State of ", "").replace("Union Territory of ", "").strip()
+            if _natives(f[3]):
+                best[(state, "IN-state")] = (state, "state", "IN", state, round(float(f[4]), 4), round(float(f[5]), 4),
+                                             0, "", _natives(f[3]))
+            continue
         if f[7] not in ("PPLA", "PPLA2", "PPLA3", "ADM2"):
             continue
         name = f[1].replace(" District", "").strip()
@@ -75,13 +102,13 @@ def build() -> int:
             continue
         typ = "district" if f[7] == "ADM2" else "city"
         best[(name, "IN")] = (name, typ, "IN", admin1.get(f"IN.{f[10]}", ""), round(float(f[4]), 4),
-                              round(float(f[5]), 4), int(f[14] or 0), f[2] if f[2] != name else "")
+                              round(float(f[5]), 4), int(f[14] or 0), f[2] if f[2] != name else "", _natives(f[3]))
 
     out = RESOURCES / "gazetteer_geonames.csv"
     with open(out, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
-        w.writerow(["name", "aliases", "type", "country", "admin1", "lat", "lon", "population"])
+        w.writerow(["name", "aliases", "type", "country", "admin1", "lat", "lon", "population", "native"])
         for (name, cc), r in sorted(best.items(), key=lambda kv: -kv[1][6]):
-            w.writerow([r[0], r[7], r[1], r[2], r[3], r[4], r[5], r[6]])
+            w.writerow([r[0], r[7], r[1], r[2], r[3], r[4], r[5], r[6], r[8]])
     print(f"gazetteer: {len(best)} places -> {out}  (GeoNames, CC-BY 4.0)")
     return len(best)

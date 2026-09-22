@@ -124,3 +124,56 @@ def test_codeword_hits_flag_but_do_not_make_species():
     t = "Selling striped t-shirt, call now"
     assert [h["term"] for h in lexicon.codeword_hits(t)] == ["striped t-shirt"]
     assert lexicon.species_groups(t) == []
+
+
+# ------------------------------------------- locations in Hindi / Google News headlines
+@pytest.mark.parametrize("title,place", [
+    ("ओडिशा में कछुआ तस्करी के रैकेट का भंडाफोड़, 55 जिंदा कछुओं का रेस्क्यू; 4 गिरफ्तार", "Odisha"),
+    ("कुशीनगर में 270 तोते बरामद, एक तस्कर गिरफ्तार", "Kushinagar"),
+    ("सीधी: वन्यजीव तस्करी गिरोह का पर्दाफाश, तेंदुए की खाल बरामद", "Sidhi"),
+    ("मेघालय के री-भोई में पैंगोलिन के शल्क जब्त, दो गिरफ्तार", "Meghalaya"),
+    ("Leopard Skin Smuggling Plot Foiled in Kandhamala; One Held", "Kandhamal"),
+    ("2 leopard skins seized in pan-India raids", "India"),
+])
+def test_headline_locations(title, place):
+    e = extract(rec(title, country_hint="IN"))
+    assert e.place and e.place["name"] == place and e.place_basis == "text"
+
+
+def test_hindi_loanword_is_not_a_town():
+    # "रैकेट" (racket) skeleton-matches the town Raikot; the stoplist must stop it.
+    names = [p.name for _, p in find_places("ओडिशा में कछुआ तस्करी के रैकेट का भंडाफोड़", "IN")]
+    assert names == ["Odisha"]
+
+
+@pytest.mark.parametrize("title", [
+    "Kattalan - Malayalam ivory smuggling action thriller starring Antony Varghese premieres on SonyLIV",
+    "430 पीस नेपाली कस्तूरी शराब जब्त, तस्कर धराया",
+    "Six arrested in Ivory Park as traffic police recover stolen transformers",
+])
+def test_false_positives_are_rejected(title):
+    assert not is_enforcement_candidate(title)
+
+
+def test_publisher_region_is_a_labelled_fallback_only():
+    e = extract(rec("13 Star Tortoise hatchlings seized, man arrested", outlet="ahmedabadmirror.com"))
+    assert e.place["name"] == "Ahmedabad" and e.place_basis == "outlet"
+    named = extract(rec("Star tortoises seized in Nagpur", outlet="ahmedabadmirror.com"))
+    assert named.place["name"] == "Nagpur" and named.place_basis == "text"
+
+
+def test_same_seizure_in_two_languages_merges():
+    a = extract(rec("Six held with pangolin scales in Malkangiri, Odisha", published="2026-09-13", country_hint="IN"))
+    b = extract(rec("ओडिशा : पैंगोलिन की खाल के साथ छह लोग गिरफ्तार", published="2026-09-14", country_hint="IN"))
+    assert len(cluster([a, b])) == 1
+
+
+def test_bharat_is_india_not_baraut():
+    names = [p.name for _, p in find_places("ओडिशा के जंगल में मिले 5 Orangutan! भारत में कैसे पहुँचे?", "IN")]
+    assert "Baraut" not in names and "India" in names
+
+
+def test_case_place_is_the_most_cited_specific_place():
+    evs = [extract(rec(f"Orangutans rescued in Balasore forest, report {i}", published="2026-09-08")) for i in range(3)]
+    evs.append(extract(rec("Rescued orangutans shifted to Nandankanan zoo, smuggling probe on", published="2026-09-10")))
+    assert summarise(evs)["place"]["name"] == "Balasore"

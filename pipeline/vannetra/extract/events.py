@@ -32,6 +32,11 @@ _PN = r"[A-Z][\w]+(?:\s[A-Z][\w]+){0,3}"  # a capitalised place name, up to 4 wo
 # "352 pangolin scales", "4 monitor lizards": up to two words between number and unit.
 QTY_GAP = re.compile(rf"(?<![\w.])(\d{{1,3}}(?:,\d{{2,3}})+|\d+(?:\.\d+)?|{'|'.join(k for k in WORDNUM if len(k) > 2)})\s+"
                      rf"(?:[A-Za-z-]+\s+){{1,2}}?({_UNIT})\b", re.I)
+# Hindi: "छह लोग गिरफ्तार", "दो आरोपी गिरफ्तार", "4 गिरफ्तार", "13 तस्कर गिरफ्तार"
+HINDI_NUM = {"एक": 1, "दो": 2, "तीन": 3, "चार": 4, "पांच": 5, "पाँच": 5, "छह": 6, "छः": 6, "छे": 6, "सात": 7,
+             "आठ": 8, "नौ": 9, "दस": 10, "ग्यारह": 11, "बारह": 12}
+PEOPLE_HI = re.compile(r"(?<![ऀ-ॿ\d])(\d+|" + "|".join(HINDI_NUM) + r")\s+(?:\S+\s+){0,2}?"
+                       r"(?:लोग|लोगों|आरोपी|आरोपियों|तस्कर|तस्करों|युवक|युवकों|व्यक्ति|शिकारी|शिकारियों)?\s*(?:को\s+)?गिरफ्तार")
 # "Six Arrested", "2 held", "three nabbed"
 PEOPLE_SHORT = re.compile(rf"\b(\d+|{'|'.join(k for k in WORDNUM if len(k) > 2)})\s+(?:arrested|held|nabbed|detained|booked)\b", re.I)
 ROUTE = re.compile(rf"\b(?:from|originating in|sourced from)\s+({_PN})\s+(?:to|towards|for|bound for|destined for)\s+({_PN})")
@@ -61,10 +66,15 @@ _WORD = re.compile(r"[A-Za-zÀ-ɏ][\w'À-ɏ-]*")
 
 
 @lru_cache(maxsize=1)
-def gazetteer() -> dict[str, list[Place]]:
-    """name -> places. The hand-curated gazetteer.csv wins over the GeoNames
-    extract (gazetteer_geonames.csv, built by `vannetra gazetteer`)."""
+def _gazetteer_all() -> tuple[dict[str, list[Place]], list[tuple[str, Place]]]:
+    """(latin index, native-script names).
+
+    Latin index: lower-cased name/alias -> places. The hand-curated gazetteer.csv
+    wins over the GeoNames extract (gazetteer_geonames.csv, `vannetra gazetteer`).
+    Native names (Devanagari, Odia, Bengali, Tamil, Telugu, Thai, Burmese, Khmer …)
+    come from GeoNames alternate names and are matched as whole words."""
     index: dict[str, list[Place]] = {}
+    native: dict[str, Place] = {}
     for fname in ("gazetteer.csv", "gazetteer_geonames.csv"):
         path = RESOURCES / fname
         if not path.exists():
@@ -72,17 +82,64 @@ def gazetteer() -> dict[str, list[Place]]:
         with open(path, encoding="utf-8") as f:
             for r in csv.DictReader(f):
                 p = Place(r["name"], r["type"], r["country"], r["admin1"], float(r["lat"]), float(r["lon"]))
-                for n in [r["name"]] + [a for a in (r["aliases"] or "").split(";") if a]:
-                    bucket = index.setdefault(n.lower(), [])
-                    if fname == "gazetteer.csv" or not bucket:
-                        bucket.append(p)
-                    elif all(b.country != p.country for b in bucket):
-                        bucket.append(p)  # same name in another country: keep for country_hint
-    return index
+                if r["type"] == "state" and fname != "gazetteer.csv":
+                    # GeoNames state rows exist only to carry native names; point them at
+                    # the curated state entry so both spellings resolve to one place.
+                    p = next((c for c in index.get(r["name"].lower(), []) if c.type == "state"), p)
+                else:
+                    for n in [r["name"]] + [a for a in (r["aliases"] or "").split(";") if a]:
+                        bucket = index.setdefault(n.lower(), [])
+                        if fname == "gazetteer.csv" or not bucket:
+                            bucket.append(p)
+                        elif all(b.country != p.country for b in bucket):
+                            bucket.append(p)  # same name in another country: keep for country_hint
+                for n in (r.get("native") or "").split(";"):
+                    if n and n not in native:
+                        native[n] = p
+    cur = RESOURCES / "gazetteer_native.csv"
+    if cur.exists():
+        with open(cur, encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                hit = index.get(r["name"].lower())
+                if hit:
+                    native[r["native"]] = hit[0]  # curated spelling wins over GeoNames
+    return index, sorted(native.items(), key=lambda kv: -len(kv[0]))
+
+
+def gazetteer() -> dict[str, list[Place]]:
+    return _gazetteer_all()[0]
+
+
+def _is_script_char(c: str) -> bool:
+    o = ord(c)
+    return 0x0900 <= o <= 0x0DFF or 0x0E00 <= o <= 0x0EFF or 0x1000 <= o <= 0x109F or 0x1780 <= o <= 0x17FF
+
+
+def find_native_places(text: str) -> list[tuple[int, Place]]:
+    """Native-script place names as whole words (a Devanagari vowel sign or letter
+    right next to the match means it is part of a longer word)."""
+    if not any(_is_script_char(c) for c in text):
+        return []
+    found: dict[str, tuple[int, Place]] = {}
+    taken: list[tuple[int, int]] = []
+    for name, p in _gazetteer_all()[1]:
+        start = text.find(name)
+        while start != -1:
+            end = start + len(name)
+            before = text[start - 1] if start else " "
+            after = text[end] if end < len(text) else " "
+            if not _is_script_char(before) and not _is_script_char(after) and                     not any(a < end and start < b for a, b in taken):
+                taken.append((start, end))
+                if p.name not in found or start < found[p.name][0]:
+                    found[p.name] = (start, p)
+                break
+            start = text.find(name, start + 1)
+    return list(found.values())
 
 
 RANK = {"airport": 0, "park": 1, "city": 2, "district": 3, "region": 4, "state": 5, "country": 6}
 MAX_WORDS = 4
+LOWER_OK = {"pan-india"}  # the only lower-case place token worth trusting
 
 
 def find_places(text: str, country_hint: str = "") -> list[tuple[int, Place]]:
@@ -95,10 +152,12 @@ def find_places(text: str, country_hint: str = "") -> list[tuple[int, Place]]:
     i = 0
     while i < len(words):
         hit = None
+        first = words[i][2]
+        if not first[0].isupper() and first.lower() not in LOWER_OK:
+            i += 1
+            continue
         for n in range(min(MAX_WORDS, len(words) - i), 0, -1):
             span = text[words[i][0]:words[i + n - 1][1]]
-            if not span[0].isupper():
-                break
             cands = idx.get(span.lower())
             if cands:
                 pick = next((c for c in cands if c.country == country_hint), cands[0])
@@ -111,6 +170,10 @@ def find_places(text: str, country_hint: str = "") -> list[tuple[int, Place]]:
             i += n
         else:
             i += 1
+    from .translit import find_hindi_places
+    for pos, p in find_native_places(text) + find_hindi_places(text):
+        if p.name not in found:
+            found[p.name] = (pos, p)
     return sorted(found.values(), key=lambda x: x[0])
 
 
@@ -164,13 +227,37 @@ class Event:
     evidence: list[str] = field(default_factory=list)
     relevance: float | None = None
     trade_signal: float | None = None
+    place_basis: str = ""  # "text" (named in the report) or "outlet" (publisher's home region)
 
     def to_dict(self):
         return asdict(self)
 
 
 def is_enforcement_candidate(text: str) -> bool:
+    if sum(lexicon.count_cues(text, "negative_cues").values()):
+        return False
     return bool(lexicon.species_groups(text)) and sum(lexicon.count_cues(text, "enforcement_cues").values()) > 0
+
+
+@lru_cache(maxsize=1)
+def _outlets() -> list[tuple[str, str]]:
+    path = RESOURCES / "outlets.csv"
+    if not path.exists():
+        return []
+    with open(path, encoding="utf-8") as f:
+        return [(r["match"].lower(), r["place"]) for r in csv.DictReader(f)]
+
+
+def outlet_place(outlet: str, url: str = "") -> Place | None:
+    """Home region of a regional publisher: a fallback when the report names no place.
+    Only publishers whose coverage is regional are listed (resources/outlets.csv)."""
+    key = f"{outlet} {url}".lower()
+    for m, name in _outlets():
+        if m in key:
+            hit = gazetteer().get(name.lower())
+            if hit:
+                return hit[0]
+    return None
 
 
 def extract(rec: Record) -> Event:
@@ -192,7 +279,9 @@ def extract(rec: Record) -> Event:
     places = find_places(text, hint)
     pp = primary_place(places, hint)
     if pp:
-        ev.place = asdict(pp)
+        ev.place = asdict(pp); ev.place_basis = "text"
+    elif (op := outlet_place(rec.outlet, rec.url)) is not None:
+        ev.place = asdict(op); ev.place_basis = "outlet"
     ev.places = [p.name for _, p in places]
     ev.countries = sorted({p.country for _, p in places})
 
@@ -223,4 +312,7 @@ def extract(rec: Record) -> Event:
     m = PEOPLE.search(text) or PEOPLE_SHORT.search(text)
     if m:
         ev.people_arrested = int(_num(m.group(1))); ev.evidence.append(m.group(0))
+    elif (m := PEOPLE_HI.search(text)):
+        g = m.group(1)
+        ev.people_arrested = HINDI_NUM.get(g) or int(g); ev.evidence.append(m.group(0))
     return ev

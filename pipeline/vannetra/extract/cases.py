@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+from collections import Counter
 from datetime import date
 
 from .. import lexicon
@@ -34,7 +35,8 @@ def _country(e: Event) -> str | None:
 
 
 def _admin1(e: Event) -> str | None:
-    if not e.place or e.place.get("type") == "country":
+    # A publisher's home region is a hint, not evidence: it never splits or joins cases.
+    if not e.place or e.place.get("type") == "country" or e.place_basis == "outlet":
         return None
     return e.place.get("admin1") or e.place["name"]
 
@@ -67,6 +69,10 @@ def same_case(a: Event, b: Event) -> bool:
         return days <= 4 and jac >= 0.30
     if days <= 4 and (jac >= 0.25 or bool(qa & qb)):
         return True
+    # Same state, within two days, same arrest count and kind of event: the same
+    # seizure reported in two languages (titles then share no words at all).
+    if days <= 2 and _admin1(a) and _admin1(a) == _admin1(b) and a.people_arrested and             a.people_arrested == b.people_arrested and set(a.event_types) & set(b.event_types):
+        return True
     return days <= 12 and _admin1(a) is not None and _admin1(a) == _admin1(b) and jac >= 0.12
 
 
@@ -94,6 +100,20 @@ def cluster(events: list[Event]) -> list[list[Event]]:
     return list(groups.values())
 
 
+def _consensus_place(pool: list[dict], rank: dict) -> dict | None:
+    """Where the case happened: the specific place (city, district, park) that the
+    most reports name, if at least two do; otherwise the most precise place named.
+    Stops a zoo the animals were later moved to from outranking the rescue site."""
+    if not pool:
+        return None
+    specific = [p for p in pool if p["type"] not in ("state", "country", "region")]
+    tally = Counter(p["name"] for p in specific)
+    if tally and max(tally.values()) >= 2:
+        top = max(tally, key=lambda n: (tally[n], -rank.get(next(p for p in specific if p["name"] == n)["type"], 9)))
+        return next(p for p in specific if p["name"] == top)
+    return min(pool, key=lambda p: rank.get(p["type"], 9))
+
+
 def summarise(evs: list[Event]) -> dict:
     """One public case record. Built from extracted facts, not from headlines,
     so it carries no names of accused persons and no copied text."""
@@ -102,8 +122,12 @@ def summarise(evs: list[Event]) -> dict:
     species = sorted({s for e in evs for s in e.species})
     types = sorted({t for e in evs for t in e.event_types})
     rank = {"airport": 0, "park": 1, "city": 2, "district": 3, "region": 4, "state": 5, "country": 6}
-    located = [e.place for e in evs if e.place]
-    place = min(located, key=lambda p: rank.get(p["type"], 9)) if located else None
+    # A place named in any report beats a publisher's home region.
+    named = [e.place for e in evs if e.place and e.place_basis != "outlet"]
+    inferred = [e.place for e in evs if e.place and e.place_basis == "outlet"]
+    pool = named or inferred
+    place = _consensus_place(pool, rank)
+    place_basis = "text" if named else ("outlet" if inferred else "")
     # Headline order: the first quantity reported is the lead item; the rest are listed.
     quantities = []
     for e in evs:
@@ -112,7 +136,9 @@ def summarise(evs: list[Event]) -> dict:
                 quantities.append(q)
     qty = quantities[0] if quantities else None
     value = max((e.value_inr for e in evs if e.value_inr), default=None)
-    people = max((e.people_arrested for e in evs if e.people_arrested), default=None)
+    # The count most reports agree on; one outlier lede should not win (ties: the larger).
+    counts = Counter(e.people_arrested for e in evs if e.people_arrested)
+    people = max(counts, key=lambda k: (counts[k], k)) if counts else None
     route = next((e.route for e in evs if e.route), [])
     kind = ("conviction" if "conviction" in types else "seizure" if "seizure" in types else
             "arrest" if "arrest" in types else "rescue" if "rescue" in types else types[0] if types else "report")
@@ -131,6 +157,7 @@ def summarise(evs: list[Event]) -> dict:
         "summary": " · ".join(bits),
         "species": species,
         "place": place,
+        "place_basis": place_basis,
         "places": sorted({p for e in evs for p in e.places}),
         "countries": sorted({c for e in evs for c in e.countries}),
         "route": route,
@@ -142,5 +169,5 @@ def summarise(evs: list[Event]) -> dict:
         "people_arrested": people,
         "sources": [{"outlet": e.outlet, "url": e.url, "date": e.published} for e in evs],
         "n_sources": len(evs),
-        "confidence": round(min(1.0, 0.45 + 0.15 * len(evs) + (0.1 if place else 0) + (0.1 if qty else 0)), 2),
+        "confidence": round(min(1.0, 0.45 + 0.15 * len(evs) + (0.1 if place_basis == "text" else 0.03 if place else 0) + (0.1 if qty else 0)), 2),
     }

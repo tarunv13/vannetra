@@ -1,5 +1,5 @@
 name,aliases,type,country,admin1,lat,lon
-India,,country,IN,,22.35,78.67
+India,Pan-India;Pan India,country,IN,,22.35,78.67
 Andhra Pradesh,,state,IN,Andhra Pradesh,15.91,79.74
 Arunachal Pradesh,,state,IN,Arunachal Pradesh,28.22,94.73
 Assam,,state,IN,Assam,26.20,92.94
@@ -166,3 +166,12 @@ Mozambique,,country,MZ,,-18.67,35.53
 South Africa,,country,ZA,,-30.56,22.94
 Kenya,,country,KE,,-0.02,37.91
 Madagascar,,country,MG,,-18.77,46.87
+Una,,city,IN,Himachal Pradesh,31.46,76.27
+Sonapur,,city,IN,Assam,26.12,91.97
+Kandhamal,Kandhamala;Phulbani,district,IN,Odisha,20.47,84.23
+Ri-Bhoi,Ri Bhoi;Nongpoh,district,IN,Meghalaya,25.90,91.88
+Nandankanan,Nandankanan Zoo,park,IN,Odisha,20.40,85.82
+Raja Ampat,,region,ID,West Papua,-0.50,130.60
+Limpopo,,state,ZA,Limpopo,-23.40,29.42
+Mangochi,,city,MW,Southern Region,-14.48,35.26
+Malawi,,country,MW,,-13.25,34.30

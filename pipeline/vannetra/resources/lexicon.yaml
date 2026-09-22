@@ -238,3 +238,11 @@ modes:
   road: [truck, lorry, highway, checkpost, check post, naka, vehicle, car, bus, motorcycle]
   post: [courier, parcel, postal, speed post]
   online: [facebook, instagram, whatsapp, telegram, youtube, online, e-commerce, social media]
+
+# Phrases that make a match NOT a wildlife-trade report. Each came from a real
+# false positive: a film ("Kattalan", an ivory-smuggling thriller), a liquor brand
+# ("Nepali Kasturi" = musk), a township ("Ivory Park", Johannesburg).
+negative_cues:
+  entertainment: [thriller, premieres, premiere, web series, box office, trailer, sonyliv, netflix, prime video, ott release, movie review, film review]
+  brands: [kasturi sharab, kasturi liquor, nepali kasturi, कस्तूरी शराब, नेपाली कस्तूरी, kasturi whisky, tiger shroff, tiger 3, tiger zinda, paper tiger, tiger global]
+  places: [ivory park, ivory coast, côte d'ivoire, cote d'ivoire]

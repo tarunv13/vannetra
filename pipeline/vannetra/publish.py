@@ -175,7 +175,8 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
         {"type": "Feature", "geometry": {"type": "Point", "coordinates": [c["place"]["lon"], c["place"]["lat"]]},
          "properties": {"id": c["id"], "kind": c["kind"], "date": c["date"], "summary": c["summary"],
                         "species": ",".join(c["species"]), "n_sources": c["n_sources"],
-                        "country": c["place"]["country"], "level": c["place"]["type"]}}
+                        "country": c["place"]["country"], "level": c["place"]["type"],
+                        "basis": c.get("place_basis", "text")}}
         for c in cases if c.get("place")]}
 
     with open(RESOURCES / "sources.yaml", encoding="utf-8") as f:

@@ -46,6 +46,7 @@ function viewOverview() {
       <div class="glass map-wrap" style="position:relative" id="map-host"><div id="map" class="map" role="region" aria-label="Map of cases"></div>
         <button class="btn primary" id="glide" style="position:absolute;top:20px;left:20px;z-index:3" ${D.geo.features.length ? "" : "disabled"}>▶ Glide through cases</button>
         <div class="map-legend glass">${Object.entries(KIND_LABEL).map(([g, l]) => `<div class="row"><span class="sw" style="background:${KIND_COLOR[g]}"></span>${l}</div>`).join("")}
+          <div class="row muted"><span class="sw" style="background:transparent;box-shadow:0 0 0 2px #2a78d6"></span>Hollow: place inferred from publisher</div>
           <div class="row muted"><span class="sw" style="background:rgba(28,92,171,.16);box-shadow:0 0 0 1.5px #1c5cab"></span>Cluster (click to zoom)</div></div></div>
       <div class="glass card"><div class="card-head"><h2>Latest cases</h2><a href="#/cases" class="small">All cases →</a></div><div class="list" id="latest"></div></div>
     </div>
@@ -141,7 +142,7 @@ function openCase(id) {
     <div class="chips">${kindPill(c.kind)}${sp}</div>
     <dl class="facts">
       <dt>First reported</dt><dd>${esc(c.date || "unknown")}</dd>
-      <dt>Location</dt><dd>${c.place ? `${esc(c.place.name)}${c.place.admin1 && c.place.admin1 !== c.place.name ? ", " + esc(c.place.admin1) : ""} (${esc(c.place.country)})` : "not stated"}</dd>
+      <dt>Location</dt><dd>${c.place ? `${esc(c.place.name)}${c.place.admin1 && c.place.admin1 !== c.place.name ? ", " + esc(c.place.admin1) : ""} (${esc(c.place.country)})` : "not stated"}${c.place_basis === "outlet" ? ` <span class="status prototype" title="No place is named in the reports; this is the publisher's home region.">◐ Inferred from publisher</span>` : ""}</dd>
       ${c.route?.length === 2 ? `<dt>Route</dt><dd>${esc(c.route[0])} → ${esc(c.route[1])}</dd>` : ""}
       <dt>Quantities</dt><dd>${(c.quantities || (c.quantity ? [c.quantity] : [])).map((q) => `${fmt(q.value)} ${esc(q.unit)}`).join(" · ") || "not stated"}</dd>
       <dt>Reported value</dt><dd>${inr(c.value_inr)}</dd>
