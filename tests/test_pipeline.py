@@ -194,3 +194,9 @@ def test_source_tiers():
     assert tier("https://timesofindia.indiatimes.com/x") == "media"
     # a look-alike domain is not a government one
     assert tier("https://govtnews.example.com/x") == "media"
+
+
+def test_official_publisher_names():
+    from wildtrace.sources_tier import tier
+    assert tier("PIB") == "official" and tier("Polícia Federal") == "official"
+    assert tier("Agence Ivoirienne de Presse (AIP)") == "media"  # a state news agency is not an enforcement body

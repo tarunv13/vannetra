@@ -6,7 +6,8 @@
             the WCS Brasil observatory's source domains are of this kind.
   ngo       conservation and monitoring organisations (TRAFFIC, WCS, EIA ...)
   media     news outlets
-The tier is decided from the publisher's domain only, never from the text.
+The tier is decided from the publisher's domain, or, when a feed gives only the
+publisher's name, from a short list of official publisher names. Never from the text.
 """
 from __future__ import annotations
 
@@ -22,6 +23,13 @@ NGO = re.compile(r"(^|\.)(traffic\.org|wcs\.org|wwf\.[a-z.]+|worldwildlife\.org|
                  r"env4wildlife\.org|freeland\.org|wildaid\.org|ifaw\.org|panthera\.org|c4ads\.org|oxpeckers\.org|"
                  r"globalinitiative\.net|earthleagueinternational\.org|wpsi-india\.org)$")
 
+# Publisher names that some feeds give in place of a domain (exact, case-insensitive).
+OFFICIAL_NAMES = re.compile(
+    r"^(pib|press information bureau|pib india|u\.s\. fish and wildlife service|us fish and wildlife service|"
+    r"united states department of justice|department of justice|u\.s\. attorney's office|"
+    r"pol[ií]cia federal|ibama|gov\.br|profepa|interpol|europol|hong kong customs|"
+    r"customs and excise department|singapore national parks board|nparks|wildlife crime control bureau)$", re.I)
+
 
 def domain(url_or_host: str) -> str:
     h = urlparse(url_or_host).netloc if "://" in (url_or_host or "") else (url_or_host or "")
@@ -32,7 +40,7 @@ def tier(url_or_host: str) -> str:
     d = domain(url_or_host)
     if not d:
         return "media"
-    if OFFICIAL.search(d):
+    if OFFICIAL.search(d) or OFFICIAL_NAMES.match(d):
         return "official"
     if NGO.search(d):
         return "ngo"

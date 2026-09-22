@@ -354,3 +354,11 @@ body:not(.inspecting) .mapctl { right: var(--gutter); }
 .pulse.folded .pulse-head { justify-content: flex-end; }
 .pulse.folded #fold svg { transform: rotate(180deg); }
 .insp-body .title:focus, .insp-body .title:focus-visible { outline: none; }
+
+/* v1.2.4: keep the lens bar inside the viewport as more lenses appear (Routes, Table, About) */
+.omni { min-width: 200px; }
+@media (max-width: 1560px) {
+  .lens-title, .brand small { display: none; }
+  .lens { padding: 0 10px; }
+}
+@media (max-width: 1320px) { .lens .n { display: none; } }
