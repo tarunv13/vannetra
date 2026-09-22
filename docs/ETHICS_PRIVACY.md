@@ -40,9 +40,13 @@ This is a deliberate trade-off, and one worth naming: readers of a wildlife-crim
 journalists and investigators, and a session replay shows what someone searched for and which
 cases they opened. The mitigations are:
 
-- **Text masking is on.** Clarity is initialised with strict masking, so text typed into the
-  search box is not carried into a replay.
+- **The sensitive parts of the page are masked.** The search box and the sheet that renders
+  imported files carry `data-clarity-mask="true"`, so a typed query and anyone's own spreadsheet
+  are never uploaded. (Masking is an HTML attribute and a dashboard setting, not a JavaScript
+  call; the project's masking level is set to Strict in Clarity itself.)
 - **Global Privacy Control is honoured.** Browsers sending that signal load no analytics at all.
+- **Advertising storage is denied.** Clarity is given `consentv2` with `ad_Storage: "denied"`, so
+  it may keep analytics storage but never advertising storage.
 - **Nothing you import is touched.** Data imported into Investigate stays in local storage; it is
   never uploaded, by Clarity or anything else.
 - **Removable in one edit.** The project id lives in `data-clarity` on `<body>` in

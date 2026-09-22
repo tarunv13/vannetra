@@ -21,13 +21,13 @@
   <meta name="twitter:title" content="WildTrace · The open atlas of illegal wildlife trade">
   <meta name="twitter:description" content="WildTrace, the open atlas of illegal wildlife trade in fauna and flora: seizures, routes, species and the observatories that watch them, each case graded by the strength of its evidence.">
   <meta name="twitter:image" content="https://tarunv13.github.io/wildtrace/og.png">
-  <link rel="stylesheet" href="css/fonts.css?v=1.3.1">
+  <link rel="stylesheet" href="css/fonts.css?v=1.3.2">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="css/wildtrace.css?v=1.3.1">
+  <link rel="stylesheet" href="css/wildtrace.css?v=1.3.2">
 </head>
 <!-- data-clarity: the Microsoft Clarity project id. Remove the attribute (or set it to
      REPLACE_ME) and no analytics load at all — useful for forks and local work. -->
-<body data-clarity="REPLACE_ME">
+<body data-clarity="ymgmjfjuz4">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="logo" viewBox="0 0 32 32">
       <circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="2" opacity=".28"/>
@@ -48,7 +48,7 @@
     <div class="omni" id="omni">
       <div class="omni-box glass">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="q" type="search" autocomplete="off" placeholder="Search cases, species, places, observatories…" aria-label="Search everything" aria-controls="omni-results">
+        <input id="q" type="search" data-clarity-mask="true" autocomplete="off" placeholder="Search cases, species, places, observatories…" aria-label="Search everything" aria-controls="omni-results">
         <span class="kbd" aria-hidden="true">/</span>
       </div>
       <div class="omni-results glass" id="omni-results" role="listbox" aria-label="Search results"></div>
@@ -112,7 +112,8 @@
     <div class="dock-side"><b id="range-label">All time</b><span id="range-sub"></span><button class="btn" id="range-reset" hidden style="height:26px;font-size:12px;padding:0 10px">Clear period</button></div>
   </section>
 
-  <section class="sheet glass" id="sheet" role="dialog" aria-modal="false" aria-labelledby="sheet-title">
+  <!-- data-clarity-mask: a reader's imported spreadsheet is rendered in here. It never reaches a session replay. -->
+  <section class="sheet glass" data-clarity-mask="true" id="sheet" role="dialog" aria-modal="false" aria-labelledby="sheet-title">
     <div style="padding-top:8px"><div class="grab"></div></div>
     <div class="sheet-head">
       <h2 id="sheet-title">Investigate</h2>
@@ -128,6 +129,6 @@
   <noscript><p style="position:fixed;inset:auto 16px 16px;padding:14px;background:#fff;border-radius:12px">WildTrace needs JavaScript for its map. The full case list is available as <a href="data/cases.csv">CSV</a>.</p></noscript>
 
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
-  <script type="module" src="js/main.js?v=1.3.1"></script>
+  <script type="module" src="js/main.js?v=1.3.2"></script>
 </body>
 </html>

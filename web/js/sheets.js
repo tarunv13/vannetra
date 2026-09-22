@@ -73,8 +73,9 @@ export function mountMethods(root, tab = "pipeline") {
       <p><b>Sellers.</b> Channel names are only used to keep one seller's listings on one side of the test split.</p>
       <p><b>You.</b> No accounts. Data you import into Investigate stays in your browser and is never uploaded.
       Usage is measured with <a href="https://clarity.microsoft.com" target="_blank" rel="noopener">Microsoft Clarity</a>,
-      which records clicks, scrolling and session replays and sets cookies; typed text is masked, and it is skipped
-      for browsers sending a Global Privacy Control signal.</p>
+      which records clicks, scrolling and session replays and sets cookies. Your search text and anything you import
+      are masked and never reach a replay, advertising storage is denied, and nothing loads at all if your browser
+      sends a Global Privacy Control signal.</p>
       <p><b>Sources.</b> robots.txt is respected, which is why Google News links are not decoded; locations come from the reports themselves.</p></div>`,
     sources: `<div style="padding:16px"><table><thead><tr><th>Source</th><th>Access</th><th>Status</th><th>Notes</th></tr></thead><tbody>
       ${(S.data.sources || []).map((s) => `<tr><td>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}</td><td>${esc(s.access)}</td>

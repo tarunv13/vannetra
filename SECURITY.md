@@ -22,8 +22,9 @@ Anything you import in **Investigate** is held in your browser's local storage a
 uploaded. Clearing it from the panel removes it. The site has no accounts and self-hosts its fonts.
 
 It does run **Microsoft Clarity**, which records interactions and session replays and sets
-cookies. Clarity is loaded with text masking on, so typed text such as a search query is not
-carried into a replay, and it is skipped when the browser sends a Global Privacy Control signal.
+cookies. The search box and the sheet that renders imported files carry `data-clarity-mask`, so
+neither a typed query nor an imported spreadsheet is captured; advertising storage is denied; and
+Clarity is skipped when the browser sends a Global Privacy Control signal.
 If that matters for your work, block `clarity.ms`, use a private window, or run the site
 yourself: deleting `data-clarity` from `web/index.html` removes it completely.
 

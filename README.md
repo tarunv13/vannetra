@@ -198,9 +198,11 @@ identity; the build fails if one slips through, and CI checks again. Imported da
 browser's local storage and is never uploaded. There are no accounts, and fonts are self-hosted.
 
 The site does measure how it is used, with **Microsoft Clarity**: clicks, scrolling and session
-replays, which set cookies and send data to Microsoft. Text is masked, so what you type in the
-search box is not carried into a replay, and Clarity is skipped for browsers sending a Global
-Privacy Control signal. Remove `data-clarity` from `web/index.html` in a fork and nothing loads.
+replays, which set cookies and send data to Microsoft. The search box and the whole panel that
+renders imported files are marked `data-clarity-mask`, so a typed query and anyone's own
+spreadsheet never reach a replay; advertising storage is denied; and Clarity is skipped entirely
+for browsers sending a Global Privacy Control signal. Remove `data-clarity` from
+`web/index.html` in a fork and nothing loads.
 See [`docs/ETHICS_PRIVACY.md`](docs/ETHICS_PRIVACY.md) and Microsoft's
 [privacy statement](https://privacy.microsoft.com/privacystatement).
 
