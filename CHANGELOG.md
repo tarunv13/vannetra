@@ -2,7 +2,7 @@
 
 All notable changes to WildTrace. Dates are the release date, newest first.
 
-## Unreleased
+## 1.6.2 — 2026-09-23
 
 ### Added
 - **A 2-minute video guide** (Tour menu, the welcome card, About, or `#guide` in the address).
