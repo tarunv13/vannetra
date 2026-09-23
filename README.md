@@ -395,7 +395,7 @@ If WildTrace helps your work, please cite it. Use the **Cite this repository** b
 
 **APA 7**
 
-> Verma, T. K. (2026). *WildTrace: the open atlas of illegal wildlife trade* (Version 1.6.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22902819
+> Verma, T. K. (2026). *WildTrace: the open atlas of illegal wildlife trade* (Version 1.6.1) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22902819
 
 **BibTeX**
 
@@ -404,7 +404,7 @@ If WildTrace helps your work, please cite it. Use the **Cite this repository** b
   author  = {Verma, Tarun Kumar},
   title   = {WildTrace: the open atlas of illegal wildlife trade},
   year    = {2026},
-  version = {1.6.0},
+  version = {1.6.1},
   doi     = {10.5281/zenodo.22902819},
   url     = {https://github.com/tarunv13/wildtrace},
   license = {MIT}
