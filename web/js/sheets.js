@@ -84,6 +84,7 @@ export function mountMethods(root, tab = "pipeline") {
       which records clicks, scrolling and session replays and sets cookies. Your search text and anything you import
       are masked and never reach a replay, advertising storage is denied, and nothing loads at all if your browser
       sends a Global Privacy Control signal.</p>
+      <p><b>Map tiles.</b> The map comes from OpenFreeMap. Satellite imagery (EOxCloudless, from Copernicus Sentinel-2) loads from EOX's servers only if you switch satellite view on.</p>
       <p><b>Sources.</b> robots.txt is respected, which is why Google News links are not decoded; locations come from the reports themselves.</p></div>`,
     sources: `<div style="padding:16px"><table><thead><tr><th>Source</th><th>Access</th><th>Status</th><th>Notes</th></tr></thead><tbody>
       ${(S.data.sources || []).map((s) => `<tr><td>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}</td><td>${esc(s.access)}</td>
@@ -148,7 +149,7 @@ export function mountAbout(root) {
     <p class="muted" style="font-size:12.5px">Every species group, country and case also has a plain page of its own,
       readable without JavaScript and linked from <a href="browse.html">the index</a>.</p>
     <h3>Icons and logos</h3>
-    <p class="muted" style="font-size:12.5px">Species silhouettes from <a href="https://www.phylopic.org" target="_blank" rel="noopener">PhyloPic</a> (public domain, CC0 or CC BY; each credited on its species page). Interface icons: <a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler Icons</a> (MIT). Outlet and organisation logos are their own site icons, shown only to identify a source; they imply no endorsement and are served from this site, so your browser never contacts a third party for them.</p>
+    <p class="muted" style="font-size:12.5px">Species silhouettes from <a href="https://www.phylopic.org" target="_blank" rel="noopener">PhyloPic</a> (public domain, CC0 or CC BY; each credited on its species page). Interface icons: <a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler Icons</a> (MIT). Flags: <a href="https://flagicons.lipis.dev" target="_blank" rel="noopener">flag-icons</a> (MIT). Satellite view: <a href="https://cloudless.eox.at" target="_blank" rel="noopener">EOxCloudless 2024</a> by EOX IT Services GmbH, contains modified Copernicus Sentinel data 2024 (CC BY-NC-SA 4.0). Outlet and organisation logos are their own site icons, shown only to identify a source; they imply no endorsement and are served from this site, so your browser never contacts a third party for them.</p>
     <p class="muted" style="font-size:12.5px;margin-top:12px">Last updated ${esc(m.built || "")}. Refreshed weekly. Usage measured with Microsoft Clarity; no accounts.</p>
   </div>`;
 }

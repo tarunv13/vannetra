@@ -2,6 +2,20 @@
 
 All notable changes to WildTrace. Dates are the release date, newest first.
 
+## 1.6.1 — 2026-09-23
+
+### Added
+- **Satellite view.** A map button switches to EOxCloudless 2024 imagery (Copernicus Sentinel-2,
+  CC BY-NC-SA 4.0, credited on the map), so forests, deserts, mountains and coasts can be read.
+  Place names turn white on a dark halo over imagery. The choice is remembered; nothing loads from
+  EOX unless it is switched on.
+
+### Changed
+- Deeper water on the map, so land and sea separate at a glance.
+- The two routes named in news reports are no longer drawn on the opening map, where "Routes 2"
+  suggested wildlife moves along two routes. The legend now links to Flows (15,000+ seized
+  shipments reported to CITES); the news routes remain an evidence layer there.
+
 ## 1.6.0 — 2026-09-23
 
 ### Added

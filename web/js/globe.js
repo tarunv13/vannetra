@@ -42,7 +42,9 @@ export function createGlobe(el, { onPick, onReady } = {}) {
       // Lighter sea and land than stock Positron: evidence marks carry the colour, the base map recedes.
       layers: next.layers.map((l) => {
         if (l.type === "background") return { ...l, paint: { ...l.paint, "background-color": "#f7f8f5" } };
-        if (l.id === "water") return { ...l, paint: { ...l.paint, "fill-color": "#d3e2ea" } };
+        // Deeper water than stock Positron so coasts read at a glance; land stays light.
+        if (l.id === "water") return { ...l, paint: { ...l.paint, "fill-color": "#a9c6d8" } };
+        if (/waterway/.test(l.id) && l.type === "line") return { ...l, paint: { ...l.paint, "line-color": "#a9c6d8" } };
         if (l.type === "symbol" && l.layout?.["text-field"]) {
           // One language on the map (English, else Latin script, else local): no stacked bilingual labels.
           const out = { ...l, layout: { ...l.layout, "text-field": ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name"]] } };
@@ -65,6 +67,14 @@ export function createGlobe(el, { onPick, onReady } = {}) {
   map.on("load", () => {
     // Centre the globe in the space the panels leave free.
     map.jumpTo({ center: [30, 12], zoom: small ? 0.9 : 1.75, padding: api.padding() });
+    // ---- satellite: EOxCloudless 2024 (Sentinel-2), CC BY-NC-SA 4.0 for non-commercial use.
+    // Drawn under borders and labels; loads nothing until the reader switches it on.
+    const under = map.getStyle().layers.find((l) => /boundary/.test(l.id) || l.type === "symbol")?.id;
+    map.addSource("satellite", { type: "raster", tileSize: 256, maxzoom: 13,
+      tiles: ["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg"],
+      attribution: '<a href="https://cloudless.eox.at" target="_blank" rel="noopener">EOxCloudless</a> 2024 by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2024)' });
+    map.addLayer({ id: "satellite", type: "raster", source: "satellite", layout: { visibility: "none" },
+      paint: { "raster-saturation": -0.12, "raster-contrast": 0.05, "raster-fade-duration": 200 } }, under);
     // ---- routes (under points)
     map.addSource("routes", { type: "geojson", data: EMPTY, lineMetrics: true });
     map.addLayer({ id: "routes", type: "line", source: "routes", layout: { "line-cap": "round", "line-join": "round" },
@@ -232,6 +242,7 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     dashTimer = setInterval(() => { dashStep = (dashStep + 1) % DASH.length; map.setPaintProperty("flow-dash", "line-dasharray", DASH[dashStep]); }, 70);
   }
 
+  const labelPaint = {};   // the basemap's own label colours, restored when satellite is switched off
   const api = {
     map,
     set(source, fc) { const s = map.getSource(source); if (s) s.setData(fc); },
@@ -262,6 +273,21 @@ export function createGlobe(el, { onPick, onReady } = {}) {
       // The panels' padding lives on the map itself; fitBounds adds only a small margin on top.
       map.setPadding(api.padding());
       map.fitBounds(bounds, { padding: 30, maxZoom, duration: reduced() ? 0 : 1400 });
+    },
+    /** Satellite imagery on or off; the choice is remembered in this browser. */
+    satellite(on) {
+      if (!map.getLayer("satellite")) return;
+      map.setLayoutProperty("satellite", "visibility", on ? "visible" : "none");
+      document.body.classList.toggle("sat", on);
+      // Place names: white on a dark halo over imagery, the stock dark-on-white on the map.
+      map.getStyle().layers.filter((l) => l.type === "symbol" && l.layout?.["text-field"] && l.source !== "flownodes" && l.source !== "zoo" && l.source !== "cases")
+        .forEach((l) => {
+          labelPaint[l.id] ||= { c: map.getPaintProperty(l.id, "text-color"), h: map.getPaintProperty(l.id, "text-halo-color"), w: map.getPaintProperty(l.id, "text-halo-width") };
+          const o = labelPaint[l.id];
+          map.setPaintProperty(l.id, "text-color", on ? "#f4f7f6" : o.c);
+          map.setPaintProperty(l.id, "text-halo-color", on ? "rgba(15,26,23,0.72)" : o.h);
+          map.setPaintProperty(l.id, "text-halo-width", on ? 1.3 : o.w);
+        });
     },
     /** Flows and outbreaks are worldwide: a flat map shows both ends of a route at once. */
     flat(on) {

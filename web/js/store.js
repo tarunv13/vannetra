@@ -5,7 +5,7 @@ import { KIND } from "./globe.js";
 export const S = {
   data: { cases: [], species: {}, countries: {}, obs: { observatories: [], categories: {} }, meta: {}, report: {}, trade: {}, sources: [], codewords: [], graph: { elements: [] } },
   filters: { kinds: new Set(), species: new Set(), countries: new Set(), ver: new Set(), range: null },
-  layers: { cases: true, routes: true, observatories: false, mine: true },
+  layers: { cases: true, routes: false, observatories: false, mine: true },   // news routes: shown in Flows only
   trail: [], pos: -1, // navigation stack for the inspector (back / forward)
   // Atlas mode: "cases" (the default map), "flows" (supply -> demand) or "zoo" (zoonoses).
   mode: "cases",

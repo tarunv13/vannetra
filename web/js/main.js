@@ -1,6 +1,6 @@
 // WildTrace: one map, everything else floats on it.
 import { esc } from "./charts.js";
-import { arc, createGlobe, KIND } from "./globe.js";
+import { createGlobe, KIND } from "./globe.js";
 import { render as renderInspector, title } from "./inspector.js";
 import { local, localEntity, localPoints, mountChart, mountImport } from "./investigate.js";
 import { renderPulse } from "./pulse.js";
@@ -29,12 +29,6 @@ function caseGeo(cs) {
       level: c.place.type, ver: c.verification || "single" },
     geometry: { type: "Point", coordinates: [c.place.lon, c.place.lat] } })) };
 }
-function routeGeo(cs) {
-  const agg = {};
-  cs.forEach((c) => { if (c.route_coords?.[0] && c.route_coords?.[1]) { const k = c.route.join("→"); (agg[k] ||= { n: 0, c }).n++; } });
-  return { type: "FeatureCollection", features: Object.entries(agg).map(([k, { n, c }]) => ({ type: "Feature",
-    properties: { label: `${c.route[0]} → ${c.route[1]}`, n }, geometry: { type: "LineString", coordinates: arc(c.route_coords[0], c.route_coords[1]) } })) };
-}
 function obsGeo() {
   return { type: "FeatureCollection", features: (S.data.obs.observatories || []).filter((o) => o.hq).map((o) => ({ type: "Feature",
     properties: { id: o.id, name: o.name.split(" (")[0], city: o.hq.city }, geometry: { type: "Point", coordinates: [o.hq.lon, o.hq.lat] } })) };
@@ -49,15 +43,16 @@ function drawMap() {
   const geo = caseGeo(cs);
   globe.set("cases", geo);
   globe.set("heat", geo);
-  globe.set("routes", routeGeo(cs));
+  // The two routes named in news reports are too few to stand alone on the opening map; they are an
+  // evidence layer in Flows, next to 15,000+ seized shipments reported to CITES.
+  globe.set("routes", { type: "FeatureCollection", features: [] });
   globe.set("obs", obsGeo());
   globe.set("mine", localPoints());
   Object.entries(S.layers).forEach(([k, v]) => globe.visible(k === "cases" ? "cases" : k === "observatories" ? "obs" : k, v));
   $("#n-cases").textContent = cs.length;
-  const nr = routeGeo(cs).features.length;
-  $("#n-routes").textContent = nr;
+
   // A layer with nothing in it only advertises a gap: the Routes toggle appears once a report states a route.
-  document.querySelector('[data-layer="routes"]').hidden = !S.data.cases.some((c) => c.route_coords);
+
   $("#n-obs").textContent = obsGeo().features.length;
   const mine = localPoints().features.length;
   $("#lens-mine").hidden = !local.elements.length;
@@ -288,6 +283,12 @@ async function boot() {
   $("#fold").addEventListener("click", () => { const f = $("#pulse").classList.toggle("folded"); $("#fold").setAttribute("aria-expanded", String(!f)); });
   $("#proj").addEventListener("click", () => toast(globe?.toggleProjection() ? "Globe" : "Flat map"));
   $("#world").addEventListener("click", () => globe?.world());
+  // Satellite view, remembered per browser.
+  const satOn = (() => { try { return localStorage.getItem("wildtrace.basemap") === "satellite"; } catch { return false; } })();
+  const setSat = (on) => { globe?.satellite(on); $("#sat").setAttribute("aria-pressed", String(on)); try { localStorage.setItem("wildtrace.basemap", on ? "satellite" : "map"); } catch { /* private window */ } };
+  $("#sat").addEventListener("click", () => { const on = $("#sat").getAttribute("aria-pressed") !== "true"; setSat(on); toast(on ? "Satellite view (EOxCloudless, Copernicus Sentinel-2)" : "Map view"); });
+  if (satOn) { const wait = setInterval(() => { if (globe?.ready) { clearInterval(wait); setSat(true); } }, 300); }
+  $("#go-flows").addEventListener("click", () => setMode("flows"));
   $("#spin").addEventListener("click", () => { globe?.spin(!globe.spinning); $("#spin").setAttribute("aria-pressed", String(!!globe?.spinning)); });
   $("#legend-toggle").addEventListener("click", () => { const l = $(".legend"); l.hidden = !l.hidden; $("#legend-toggle").setAttribute("aria-pressed", String(!l.hidden)); });
   addEventListener("wildtrace:open", (e) => { const [k, t] = String(e.detail).split(":"); openSheet(k, t); });

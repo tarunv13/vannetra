@@ -28,7 +28,7 @@ export const TOURS = {
     { el: null, title: "Welcome to WildTrace",
       body: "One open map of the illegal trade in wild animals and plants: seizures, arrests and convictions from public reports, where traded wildlife comes from and goes, and where animal-borne outbreaks are reported. About a minute; leave at any point." },
     { el: "#globe", place: "center", title: "The Atlas",
-      body: "Every case sits where its report says it happened. The icon inside a point is the kind of event (box: seizure, lock: arrest, hands: rescue); paler points rest on a single report; a ring means the place is approximate; the glow shows where reporting is dense. Switch cases, routes and observatories on and off in the legend, bottom right." },
+      body: "Every case sits where its report says it happened. The icon inside a point is the kind of event (box: seizure, lock: arrest, hands: rescue); paler points rest on a single report; a ring means the place is approximate; the glow shows where reporting is dense. Switch cases and observatories on and off in the legend, bottom right, and turn on satellite imagery with the map buttons to see the landscape. Trade routes live in Flows." },
     { el: ".modes", title: "Three ways to read the map",
       body: "<b>Cases</b> is the news record. <b>Flows</b> shows where wildlife is taken and where it is seized, from government reports to CITES. <b>Zoonoses</b> places animal-borne outbreaks beside the trade. Each has its own short tour the first time you open it." },
     { el: "#pulse", title: "Pulse: what is in view",
