@@ -138,7 +138,7 @@ export function mountAbout(root) {
     <h3>Who runs it</h3>
     <p>An open-source research project, maintained on GitHub by <a href="https://github.com/tarunv13" target="_blank" rel="noopener">@tarunv13</a>. It builds on the OWT labelled set of online listings and on the observatories listed under Network. Code and method: <a href="https://github.com/tarunv13/wildtrace" target="_blank" rel="noopener">github.com/tarunv13/wildtrace</a>.</p>
     <h3>Use and cite</h3>
-    <p>Cases and case data: <b>CC BY 4.0</b>. Code: MIT. The Flows data (<code>flows.json</code>) is derived from the CITES Trade Database and shared under its terms (non-commercial, with attribution); the virus counts in <code>zoonoses.json</code> come from VIRION under <b>ODbL 1.0</b>. Suggested citation:</p>
+    <p>Case data: <b>CC BY 4.0</b>. Code: MIT. The Flows data (<code>flows.json</code>) is derived from the CITES Trade Database and shared under its terms (non-commercial, with attribution); the virus counts in <code>zoonoses.json</code> come from VIRION under <b>ODbL 1.0</b>. Suggested citation:</p>
     <p class="box mono" style="font-size:12.5px">${esc(m.cite || "WildTrace. The open atlas of illegal wildlife trade.")}</p>
     <div class="row"><a class="btn primary" href="data/cases.csv" download>Download all cases (CSV)</a>
       <a class="btn" href="browse.html">Browse by species &amp; country</a></div>

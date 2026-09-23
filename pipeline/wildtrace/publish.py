@@ -38,10 +38,15 @@ def _cite() -> str:
         cff = yaml.safe_load((Path(__file__).resolve().parents[2] / "CITATION.cff").read_text(encoding="utf-8")) or {}
     except OSError:
         cff = {}
+    # Same form as GitHub's "Cite this repository" (APA): authors, version and DOI all from CITATION.cff.
+    names = [f"{a['family-names']}, " + " ".join(f"{g[0]}." for g in a.get("given-names", "").split())
+             for a in cff.get("authors", []) if a.get("family-names")] or ["Verma, T. K."]
+    title = cff.get("title", "WildTrace: the open atlas of illegal wildlife trade")
+    version = f" (Version {cff['version']})" if cff.get("version") else ""
     doi = cff.get("doi")
-    where = f"https://doi.org/{doi}" if doi else "https://tarunv13.github.io/wildtrace/"
-    return (f"Verma, T. ({time.strftime('%Y')}). WildTrace: the open atlas of illegal wildlife trade. {where} "
-            f"(data built {time.strftime('%Y-%m-%d')}).")
+    where = f"Zenodo. https://doi.org/{doi}" if doi else "https://tarunv13.github.io/wildtrace/"
+    return (f"{' & '.join(names)} ({str(cff.get('date-released', ''))[:4] or time.strftime('%Y')}). {title}{version} "
+            f"[Computer software]. {where} (data built {time.strftime('%Y-%m-%d')}).")
 
 def _dump(name: str, obj) -> Path:
     p = WEB_DATA / name

@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use WildTrace or its data, please cite it as below. Data CC BY 4.0, code MIT."
+message: "If you use WildTrace or its data, please cite it as below. Code MIT; case data CC BY 4.0; CITES-derived flows under CITES terms (non-commercial); VIRION-derived virus counts ODbL 1.0."
 title: "WildTrace: the open atlas of illegal wildlife trade"
 type: software
 authors:
