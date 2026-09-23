@@ -104,6 +104,23 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     const approx = ["any", ["==", ["get", "basis"], "outlet"], ["==", ["get", "level"], "country"]];
     map.addLayer({ id: "halo", type: "circle", source: "cases", filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "id"], ""]],
       paint: { "circle-radius": 18, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": "#0f1a17", "circle-stroke-width": 2, "circle-stroke-opacity": 0.6 } });
+    // Case kind as a white glyph inside each point (seizure box, arrest lock, rescue hands).
+    const glyph = (name, file) => new Promise((ok) => {
+      fetch(`icons/ui/${file}.svg`).then((r) => r.text()).then((svg) => {
+        const img = new Image(48, 48);
+        img.onload = () => { const c = document.createElement("canvas"); c.width = c.height = 48; c.getContext("2d").drawImage(img, 6, 6, 36, 36);
+          if (!map.hasImage(name)) map.addImage(name, c.getContext("2d").getImageData(0, 0, 48, 48), { pixelRatio: 2 }); ok(); };
+        img.onerror = ok;
+        img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.replace(/currentColor/g, "#ffffff").replace(/stroke-width="2"/, 'stroke-width="2.4"'));
+      }).catch(ok);
+    });
+    Promise.all([glyph("k-seizure", "package"), glyph("k-arrest", "lock"), glyph("k-other", "heart-handshake")]).then(() => {
+      if (map.getLayer("point-kind")) return;
+      map.addLayer({ id: "point-kind", type: "symbol", source: "cases", filter: ["all", ["!", ["has", "point_count"]], ["!", approx]], minzoom: 2.2,
+        layout: { "icon-image": ["match", ["get", "kg"], "seizure", "k-seizure", "arrest", "k-arrest", "k-other"], "icon-size": ["interpolate", ["linear"], ["get", "n_sources"], 1, 0.62, 20, 0.95],
+          "icon-allow-overlap": true, "icon-ignore-placement": true,
+          visibility: document.body.classList.contains("mode-cases") ? "visible" : "none" } });
+    });
     map.addLayer({ id: "points", type: "circle", source: "cases", filter: ["!", ["has", "point_count"]],
       paint: {
         "circle-radius": ["interpolate", ["linear"], ["get", "n_sources"], 1, 6, 5, 9, 20, 13],
@@ -166,6 +183,10 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     hover("zoo", (p) => `<b>${esc(p.name)}</b><div class="muted" style="font-size:12px">${esc(p.what)}</div>`);
     hover("zoo-cases", (p) => `<b>${esc(p.name)}</b><div class="muted" style="font-size:12px">${esc(p.what)}</div>`);
     map.on("click", "flow-nodes", (e) => onPick?.({ kind: "country", id: e.features[0].properties.cc }));
+    ["flow-lines", "flow-lines-d"].forEach((l) => map.on("click", l, (e) => {
+      if (map.queryRenderedFeatures(e.point, { layers: ["flow-nodes"] }).length) return;   // a node click wins
+      onPick?.({ kind: "route", id: e.features[0].properties.key });
+    }));
     map.on("click", "zoo", (e) => onPick?.({ kind: "country", id: e.features[0].properties.cc }));
     map.on("mouseenter", "clusters", () => (map.getCanvas().style.cursor = "pointer"));
     map.on("mouseleave", "clusters", () => (map.getCanvas().style.cursor = ""));
@@ -215,7 +236,7 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     map,
     set(source, fc) { const s = map.getSource(source); if (s) s.setData(fc); },
     visible(layer, on) {
-      const ids = layer === "cases" ? ["clusters", "cluster-n", "points", "halo", "heat"] : [layer];
+      const ids = layer === "cases" ? ["clusters", "cluster-n", "points", "point-kind", "halo", "heat"] : [layer];
       ids.forEach((id) => map.getLayer(id) && map.setLayoutProperty(id, "visibility", on ? "visible" : "none"));
     },
     highlight(id) {

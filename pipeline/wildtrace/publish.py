@@ -344,6 +344,12 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
     _dump("regions.json", {"source": regions["source"], "regions": regions["regions"]})
     obs = yaml.safe_load((RESOURCES / "observatories.yaml").read_text(encoding="utf-8"))
     _dump("observatories.json", obs)
+    # Outlet and organisation icons (self-hosted; fetched once, only for new domains).
+    from . import logos
+    try:
+        logos.update(cases, obs.get("observatories", []))
+    except Exception as e:   # a logo outage must never stop a data refresh
+        print(f"  logos skipped: {e}")
     _dump("codewords.json", [{k: v for k, v in c.items()} for c in lexicon.codewords()])
     _dump("trivia.json", trivia(cases, species_meta))
     # CI has no private data or model: keep the last published aggregates instead of blanking them.

@@ -138,6 +138,7 @@ function drawInspector() {
   if (!item && autoFolded) { $("#pulse").classList.remove("folded"); autoFolded = false; }
   if (!item) { globe?.highlight(null); return; }
   renderInspector(item, $("#insp-body"), { act, entity: localEntity });
+  if (item.kind === "route" && !S.data.flows_detail) Promise.all([loadExtra("flows"), loadExtra("flows_detail")]).then(refreshInspector);
   // Move keyboard and screen-reader focus to the record that just opened.
   const h = $("#insp-body .title");
   if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }

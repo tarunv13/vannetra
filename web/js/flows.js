@@ -4,6 +4,7 @@
 // Data: CITES Trade Database shipments (web/data/flows.json), plus routes named in cases.
 import { esc, fmt } from "./charts.js";
 import { S, ccName, emit, spLabel } from "./store.js";
+import * as icons from "./icons.js";
 
 // Eight trade regions in a fixed order (validated categorical palette), Other in grey.
 export const REGION_COLOR = { south_asia: "#2a78d6", southeast_asia: "#eb6834", east_asia: "#1baf7a", mena: "#eda100",
@@ -123,7 +124,7 @@ export function geo() {
     const SEG = 12, step = Math.ceil((pts.length - 1) / SEG);
     for (let i = 0; i < pts.length - 1; i += step) {
       const seg = pts.slice(i, Math.min(pts.length, i + step + 1));
-      lines.push({ type: "Feature", properties: { c: mix(ca, cb, (i + step / 2) / (pts.length - 1)), w, o, k: r.k, label: lab, what }, geometry: { type: "LineString", coordinates: seg } });
+      lines.push({ type: "Feature", properties: { c: mix(ca, cb, (i + step / 2) / (pts.length - 1)), w, o, k: r.k, key: r.key, label: lab, what: `${what} · click for the evidence` }, geometry: { type: "LineString", coordinates: seg } });
     }
     if (r.k !== "d") dash.push({ type: "Feature", properties: { w }, geometry: { type: "LineString", coordinates: pts } });
     const j = pts.length - 3;
@@ -216,6 +217,8 @@ export function renderControls(el) {
   el.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:open", { detail: b.dataset.open }))));
 }
 
+const spIcons = (r) => Object.entries(r.gs).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([g]) => icons.sp(g, spLabel(g))).join("");
+
 // ------------------------------------------------------------------ right panel: story + route switches + legend
 export function renderSide(el, g) {
   const f = S.flow;
@@ -229,7 +232,7 @@ export function renderSide(el, g) {
     return `<label class="route ${on ? "" : "off"}"><input type="checkbox" data-key="${esc(r.key)}" ${on ? "checked" : ""}>
       <span class="rt"><b>${esc(label(r))}</b>${r.k === "d" ? ` <span class="status info">declared</span>` : r.k === "n" ? ` <span class="status warn">news</span>` : ""}
         <i class="rb" style="width:${Math.max(6, (r.n / top) * 100)}%;background:linear-gradient(90deg,${ca},${cb})"></i><small>${esc(gs)}</small></span>
-      <span class="mono">${fmt(r.n)}</span></label>`;
+      <span class="rt-r"><span class="mono">${fmt(r.n)}</span>${r.k !== "n" ? `<button class="ev" data-route="${esc(r.key)}" title="See the evidence for this route" aria-label="Evidence for ${esc(label(r))}">${spIcons(r)}<b>Evidence</b></button>` : ""}</span></label>`;
   }).join("");
   const html = `
     <div class="eyebrow" style="--c:var(--trade)">Your story</div>
@@ -241,6 +244,8 @@ export function renderSide(el, g) {
     <p class="muted" style="font-size:11.5px;margin:10px 0 0">Thicker and more solid = more shipments. The glow under a market grows with what arrives. ${f.noUS ? "" : "The United States reports its seizures more completely than most countries, so it looks bigger than it may be."}</p>`;
   el.innerHTML = html;
   el.querySelectorAll("[data-key]").forEach((b) => b.addEventListener("change", () => { b.checked ? f.off.delete(b.dataset.key) : f.off.add(b.dataset.key); emit("flows"); }));
+  el.querySelectorAll("[data-route]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation();
+    dispatchEvent(new CustomEvent("wildtrace:go", { detail: { kind: "route", id: b.dataset.route } })); }));
   el.querySelectorAll("[data-all]").forEach((b) => b.addEventListener("click", () => { f.off.clear(); if (b.dataset.all === "0") g.all.forEach((r) => f.off.add(r.key)); emit("flows"); }));
 }
 
@@ -364,4 +369,56 @@ export function mountMatrix(root) {
     }));
   };
   draw();
+}
+
+// ------------------------------------------------------------------ one route, with its evidence
+const PURPOSE = { P: "personal", T: "commercial", S: "scientific", Z: "zoo", H: "hunting trophy", Q: "circus or travelling show",
+  E: "education", B: "captive breeding", M: "medical", L: "law enforcement or court", N: "reintroduction", G: "botanical garden" };
+
+/** Inspector page for a route "s|origin|importer" (seized) or "d|exporter|importer" (declared). */
+export function routeView(key, ic) {
+  const [k, a, b] = key.split("|"), d = S.data.flows;
+  if (!d) return `<p class="muted">Loading trade flows…</p>`;
+  const rows = k === "s" ? d.seized.filter((r) => r[1] === a && r[3] === b) : [];
+  const decl = k === "d" ? Object.entries(d.declared).flatMap(([g, rs]) => rs.filter((r) => r[0] === a && r[1] === b).map((r) => [g, r[2]])) : [];
+  const total = k === "s" ? rows.reduce((n, r) => n + r[4], 0) : decl.reduce((n, r) => n + r[1], 0);
+  const groups = {};
+  (k === "s" ? rows.map((r) => [r[0], r[4]]) : decl).forEach(([g, n]) => (groups[g] = (groups[g] || 0) + n));
+  const det = k === "s" ? S.data.flows_detail?.[`${a}|${b}`] : null;
+  const via = det?.via?.map(([c]) => c) || [];
+  const ccs = new Set([a, b, ...via]);
+  const news = S.data.cases.filter((c) => c.place && ccs.has(c.place.country) && c.species.some((s) => groups[s]))
+    .sort((x, y) => (y.date || "").localeCompare(x.date || "")).slice(0, 10);
+  const plant = (g) => S.data.species[g]?.kingdom === "plant";
+  const anyPlant = Object.keys(groups).some(plant);
+  const years = det ? Object.entries(det.years) : [];
+  const ymax = Math.max(1, ...years.map(([, n]) => n));
+  const reporter = det ? Object.entries(det.reporter).map(([r, n]) => `${fmt(n)} reported by the ${r === "I" ? `importing country (${esc(name(b))})` : r === "E" ? `exporting country (${esc(name(a))})` : "a party"}`).join(", ") : "";
+  return `
+    <div class="eyebrow">${ic.ui("package")} Route · ${k === "s" ? "seized shipments" : "declared trade"}</div>
+    <h2 class="title"><span class="dotc" style="background:${REGION_COLOR[regionOf(a)]}"></span>${esc(name(a))} <span class="muted">→</span> <span class="dotc" style="background:${REGION_COLOR[regionOf(b)]}"></span>${esc(name(b))}</h2>
+    <div class="tiles"><div class="tile"><div class="v">${fmt(total)}</div><div class="k">${k === "s" ? "shipments seized or confiscated" : "shipments declared (mostly legal)"}</div></div>
+      <div class="tile"><div class="v">${years.length ? `${years[0][0]}–${years[years.length - 1][0]}` : `${d.year_min}+`}</div><div class="k">years on record</div></div></div>
+    <div class="eyebrow" style="margin:6px 0 8px">What ${k === "s" ? "was seized" : "was traded"}</div>
+    <div class="evid">${Object.entries(groups).sort((x, y) => y[1] - x[1]).map(([g, n]) =>
+      `<button class="chip" data-go="species|${g}">${ic.sp(g)}${esc(spLabel(g))} <span class="muted">${fmt(n)}</span></button>`).join("")}</div>
+    ${det ? `<div class="evid" style="margin-top:8px">${det.terms.filter(([t]) => t).map(([t, n]) => `<span class="term-chip">${ic.term(t, anyPlant)}${esc(t)} <span class="muted">${n}</span></span>`).join("")}</div>
+      <p class="muted" style="font-size:12px;margin:8px 0 0">Recorded taxa: <i>${det.taxa.filter(([t]) => t).map(([t, n]) => `${esc(t)} (${n})`).join(", ")}</i></p>` : ""}
+    ${years.length > 1 ? `<div class="eyebrow" style="margin:16px 0 6px">When</div>
+      <div class="yrs">${years.map(([y, n]) => `<i title="${y}: ${n}" style="height:${Math.max(3, (n / ymax) * 44)}px"></i>`).join("")}</div>
+      <div class="yrs-l"><span>${years[0][0]}</span><span>${years[years.length - 1][0]}</span></div>` : ""}
+    ${det ? `<div class="box"><h4>Who reported it, and why it moved</h4>
+      <p style="margin:0 0 6px">${reporter}.</p>
+      ${Object.keys(det.purpose).length ? `<p style="margin:0 0 6px">Declared purpose: ${Object.entries(det.purpose).map(([p, n]) => `${esc(PURPOSE[p] || p || "not stated")} (${n})`).join(", ")}.</p>` : ""}
+      ${via.length ? `<p style="margin:0">Re-exported through ${via.map((c) => esc(name(c))).join(", ")} on the way.</p>` : ""}</div>` : ""}
+    <div class="box limit"><h4>Where is the article?</h4>
+      <p style="margin:0 0 6px">This route is not built from news. Each record is a shipment a government reported to CITES in its annual report, with source code I: confiscated or seized. CITES anonymises individual shipments, so the counts, products, years and reporters above are the evidence.</p>
+      <p style="margin:0"><a href="https://trade.cites.org/" target="_blank" rel="noopener">Check it in the CITES Trade Database ↗</a> (exporter ${esc(a)}, importer ${esc(b)}, source I, ${esc(String(d.year_min))} onward).</p></div>
+    <div class="eyebrow" style="margin:16px 0 6px">${ic.ui("news")} In the news</div>
+    ${news.length ? `<p class="muted" style="font-size:12px;margin:0 0 6px">WildTrace cases involving the same species in ${[...ccs].map((c) => esc(name(c))).join(", ")}. They support the pattern; they are not the same shipments.</p>
+      ${news.map((c) => `<button class="link-row" data-go="case|${c.id}"><span style="display:inline-flex;gap:8px;align-items:center;min-width:0">${ic.kind(c.kind)}<span>${esc(c.summary)}</span></span>
+        <span style="display:inline-flex;gap:4px;align-items:center">${(c.sources || []).slice(0, 3).map((s) => ic.outlet(s.outlet)).join("")}<span class="muted" style="font-size:12px;margin-left:4px">${esc(c.date || "")}</span></span></button>`).join("")}`
+      : `<p class="muted" style="font-size:13px">No news case in WildTrace matches these species in these countries yet. News covers few of the seizures that governments report.</p>`}
+    <div class="row" style="margin-top:14px"><button class="btn" data-act="copy">Copy link</button></div>
+    <p class="muted" style="font-size:11.5px;margin-top:10px">${esc(d.cite)}</p>`;
 }

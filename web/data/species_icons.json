@@ -1,0 +1,224 @@
+{
+"pangolin": {
+"taxon": "Manis",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Steven Traver",
+"page": "https://www.phylopic.org/images/f628f6fe-6e2d-4173-a20f-265dc7d2d04f"
+},
+"musk_deer": {
+"taxon": "Moschus",
+"license": "https://creativecommons.org/licenses/by/4.0/",
+"attribution": "painting Guo",
+"page": "https://www.phylopic.org/images/6847ada9-35f7-4a9e-bef5-0645339a8f54"
+},
+"monitor_lizard": {
+"taxon": "Varanus",
+"license": "https://creativecommons.org/licenses/by/4.0/",
+"attribution": "Christina Zdenek",
+"page": "https://www.phylopic.org/images/57072d9f-85ac-4b7b-aaf6-00a1c1aedbf0"
+},
+"jackal": {
+"taxon": "Canis aureus",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Margot Michaud",
+"page": "https://www.phylopic.org/images/26a76622-fdd7-4989-abb6-df5ec21497df"
+},
+"sand_boa": {
+"taxon": "Eryx",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Alex Slavenko",
+"page": "https://www.phylopic.org/images/1f115cd0-96b2-4f3c-b9c7-3f3f88dd3231"
+},
+"wild_boar": {
+"taxon": "Sus scrofa",
+"license": "https://creativecommons.org/licenses/by/4.0/",
+"attribution": "Gabriela Palomo-Munoz",
+"page": "https://www.phylopic.org/images/14a64a2f-166e-4bb4-b108-adc085cbcb7a"
+},
+"turtles": {
+"taxon": "Testudinidae",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Christoph Schomburg",
+"page": "https://www.phylopic.org/images/12ec0606-9446-462a-ab05-9d9c1a693ca6"
+},
+"sea_fan": {
+"taxon": "Gorgonia",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Darrin Schultz",
+"page": "https://www.phylopic.org/images/0219fce6-63c5-4c77-93f3-78ef33f1852e"
+},
+"tokay_gecko": {
+"taxon": "Gekko gecko",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Birgit Szabo",
+"page": "https://www.phylopic.org/images/264fa655-afd7-451c-8f27-e0a9557376e6"
+},
+"elephant": {
+"taxon": "Elephas maximus",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "An Ignorant Atheist",
+"page": "https://www.phylopic.org/images/6e47a104-e62a-4901-81f7-fca2ecacdb0e"
+},
+"tiger": {
+"taxon": "Panthera tigris",
+"license": "https://creativecommons.org/licenses/by/4.0/",
+"attribution": "Matej Frantisek Calfa",
+"page": "https://www.phylopic.org/images/13f2f985-5bf4-4c38-8d8b-caf7da42bef8"
+},
+"leopard": {
+"taxon": "Panthera pardus",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Margot Michaud",
+"page": "https://www.phylopic.org/images/78dbe564-bcba-4dc3-8bdc-fb95fc288580"
+},
+"rhino": {
+"taxon": "Rhinoceros unicornis",
+"license": "https://creativecommons.org/publicdomain/mark/1.0/",
+"attribution": "H. F. O. March (vectorized by T. Michael Keesey)",
+"page": "https://www.phylopic.org/images/abad209c-2ca1-423b-a66b-317ca52f4c78"
+},
+"owl": {
+"taxon": "Bubo",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Margot Michaud",
+"page": "https://www.phylopic.org/images/006de050-910b-4dca-8bcc-9a16f901ac70"
+},
+"birds": {
+"taxon": "Psittacus erithacus",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "",
+"page": "https://www.phylopic.org/images/d791cad7-c2bc-41ed-9ec2-d49e0e3152bb"
+},
+"red_sanders": {
+"taxon": "Fabaceae",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Dave Merrills",
+"page": "https://www.phylopic.org/images/b2fed6ab-ea5d-4670-ad18-3d663aec68e4"
+},
+"shark_ray": {
+"taxon": "Carcharhinus",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Margot Michaud",
+"page": "https://www.phylopic.org/images/07eeaf0e-0284-4c1d-8415-ddd65a736232"
+},
+"primates": {
+"taxon": "Macaca",
+"license": "https://creativecommons.org/publicdomain/mark/1.0/",
+"attribution": "",
+"page": "https://www.phylopic.org/images/13daf9fe-04c7-483c-bacd-4da045f7a7ec"
+},
+"hornbill": {
+"taxon": "Buceros",
+"license": "https://creativecommons.org/publicdomain/mark/1.0/",
+"attribution": "",
+"page": "https://www.phylopic.org/images/220252f6-a950-4173-ab6c-8101f8cac81c"
+},
+"bear": {
+"taxon": "Ursus thibetanus",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Tracy A. Heath",
+"page": "https://www.phylopic.org/images/51f6ff66-3344-4373-b6b0-e8beeb7fee33"
+},
+"mongoose": {
+"taxon": "Herpestes",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Margot Michaud",
+"page": "https://www.phylopic.org/images/019adcd0-a8c2-47e0-9888-d405b5fdb2ec"
+},
+"jaguar": {
+"taxon": "Panthera onca",
+"license": "https://creativecommons.org/licenses/by/3.0/",
+"attribution": "Manabu Sakamoto",
+"page": "https://www.phylopic.org/images/96d821f4-3dde-40bb-8939-541d6ee74bdf"
+},
+"lion": {
+"taxon": "Panthera leo",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Margot Michaud",
+"page": "https://www.phylopic.org/images/78dbe564-bcba-4dc3-8bdc-fb95fc288580"
+},
+"cheetah": {
+"taxon": "Acinonyx jubatus",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "An Ignorant Atheist",
+"page": "https://www.phylopic.org/images/0f43b377-b62f-4a4c-bdf4-bd7b5c779735"
+},
+"totoaba": {
+"taxon": "Sciaenidae",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Ananth Srinivas",
+"page": "https://www.phylopic.org/images/503e3887-67eb-45d7-a20f-2555b711e7c5"
+},
+"eels": {
+"taxon": "Anguilla anguilla",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Ingo Braasch",
+"page": "https://www.phylopic.org/images/9ce911e2-a8fa-47a2-afe9-ca18d71be30f"
+},
+"abalone": {
+"taxon": "Haliotis",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Tauana J. Cunha",
+"page": "https://www.phylopic.org/images/676fd1fd-3605-4047-a7dd-97d6273753dd"
+},
+"rosewood": {
+"taxon": "Fabaceae",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Dave Merrills",
+"page": "https://www.phylopic.org/images/b2fed6ab-ea5d-4670-ad18-3d663aec68e4"
+},
+"pythons_reptiles": {
+"taxon": "Python",
+"license": "https://creativecommons.org/licenses/by/4.0/",
+"attribution": "DS Biswas",
+"page": "https://www.phylopic.org/images/0376a292-2e17-4978-b859-6fbf9bea6c67"
+},
+"orchids": {
+"taxon": "Orchidaceae",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "",
+"page": "https://www.phylopic.org/images/4128df49-da1c-4759-86c2-e4242acecbdf"
+},
+"cacti_succulents": {
+"taxon": "Cactaceae",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "",
+"page": "https://www.phylopic.org/images/985e5bbd-0662-49ac-bf5b-6d5312123eee"
+},
+"cycads": {
+"taxon": "Cycas",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "",
+"page": "https://www.phylopic.org/images/16535285-cdf3-4bea-ab97-9d907bc61470"
+},
+"carnivorous_plants": {
+"taxon": "Nepenthes",
+"license": "https://creativecommons.org/publicdomain/mark/1.0/",
+"attribution": "John Muirhead MacFarlane",
+"page": "https://www.phylopic.org/images/21eb3436-781b-4b0f-99ea-f18df6b86256"
+},
+"medicinal_plants": {
+"taxon": "Araliaceae",
+"license": "https://creativecommons.org/licenses/by/4.0/",
+"attribution": "Tree of Life App",
+"page": "https://www.phylopic.org/images/05f585ef-54a4-499e-915b-35e180f2a341"
+},
+"sandalwood": {
+"taxon": "Santalaceae",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "",
+"page": "https://www.phylopic.org/images/c11488d1-4311-4631-adaa-6e46f8866b48"
+},
+"resins_gums": {
+"taxon": "Burseraceae",
+"license": "https://creativecommons.org/publicdomain/mark/1.0/",
+"attribution": "",
+"page": "https://www.phylopic.org/images/f79a7c7c-07a7-4159-87eb-84225b3a2e1d"
+},
+"bulbs_ornamental": {
+"taxon": "Galanthus",
+"license": "https://creativecommons.org/publicdomain/zero/1.0/",
+"attribution": "Kamil S. Jaron",
+"page": "https://www.phylopic.org/images/0fe46927-f27d-4b02-bbfb-9ee24883ab91"
+}
+}

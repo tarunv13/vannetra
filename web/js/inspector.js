@@ -4,10 +4,11 @@
 import { esc, fmt } from "./charts.js";
 import { KIND, KIND_COLOR, KIND_LABEL } from "./globe.js";
 import { S, ccName, go, spLabel } from "./store.js";
-import { roleBar, sankey } from "./flows.js";
+import { roleBar, routeView, sankey } from "./flows.js";
+import * as ic from "./icons.js";
 import { countryBlock, speciesBlock } from "./zoo.js";
 
-const HUE = { case: "var(--cases)", species: "var(--species)", country: "var(--place)", obs: "var(--network)", entity: "var(--invest)" };
+const HUE = { case: "var(--cases)", species: "var(--species)", country: "var(--place)", obs: "var(--network)", entity: "var(--invest)", route: "var(--trade)" };
 const LANG = { en: "English", hi: "Hindi", hi_latn: "Hindi (Latin)", te: "Telugu", te_latn: "Telugu (Latin)", vi: "Vietnamese", id_ms: "Indonesian / Malay",
   th: "Thai", pt: "Portuguese", es: "Spanish", fr: "French" };
 const inr = (v) => (v == null ? null : v >= 1e7 ? `₹${(v / 1e7).toFixed(1)} crore` : v >= 1e5 ? `₹${(v / 1e5).toFixed(1)} lakh` : `₹${fmt(v)}`);
@@ -63,19 +64,20 @@ function narrative(c, place, qs) {
 
 const days = (a, b) => Math.abs((new Date(a) - new Date(b)) / 864e5);
 const link = (kind, id, label, sub = "") => `<button class="link-row" data-go="${kind}|${esc(id)}"><span>${label}</span><span class="muted" style="font-size:12px">${sub}</span></button>`;
-const caseLink = (c) => link("case", c.id, `<span style="display:inline-flex;gap:8px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:${KIND_COLOR[KIND(c.kind)]}"></span>${esc(c.summary)}</span>`, esc(c.date || ""));
+const caseLink = (c) => link("case", c.id, `<span style="display:inline-flex;gap:8px;align-items:center"><span style="color:${KIND_COLOR[KIND(c.kind)]};display:inline-flex">${ic.kind(c.kind)}</span>${esc(c.summary)}</span>`, esc(c.date || ""));
 
 export function title(item) {
   if (item.kind === "case") return S.data.byId[item.id]?.summary.split(" · ").slice(0, 2).join(" · ") || "Case";
   if (item.kind === "species") return spLabel(item.id);
   if (item.kind === "country") return ccName(item.id);
+  if (item.kind === "route") { const [, a, b] = item.id.split("|"); return `${ccName(a)} → ${ccName(b)}`; }
   if (item.kind === "obs") return S.data.obsById[item.id]?.name.split(" (")[0] || "Observatory";
   return item.label || item.id;
 }
 
 export function render(item, el, ctx) {
   el.style.setProperty("--c", HUE[item.kind]);
-  const fn = { case: caseView, species: speciesView, country: countryView, obs: obsView, entity: entityView }[item.kind];
+  const fn = { case: caseView, species: speciesView, country: countryView, obs: obsView, entity: entityView, route: (id) => routeView(id, ic) }[item.kind];
   el.innerHTML = fn ? fn(item.id, ctx) : "";
   el.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => {
     const [kind, id] = b.dataset.go.split("|");
@@ -124,14 +126,14 @@ function caseView(id) {
     c.modes.length ? `Transport named: ${c.modes.map(esc).join(", ")}.` : "",
   ].filter(Boolean);
   return `
-    <div class="eyebrow">${esc(KIND_LABEL[KIND(c.kind)])} · ${esc(c.date || "undated")}</div>
+    <div class="eyebrow">${ic.kind(c.kind)} ${esc(KIND_LABEL[KIND(c.kind)])} · ${esc(c.date || "undated")}</div>
     <h2 class="title">${esc(c.summary)}</h2>
     <div class="row" style="margin-bottom:8px"><span class="status ${VER[c.verification]?.[0] || "info"}" title="${esc(VER[c.verification]?.[2] || "")}">${VER[c.verification]?.[1] || ""}</span>
       <span class="muted" style="font-size:12.5px">${esc(VER[c.verification]?.[2] || "")}</span></div>
     ${c.review ? `<div class="box" style="border-left:3px solid var(--species)"><h4>Review</h4>${esc(c.review.note || "")} <span class="muted">(${esc(c.review.reviewer || "")}, ${esc(c.review.date || "")})</span></div>` : ""}
     ${!place ? `<div class="box" style="border-left:3px solid var(--ink-3)"><h4>Not on the map</h4>No report names a place for this case, so it is counted but not drawn. The reports below may say more.</div>` : ""}
     <div class="row">
-      ${c.species.map((s) => `<button class="chip" data-go="species|${s}" style="border-color:rgba(33,138,91,.3)">${esc(spLabel(s))} <span class="muted">CITES ${esc(S.data.species[s]?.cites || "–")}</span></button>`).join("")}
+      ${c.species.map((s) => `<button class="chip" data-go="species|${s}" style="border-color:rgba(33,138,91,.3)">${ic.sp(s)}${esc(spLabel(s))} <span class="muted">CITES ${esc(S.data.species[s]?.cites || "–")}</span></button>`).join("")}
       ${place ? `<button class="chip" data-go="country|${esc(place.country)}">${esc(ccName(place.country))}</button>` : ""}
     </div>
     <div class="account">${narrative(c, place, qs).map((t) => `<p>${t}</p>`).join("")}</div>
@@ -143,7 +145,7 @@ function caseView(id) {
       <p style="margin:0 0 6px">Extracted automatically from ${c.n_sources} public report${c.n_sources > 1 ? "s" : ""}; not reviewed by a person. Confidence ${Math.round(c.confidence * 100)}%.</p>
       <p style="margin:0">CITES appendices shown are group-level; check the taxon on Species+.</p></div>
     <div class="eyebrow" style="margin:18px 0 6px">Reports (${c.n_sources})</div>
-    ${c.sources.map((s) => `<a class="link-row" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer nofollow"><span>${esc(s.outlet || new URL(s.url).hostname)} ↗ <span class="status ${s.tier === "official" ? "good" : "info"}" style="margin-left:4px">${TIER[s.tier] || "Media"}</span></span><span class="muted" style="font-size:12px">${esc(s.date || "")}</span></a>`).join("")}
+    ${c.sources.map((s) => `<a class="link-row" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer nofollow"><span style="display:inline-flex;gap:8px;align-items:center">${ic.outlet(s.outlet)}${esc(s.outlet || new URL(s.url).hostname)} ↗ <span class="status ${s.tier === "official" ? "good" : "info"}" style="margin-left:4px">${TIER[s.tier] || "Media"}</span></span><span class="muted" style="font-size:12px">${esc(s.date || "")}</span></a>`).join("")}
     ${related.length ? `<div class="eyebrow" style="margin:18px 0 6px">Related in time</div>${related.map(caseLink).join("")}` : ""}
     <div class="row" style="margin-top:16px">
       <button class="btn violet" data-act="chart">Chart this case</button>
@@ -165,7 +167,8 @@ function speciesView(gid) {
   const pmcN = Object.entries(g.terms).filter(([k]) => k.startsWith("pmc_")).reduce((n, [, v]) => n + v.length, 0);
   return `
     <div class="eyebrow">Species group</div>
-    <h2 class="title">${esc(g.label)}</h2>
+    <div class="sp-hero">${ic.sp(gid, g.label)}<h2 class="title">${esc(g.label)}</h2></div>
+    ${S.data.speciesIcons?.[gid] ? `<p class="muted" style="font-size:11px;margin:-4px 0 8px">Silhouette: <i>${esc(S.data.speciesIcons[gid].taxon)}</i>${S.data.speciesIcons[gid].attribution ? `, ${esc(S.data.speciesIcons[gid].attribution)}` : ""}, <a href="${esc(S.data.speciesIcons[gid].page)}" target="_blank" rel="noopener">PhyloPic</a></p>` : ""}
     <div class="row"><span class="status ${String(g.cites).startsWith("I") && !String(g.cites).startsWith("II") ? "bad" : "info"}">CITES ${esc(g.cites || "not listed")}</span>
       <span class="muted" style="font-size:12.5px"><i>${esc(g.taxa.join(", "))}</i></span></div>
     <dl class="facts">
@@ -200,7 +203,7 @@ function countryView(cc) {
       <div class="tile"><div class="v">${Object.keys(sp).length}</div><div class="k">species groups</div></div></div>
     ${roleBar(cc)}${countryBlock(cc)}
     ${Object.keys(sp).length ? `<div class="eyebrow" style="margin:14px 0 6px">Species involved</div>${Object.entries(sp).sort((a, b) => b[1] - a[1])
-      .map(([s, n]) => link("species", s, esc(spLabel(s)), `${n}`)).join("")}` : ""}
+      .map(([s, n]) => link("species", s, `<span style="display:inline-flex;gap:8px;align-items:center">${ic.sp(s)}${esc(spLabel(s))}</span>`, `${n}`)).join("")}` : ""}
     ${outRoutes.length ? `<div class="eyebrow" style="margin:14px 0 6px">Reported routes</div>${outRoutes.map((c) => link("case", c.id, `${esc(c.route[0])} → ${esc(c.route[1])}`, esc(c.date || ""))).join("")}` : ""}
     ${obs.length ? `<div class="eyebrow" style="margin:14px 0 6px">Observatories based here</div>${obs.map((o) => link("obs", o.id, esc(o.name.split(" (")[0]), esc(o.hq.city))).join("")}` : ""}
     ${cases.length ? `<div class="eyebrow" style="margin:14px 0 6px">Cases</div>${cases.slice(0, 15).map(caseLink).join("")}` : `<p class="muted">No cases located here in this build.</p>`}
@@ -220,7 +223,7 @@ function obsView(id) {
   const [cls, lab] = STATE[o.status.state] || ["info", o.status.state];
   return `
     <div class="eyebrow">Observatory · ${esc(S.data.obs.categories?.[o.category] || o.category)}</div>
-    <h2 class="title">${esc(o.name)}</h2>
+    <div class="sp-hero">${ic.org(o.id, o.name)}<h2 class="title">${esc(o.name)}</h2></div>
     <div class="row"><span class="status ${cls}">${lab}</span><span class="muted" style="font-size:12.5px">checked ${esc(String(o.status.checked))}</span></div>
     <dl class="facts">
       <dt>Run by</dt><dd>${esc(o.entity)}</dd>

@@ -2,6 +2,7 @@
 // Results are grouped (cases, species, countries, observatories) and keyboard-navigable.
 import { esc } from "./charts.js";
 import { S, ccName, go, spLabel } from "./store.js";
+import * as ic from "./icons.js";
 
 const norm = (s) => String(s || "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
@@ -9,13 +10,13 @@ export function mountSearch(root, input, list) {
   let items = [], sel = 0;
   const index = () => [
     ...Object.entries(S.data.species).map(([id, g]) => ({ kind: "species", id, t: g.label, s: `${g.taxa.slice(0, 2).join(", ")} · CITES ${g.cites || "–"}`,
-      hay: norm([g.label, ...g.taxa, ...Object.values(g.terms).flat()].join(" ")), c: "var(--species)", ic: "SP" })),
+      hay: norm([g.label, ...g.taxa, ...Object.values(g.terms).flat()].join(" ")), c: "var(--species)", ic: "SP", html: ic.sp(id) })),
     ...Object.entries(S.data.countries).filter(([cc]) => S.data.cases.some((c) => c.place?.country === cc))
       .map(([cc, v]) => ({ kind: "country", id: cc, t: v.name, s: `${S.data.cases.filter((c) => c.place?.country === cc).length} cases`, hay: norm(v.name + " " + cc), c: "var(--place)", ic: cc })),
     ...(S.data.obs.observatories || []).map((o) => ({ kind: "obs", id: o.id, t: o.name.split(" (")[0], s: `${o.entity} · ${o.hq?.city || "global"}`,
-      hay: norm([o.name, o.entity, o.focus, o.features].join(" ")), c: "var(--network)", ic: "OB" })),
+      hay: norm([o.name, o.entity, o.focus, o.features].join(" ")), c: "var(--network)", ic: "OB", logo: ic.org(o.id, o.name) })),
     ...S.data.cases.map((c) => ({ kind: "case", id: c.id, t: c.summary, s: `${c.date || "undated"} · ${c.agencies.slice(0, 2).join(", ")}`,
-      hay: norm([c.summary, ...c.places, ...c.agencies, ...c.species.map(spLabel), c.place ? ccName(c.place.country) : ""].join(" ")), c: "var(--cases)", ic: "CA" })),
+      hay: norm([c.summary, ...c.places, ...c.agencies, ...c.species.map(spLabel), c.place ? ccName(c.place.country) : ""].join(" ")), c: "var(--cases)", ic: "CA", html: ic.kind(c.kind) })),
   ];
   let IDX = null;
   const draw = () => {
@@ -31,7 +32,7 @@ export function mountSearch(root, input, list) {
       const g = items.filter((x) => x.kind === k).slice(0, k === "case" ? 12 : 6);
       if (!g.length) return "";
       return `<div class="omni-group">${label}</div>` + g.map((x) => `<button class="hit" role="option" data-i="${items.indexOf(x)}" aria-selected="${i++ === sel}" style="--c:${x.c}">
-        <span class="ic">${esc(x.ic)}</span><span style="min-width:0"><div class="t">${esc(x.t)}</div><div class="s">${esc(x.s)}</div></span><span class="k">↵</span></button>`).join("");
+        ${x.logo ? `<span class="ic logo-ic">${x.logo}</span>` : `<span class="ic">${x.html || esc(x.ic)}</span>`}<span style="min-width:0"><div class="t">${esc(x.t)}</div><div class="s">${esc(x.s)}</div></span><span class="k">↵</span></button>`).join("");
     }).join("") || `<p class="muted" style="padding:10px 12px;margin:0">No match. Try a species (pangolin), a place (Lagos) or an agency (DRI).</p>`;
     root.classList.add("open");
     list.querySelectorAll("[data-i]").forEach((b) => b.addEventListener("click", () => pick(items[+b.dataset.i])));

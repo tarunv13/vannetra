@@ -5,6 +5,7 @@
 import { esc, fmt } from "./charts.js";
 import { S, ccName, emit, spLabel } from "./store.js";
 import { roles } from "./flows.js";
+import * as ic from "./icons.js";
 
 export const PATHWAY = { wildlife: ["Wildlife contact", "#eb6834", "Ebola, Marburg, mpox, SARS, Nipah, Lassa"],
   birds: ["Birds", "#2a78d6", "avian influenza, West Nile"], livestock: ["Livestock", "#008300", "MERS, Rift Valley fever, anthrax"],
@@ -120,7 +121,7 @@ export function mountZoo(root, tab = "species") {
       <p style="margin:0 0 10px;font-size:13.5px;max-width:80ch">Viruses confirmed by sequencing or isolation in each traded species group. A <b>close relative</b> belongs to a virus genus that also infects people; <b>same as in people</b> is the very same virus species.</p>
       <table class="matrix zoo-t" aria-label="Viruses recorded in traded species groups"><thead><tr><th scope="col">Species group</th><th scope="col" class="num">Cases</th><th scope="col" class="num">Viruses found</th><th scope="col">Same as in people</th><th scope="col">Close relatives</th>
         ${FAM.map(([, l]) => `<th scope="col">${l}</th>`).join("")}</tr></thead>
-      <tbody>${rows.map(([g, x]) => `<tr><th scope="row"><button class="linkish" data-sp="${g}">${esc(spLabel(g))}</button></th><td class="num">${cases[g] || 0}</td><td class="num">${x.viruses}</td>
+      <tbody>${rows.map(([g, x]) => `<tr><th scope="row"><button class="linkish" data-sp="${g}" style="display:inline-flex;gap:8px;align-items:center">${ic.sp(g)}${esc(spLabel(g))}</button></th><td class="num">${cases[g] || 0}</td><td class="num">${x.viruses}</td>
         ${[x.same, x.relatives, ...FAM.map(([k]) => x.families[k] || 0)].map((n) => { const [bg, fg] = zc(n); return `<td><span class="mc" style="background:${bg};color:${fg}">${n || "·"}</span></td>`; }).join("")}</tr>`).join("")}</tbody></table>
       <div class="row" style="margin-top:10px;gap:14px"><span class="muted" style="font-size:12px">Virus count</span>${ZR.map((c, i) => `<span class="lg"><i style="background:${c};border-radius:4px;width:20px"></i>${["1", "2–3", "4–9", "10–29", "30+"][i]}</span>`).join("")}</div>
     </div>

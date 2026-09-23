@@ -568,3 +568,38 @@ svg .hit { fill: transparent; cursor: default; }
   .zoo-side { border-left: 0; border-top: 1px solid var(--line); }
   .two { grid-template-columns: 1fr; }
 }
+
+/* v1.6: icons, logos and route evidence ----------------------------------------------
+   Icons are CSS masks (species silhouettes from PhyloPic, product and kind icons from Tabler),
+   so they take the colour of the text around them. Logos are the outlets' own site icons. */
+.ico { display: inline-block; width: 1em; height: 1em; flex: none; vertical-align: -0.14em; background: currentColor;
+  -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
+.ico.sp { width: 1.35em; height: 1.2em; vertical-align: -0.24em; }
+.chip .ico, .bar .ico, .term-chip .ico { margin-right: 2px; }
+.bar span .ico.sp { color: var(--species-ink); margin-right: 6px; }
+.logo { width: 16px; height: 16px; border-radius: 4px; object-fit: contain; flex: none; background: #fff;
+  box-shadow: 0 0 0 1px var(--line); vertical-align: middle; }
+.logo.lg { width: 24px; height: 24px; border-radius: 6px; }
+.logo.letter { display: inline-grid; place-items: center; font: 650 9.5px/1 var(--font); color: var(--ink-2); background: rgba(15, 26, 23, 0.06); box-shadow: none; }
+.logo.lg.letter { font-size: 12px; }
+.sp-hero { display: flex; align-items: center; gap: 12px; }
+.sp-hero .ico.sp { width: 44px; height: 40px; color: var(--c, var(--species)); }
+.sp-hero .logo.lg { width: 32px; height: 32px; }
+.sp-hero .title { margin: 10px 0; }
+.item .k.ki { width: 18px; height: 18px; border-radius: 6px; background: var(--kc); color: #fff; display: grid; place-items: center; margin-top: 1px; font-size: 12px; }
+.hit .ic .ico { width: 16px; height: 16px; }
+.hit .ic.logo-ic { background: transparent; }
+.eyebrow .ico { width: 14px; height: 14px; }
+.eyebrow::before { flex: none; }
+
+/* route evidence */
+.evid { display: flex; flex-wrap: wrap; gap: 6px; }
+.evid .chip .ico.sp { color: var(--species-ink); }
+.term-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 550;
+  background: rgba(194, 122, 6, 0.1); color: var(--trade-ink); border: 1px solid rgba(194, 122, 6, 0.22); }
+.route .rt-r { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.route .ev { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--line-2);
+  background: #fff; color: var(--ink-2); font-size: 11.5px; cursor: pointer; white-space: nowrap; }
+.route .ev:hover { color: var(--trade-ink); border-color: var(--trade); }
+.route .ev .ico.sp { width: 16px; height: 14px; color: var(--species-ink); }
+.route .ev b { font-weight: 600; }

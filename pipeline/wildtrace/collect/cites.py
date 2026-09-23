@@ -61,6 +61,9 @@ def group_of(row: dict, species: dict, higher: dict) -> str | None:
 def aggregate(folder: Path | str, min_year: int = MIN_YEAR) -> dict:
     species, higher = taxon_index()
     seized, seized_years, declared = Counter(), Counter(), Counter()
+    # The evidence behind each seized route (origin -> importer): what, when, reported by whom.
+    detail = defaultdict(lambda: {"years": Counter(), "taxa": Counter(), "terms": Counter(), "reporter": Counter(),
+                                  "purpose": Counter(), "via": Counter(), "groups": Counter()})
     files = sorted(Path(folder).glob("*.csv"))
     if not files:
         raise SystemExit(f"no CSV files in {folder}: unzip the CITES download there first")
@@ -84,6 +87,14 @@ def aggregate(folder: Path | str, min_year: int = MIN_YEAR) -> dict:
                     org = (r.get("Origin") or "").strip() or exp
                     seized[(g, org, exp, imp)] += 1
                     seized_years[(g, y)] += 1
+                    d = detail[f"{org}|{imp}"]
+                    d["years"][y] += 1; d["groups"][g] += 1
+                    d["taxa"][(r.get("Taxon") or "").strip()] += 1
+                    d["terms"][(r.get("Term") or "").strip()] += 1
+                    d["reporter"][(r.get("Reporter.type") or "").strip()] += 1
+                    d["purpose"][(r.get("Purpose") or "").strip()] += 1
+                    if exp != org:
+                        d["via"][exp] += 1
                 else:
                     declared[(g, exp, imp)] += 1
         print(f"  {f.name}: {sum(seized.values()):,} seized, {sum(declared.values()):,} declared so far")
@@ -108,12 +119,21 @@ def aggregate(folder: Path | str, min_year: int = MIN_YEAR) -> dict:
         # [group, exporter, importer, shipments], top corridors per group; totals below
         "declared": {g: rows for g, rows in per_group.items()},
         "declared_total": dict(declared_tot),
+        # Per seized route "origin|importer": the records behind the line on the map.
+        "detail": {k: {"years": dict(sorted(v["years"].items())), "taxa": v["taxa"].most_common(6),
+                       "terms": v["terms"].most_common(6), "reporter": dict(v["reporter"]),
+                       "purpose": dict(v["purpose"].most_common(4)), "via": v["via"].most_common(4),
+                       "groups": v["groups"].most_common(4)} for k, v in detail.items()},
     }
 
 
 def publish_flows(data: dict, out: Path = WEB_DATA) -> Path:
     path = out / "flows.json"
+    # The per-route evidence is only needed when a reader opens a route: it ships separately.
+    detail = data.pop("detail", None)
     path.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
+    if detail is not None:
+        (out / "flows_detail.json").write_text(json.dumps(detail, separators=(",", ":")), encoding="utf-8")
     # The same counts as flat tables, for spreadsheets and R/Python users.
     with open(out / "cites_seized_flows.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)

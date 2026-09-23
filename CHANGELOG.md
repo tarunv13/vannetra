@@ -2,6 +2,22 @@
 
 All notable changes to WildTrace. Dates are the release date, newest first.
 
+## 1.6.0 — 2026-09-23
+
+### Added
+- **Evidence behind every route.** Each Flows route has an Evidence button, and clicking a line on
+  the map opens the same page: what was seized (species and products such as ivory carvings, skins,
+  timber or live animals), the years, which country reported it, the declared purpose, any transit
+  countries, a plain answer to "where is the article?" (CITES records are government reports, not
+  news, and are anonymised shipment by shipment) with a link to check the CITES Trade Database, and
+  the WildTrace news cases involving the same species in those countries, with their outlets.
+- **Icons and logos throughout.** Species silhouettes from PhyloPic (public domain, CC0 or CC BY,
+  credited on each species page) for 37 of 38 groups; product and case-kind icons from Tabler Icons
+  (MIT); case kinds as glyphs inside the map points; outlet logos beside every source (570 outlets)
+  and organisation logos on the Network cards. Logos are fetched once at build time and served from
+  the site, so a reader's browser never contacts a third party for them.
+- `web/data/flows_detail.json`: per-route taxa, products, years, reporters, purposes and transit.
+
 ## 1.5.1 — 2026-09-23
 
 ### Changed

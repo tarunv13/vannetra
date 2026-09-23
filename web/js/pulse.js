@@ -3,12 +3,13 @@
 import { esc, fmt } from "./charts.js";
 import { KIND, KIND_COLOR, KIND_LABEL } from "./globe.js";
 import { S, ccName, clearFilters, emit, filtered, go, spLabel, toggle, verBucket } from "./store.js";
+import * as ic from "./icons.js";
 const VERB = { strong: ["Official or validated", "var(--species)"], corroborated: ["Corroborated", "var(--place)"], single: ["Single report", "var(--ink-3)"] };
 
-function bars(entries, facet, color, max = 8) {
+function bars(entries, facet, color, max = 8, icon = null) {
   const top = Math.max(1, ...entries.map((e) => e[1]));
   return entries.slice(0, max).map(([k, n, label]) => `<button class="bar" data-f="${facet}" data-v="${esc(k)}" aria-pressed="${S.filters[facet].has(k)}"
-      style="--c:${color};--w:${Math.max(4, (n / top) * 100)}%"><i class="fill"></i><span>${esc(label)}</span><b class="n">${fmt(n)}</b></button>`).join("");
+      style="--c:${color};--w:${Math.max(4, (n / top) * 100)}%"><i class="fill"></i><span>${icon ? icon(k) : ""}${esc(label)}</span><b class="n">${fmt(n)}</b></button>`).join("");
 }
 
 export function renderPulse(el) {
@@ -44,11 +45,11 @@ export function renderPulse(el) {
     <div class="sec"><h3>Evidence</h3><button data-open="about">What do these mean?</button></div>
     <div class="chips" style="margin-bottom:4px">${Object.entries(VERB).map(([k, [l, c]]) => `<button class="chip k" style="--kc:${c}${f.ver.has(k) ? ";background:#fff;box-shadow:inset 0 0 0 1.5px " + c : ""}" data-f="ver" data-v="${k}" aria-pressed="${f.ver.has(k)}">${l} <span class="muted">${vers[k] || 0}</span></button>`).join("")}</div>
     <div class="sec"><h3>Species</h3></div>
-    <div class="bars">${bars(Object.entries(sp).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, n, spLabel(k)]), "species", "var(--species)")}</div>
+    <div class="bars">${bars(Object.entries(sp).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, n, spLabel(k)]), "species", "var(--species)", 8, (k) => ic.sp(k))}</div>
     <div class="sec"><h3>Countries</h3></div>
     <div class="bars">${bars(Object.entries(cc).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, n, ccName(k)]), "countries", "var(--place)")}</div>
     <div class="sec"><h3>Latest</h3><button data-open="table">All ${fmt(cs.length)} as a table</button></div>
-    <div class="feed">${latest.map((c) => `<button class="item" data-case="${c.id}" style="--kc:${KIND_COLOR[KIND(c.kind)]}"><i class="k"></i><span><div class="t">${esc(c.summary)}</div>
+    <div class="feed">${latest.map((c) => `<button class="item" data-case="${c.id}" style="--kc:${KIND_COLOR[KIND(c.kind)]}"><i class="k ki">${ic.kind(c.kind)}</i><span><div class="t">${esc(c.summary)}</div>
       <div class="s">${esc(c.date || "undated")} · ${c.n_sources} report${c.n_sources > 1 ? "s" : ""}</div></span></button>`).join("") || `<p class="muted">Nothing matches these filters.</p>`}</div>`;
   el.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => toggle(b.dataset.f, b.dataset.v)));
   el.querySelector("[data-clear-all]")?.addEventListener("click", clearFilters);

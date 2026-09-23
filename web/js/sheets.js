@@ -1,6 +1,7 @@
 // Network and Methods sheets. They slide up over the map; the map stays live above them.
 import { esc, fmt } from "./charts.js";
 import { S, go } from "./store.js";
+import * as ic from "./icons.js";
 
 const STATE = { active: ["good", "● Active"], prototype: ["warn", "◐ Prototype"], restricted: ["info", "◌ Restricted"], "bot-blocked": ["info", "◌ Browser only"],
   offline: ["bad", "✕ Offline"], unverified: ["warn", "? Unverified"] };
@@ -20,7 +21,7 @@ export function mountNetwork(root) {
       </div>
       <div class="dir">${list.map((o) => { const [c, l] = STATE[o.status.state] || ["info", o.status.state];
         return `<article class="obs" data-obs="${esc(o.id)}" tabindex="0" role="button" aria-label="${esc(o.name)}">
-          <div class="row" style="justify-content:space-between;align-items:start"><h4>${esc(o.name.split(" (")[0])}</h4><span class="status ${c}">${l}</span></div>
+          <div class="row" style="justify-content:space-between;align-items:start;flex-wrap:nowrap"><h4 style="display:flex;gap:8px;align-items:center">${ic.org(o.id, o.name)}${esc(o.name.split(" (")[0])}</h4><span class="status ${c}">${l}</span></div>
           <div class="muted" style="font-size:12.5px">${esc(o.entity)}${o.hq ? ` · ${esc(o.hq.city)}` : ""}</div>
           <div>${esc(o.features)}</div>
           <div class="use"><b>In WildTrace:</b> ${esc(o.wildtrace.how)}</div>
@@ -146,6 +147,8 @@ export function mountAbout(root) {
       <a class="btn" href="https://github.com/tarunv13/wildtrace/issues/new?title=Correction%3A%20&labels=correction" target="_blank" rel="noopener">Report a correction</a></div>
     <p class="muted" style="font-size:12.5px">Every species group, country and case also has a plain page of its own,
       readable without JavaScript and linked from <a href="browse.html">the index</a>.</p>
+    <h3>Icons and logos</h3>
+    <p class="muted" style="font-size:12.5px">Species silhouettes from <a href="https://www.phylopic.org" target="_blank" rel="noopener">PhyloPic</a> (public domain, CC0 or CC BY; each credited on its species page). Interface icons: <a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler Icons</a> (MIT). Outlet and organisation logos are their own site icons, shown only to identify a source; they imply no endorsement and are served from this site, so your browser never contacts a third party for them.</p>
     <p class="muted" style="font-size:12.5px;margin-top:12px">Last updated ${esc(m.built || "")}. Refreshed weekly. Usage measured with Microsoft Clarity; no accounts.</p>
   </div>`;
 }
