@@ -92,3 +92,7 @@ jobs:
     steps:
       - id: d
         uses: actions/deploy-pages@v4
+      # Tell Bing (and the other IndexNow engines) which pages today's data changed.
+      - uses: actions/checkout@v4
+        with: { ref: main, fetch-depth: 2 }
+      - run: python scripts/indexnow.py --changed || echo "IndexNow ping failed; pages are still in the sitemap"
