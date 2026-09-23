@@ -2,6 +2,16 @@
 
 All notable changes to WildTrace. Dates are the release date, newest first.
 
+## 1.5.1 — 2026-09-23
+
+### Changed
+- **Daily refresh.** The update workflow now runs every day at 03:17 UTC: Google News for the last
+  three days, WHO outbreak reports and VIRION every day; government and court domains and GDELT on
+  Mondays. The collected records live in a private archive repository that the workflow restores
+  and extends, so every build sees the full history. The site is redeployed only when the data
+  changed.
+- **Shrink guard.** A build that would publish more than 10% fewer cases than are live stops instead.
+
 ## 1.5.0 — 2026-09-23
 
 ### Added

@@ -1,32 +1,70 @@
-# Weekly: collect open news, rebuild cases and graph, deploy the static site to GitHub Pages.
-# The private WCS-OWT data and trained model are NOT in the repo, so CI keeps the
-# last published model report and trade-signal aggregates (see publish.py).
+# Daily: collect open news, refresh outbreak data, rebuild cases and graph, deploy the site.
+#
+# The collected records are the project's memory: a case can rest on reports from months ago.
+# They live in a PRIVATE repo (tarunv13/wildtrace-archive), because Google News terms allow
+# publishing derived facts only, never the feed. This workflow restores them, adds today's,
+# rebuilds, and pushes the new records back. Access is a deploy key limited to that one repo
+# (secret ARCHIVE_DEPLOY_KEY). publish.py refuses to publish if cases drop by more than 10%,
+# so a failed restore can never shrink the live site.
+#
+# Every day: Google News, last 3 days (overlap covers a missed run), and WHO + VIRION.
+# Mondays also: government and court domains, and GDELT (both slow; weekly is polite enough).
+# CITES flows are refreshed by hand once a year (`wildtrace cites <folder>`).
+# YouTube is left out of CI: datacentre IPs are routinely bot-checked. Run it locally.
 name: update-and-deploy
 on:
-  schedule: [{ cron: "30 2 * * 1" }]
+  schedule: [{ cron: "17 3 * * *" }]   # 03:17 UTC daily, off the busy top of the hour
   workflow_dispatch:
+    inputs:
+      full:
+        description: "Also sweep official domains and GDELT (the Monday run)"
+        type: boolean
+        default: false
 permissions: { contents: write, pages: write, id-token: write }
 concurrency: { group: pages, cancel-in-progress: false }
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
+        with: { python-version: "3.11", cache: pip }
       - run: pip install -e .
-      - name: Restore collected records (rolling archive, never committed)
-        uses: actions/cache@v4
+
+      - name: Restore the record archive (private repo)
+        uses: actions/checkout@v4
         with:
-          path: data/raw
-          key: raw-${{ github.run_id }}
-          restore-keys: raw-
-      # YouTube is left out of CI: datacentre IPs are routinely bot-checked. Run it locally.
-      - run: python -m wildtrace.cli run --timespan 1m --official --gnews --countries ALL
-      # WHO outbreak reports and the latest VIRION release. CITES flows are refreshed by hand once a
-      # year from the bulk download (`wildtrace cites <folder>`), so flows.json is kept as committed.
-      - run: python -m wildtrace.cli zoonoses || echo "zoonoses refresh failed; keeping the last published file"
-      - run: pytest -q || true
+          repository: tarunv13/wildtrace-archive
+          ssh-key: ${{ secrets.ARCHIVE_DEPLOY_KEY }}
+          path: archive
+      - run: |
+          mkdir -p data/raw data/interim
+          cp archive/raw/*.jsonl data/raw/
+          cp archive/interim/*.json data/interim/ 2>/dev/null || true
+          echo "restored $(ls data/raw/*.jsonl | wc -l) record files"
+
+      - name: Collect
+        run: |
+          EXTRA="--no-gdelt"
+          if [ "$(date -u +%u)" = "1" ] || [ "${{ inputs.full }}" = "true" ]; then EXTRA="--official"; fi
+          python -m wildtrace.cli collect --gnews --countries ALL --timespan 1w --gnews-window 3d $EXTRA
+      - name: Outbreaks and viruses (WHO, VIRION)
+        run: python -m wildtrace.cli zoonoses || echo "zoonoses refresh failed; keeping the last published file"
+      - name: Build (refuses to publish if cases drop by more than 10%)
+        run: python -m wildtrace.cli build
+      - run: pip install pytest && pytest -q
+
+      - name: Save new records to the archive
+        run: |
+          cp data/raw/*.jsonl archive/raw/
+          cp data/interim/ledes.json archive/interim/ 2>/dev/null || true
+          cd archive
+          git config user.name "wildtrace-bot"; git config user.email "actions@users.noreply.github.com"
+          git add -A && git commit -q -m "records: $(date -u +%F)" && git push || echo "archive unchanged"
+
       # The share card carries the current counts, so it is redrawn from the rebuilt site.
       - name: Redraw the social card
         run: |
@@ -34,14 +72,20 @@ jobs:
           playwright install --with-deps chromium
           python scripts/make_og.py
       - name: Commit refreshed public data
+        id: commit
         run: |
           git config user.name "wildtrace-bot"; git config user.email "actions@users.noreply.github.com"
-          git add web/data web/og.png && git commit -m "data: weekly refresh" || echo "no changes"
-          git push || true
+          git add web
+          if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git commit -q -m "data: daily refresh $(date -u +%F)"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-pages-artifact@v3
+        if: steps.commit.outputs.changed == 'true'
         with: { path: web }
   deploy:
     needs: build
+    if: needs.build.outputs.changed == 'true'
     runs-on: ubuntu-latest
     environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
     steps:

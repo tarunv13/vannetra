@@ -6,6 +6,7 @@ Public output goes to web/data and passes privacy.assert_public_safe first.
 from __future__ import annotations
 
 import json
+import os
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -316,6 +317,13 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
             "window": [min((c["date"] for c in cases if c.get("date")), default=""),
                        max((c["date"] for c in cases if c.get("date")), default="")]}
 
+    # Guard: a thin archive (a failed restore, a blocked source) must never shrink the live site.
+    old = WEB_DATA / "cases.json"
+    if old.exists() and not os.environ.get("WILDTRACE_ALLOW_SHRINK"):
+        n_old = len(json.loads(old.read_text(encoding="utf-8")))
+        if len(cases) < 0.9 * n_old:
+            raise SystemExit(f"refusing to publish: {len(cases)} cases against {n_old} live (more than 10% fewer). "
+                             "Check the record archive, or set WILDTRACE_ALLOW_SHRINK=1 if the drop is intended.")
     _dump("cases.json", cases); _dump("cases.geojson", geo); _dump("stats.json", s)
     write_csv(cases)
     _dump("species.json", species_meta); _dump("sources.json", registry); _dump("meta.json", meta)

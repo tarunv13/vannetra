@@ -150,6 +150,15 @@ Found a mistake? Use **Report a correction** on any case, which opens a pre-fill
 - **Coverage:** 1,271 cases, 59 countries, 1,788 public reports, 2024-01-15 to 2026-09-22; 15,512
   seized and 7 million declared CITES shipments since 2015; 2,116 zoonotic WHO outbreak reports.
 
+## How it stays current
+
+A GitHub Actions workflow refreshes the site **every day** (03:17 UTC): new news reports, WHO
+outbreak reports and VIRION, then a rebuild and redeploy if anything changed. Government and court
+domains and GDELT are swept on Mondays. The collected records are kept in a private archive
+repository, because news feed terms allow publishing derived facts only; a build that would
+publish over 10% fewer cases than are live stops instead of shrinking the site. CITES flows follow
+the CITES release cycle and are refreshed once a year.
+
 ## Run it yourself
 
 ```bash

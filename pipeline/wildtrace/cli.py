@@ -29,7 +29,7 @@ def _collect(a) -> None:
         eds = list(feeds.GNEWS_EDITIONS) if "ALL" in countries else [c for c in feeds.GNEWS_EDITIONS if c.split("-")[0] in countries]
         print(f"Google News RSS: {eds}")
         groups = {g.strip() for g in (getattr(a, "groups", "") or "").split(",") if g.strip()} or None
-        print("  ->", write_jsonl(feeds.collect_gnews(eds, groups=groups), "gnews"))
+        print("  ->", write_jsonl(feeds.collect_gnews(eds, when=a.gnews_window, groups=groups), "gnews"))
     if a.youtube:
         from .collect import social
         print("YouTube (yt-dlp, metadata only)")
@@ -95,6 +95,7 @@ def main(argv=None) -> None:
         c.add_argument("--history", type=int, default=0, help="backfill this many past months (Google News date ranges)")
         c.add_argument("--no-gdelt", action="store_true", help="skip GDELT (heavily throttled)")
         c.add_argument("--groups", default="", help="limit the news search to these species groups (comma-separated)")
+        c.add_argument("--gnews-window", default="30d", help="how far back Google News searches reach (daily runs use 3d)")
     mi = sub.add_parser("mine", help="mine the research literature for taxa, trade names and datasets")
     mi.add_argument("--topics", default="all", help="all | flora | fauna | codewords | datasets (comma-separated)")
     mi.add_argument("--pages", type=int, default=2, help="pages per query, 50-100 papers each")
