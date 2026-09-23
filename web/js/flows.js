@@ -43,6 +43,16 @@ function topGroups(k) {
   return Object.entries(c).sort((a, b) => b[1] - a[1]).slice(0, k).map(([g]) => g);
 }
 
+// "Spread across markets": the busiest routes, but at most this many into any one country, so one
+// country's reporting (the United States files seizures far more completely than most) cannot
+// fill the whole list.
+const PER_MARKET = 2;
+function spread(list) {
+  if (!S.flow.spread) return list;
+  const per = {};
+  return list.filter((r) => (per[r.b] = (per[r.b] || 0) + 1) <= PER_MARKET);
+}
+
 /** All routes the current choices allow, before the reader's on/off switches. */
 export function routes() {
   const f = S.flow, d = S.data.flows, out = [];
@@ -58,7 +68,7 @@ export function routes() {
       const r = (agg[`s|${o}|${i}`] ||= { key: `s|${o}|${i}`, k: "s", a: o, b: i, n: 0, gs: {} });
       r.n += n; r.gs[g] = (r.gs[g] || 0) + n;
     });
-    out.push(...Object.values(agg).filter((r) => has(r.a) && has(r.b)).sort((x, y) => y.n - x.n).slice(0, f.top));
+    out.push(...spread(Object.values(agg).filter((r) => has(r.a) && has(r.b)).sort((x, y) => y.n - x.n)).slice(0, f.top));
   }
   if (f.ev.declared) {
     const agg = {};
@@ -67,7 +77,7 @@ export function routes() {
       const r = (agg[`d|${e}|${i}`] ||= { key: `d|${e}|${i}`, k: "d", a: e, b: i, n: 0, gs: {} });
       r.n += n; r.gs[g] = (r.gs[g] || 0) + n;
     }));
-    out.push(...Object.values(agg).filter((r) => has(r.a) && has(r.b)).sort((x, y) => y.n - x.n).slice(0, f.top));
+    out.push(...spread(Object.values(agg).filter((r) => has(r.a) && has(r.b)).sort((x, y) => y.n - x.n)).slice(0, f.top));
   }
   if (f.ev.news) {
     const agg = {};
@@ -191,6 +201,7 @@ export function renderControls(el) {
     ${chk("f-ev-s", f.ev.seized, "Seized shipments", "CITES, source code I (confiscated or seized)")}
     ${chk("f-ev-d", f.ev.declared, "Declared trade", "CITES, all other sources: mostly legal, dashed")}
     ${chk("f-ev-n", f.ev.news, "News routes", "origin and destination named in WildTrace cases")}
+    ${chk("f-spread", f.spread, "Spread across markets", `at most ${PER_MARKET} routes into any one country, so no single market fills the list`)}
     ${chk("f-us", !f.noUS, "Include the United States", "it reports seizures more completely than most")}
     <div class="sec"><h3>Seizures per year</h3><span class="muted" style="font-size:11.5px">${last} still being reported</span></div>
     <div class="yrs">${ys.map((y) => `<i title="${y}: ${fmt(years[y])}" style="height:${Math.max(2, (years[y] / ymax) * 44)}px" class="${y === last ? "part" : ""}"></i>`).join("")}</div>
@@ -212,7 +223,8 @@ export function renderControls(el) {
   el.querySelector("#f-top").addEventListener("input", (e) => (e.target.previousElementSibling.querySelector(".mono").textContent = `top ${e.target.value}`));
   [["f-ev-s", "seized"], ["f-ev-d", "declared"], ["f-ev-n", "news"]].forEach(([id, k]) => el.querySelector(`#${id}`).addEventListener("change", (e) => set(() => (f.ev[k] = e.target.checked))));
   el.querySelector("#f-us").addEventListener("change", (e) => set(() => (f.noUS = !e.target.checked)));
-  el.querySelector("#f-reset").addEventListener("click", () => set(() => Object.assign(f, { story: "species", country: "", colorBy: "region", top: 14, noUS: false,
+  el.querySelector("#f-spread").addEventListener("change", (e) => set(() => (f.spread = e.target.checked)));
+  el.querySelector("#f-reset").addEventListener("click", () => set(() => Object.assign(f, { story: "species", country: "", colorBy: "region", top: 14, noUS: false, spread: true,
     ev: { seized: true, declared: false, news: false } }, f.groups.clear(), f.from.clear(), f.to.clear())));
   el.querySelector("#f-copy").addEventListener("click", () => navigator.clipboard?.writeText(location.href).then(() => dispatchEvent(new CustomEvent("wildtrace:toast", { detail: "Link to this view copied" }))));
   el.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:open", { detail: b.dataset.open }))));
@@ -242,7 +254,7 @@ export function renderSide(el, g) {
     <div class="routes">${list || `<p class="muted">No routes.</p>`}</div>
     <div class="sec"><h3>${f.colorBy === "role" ? "Roles" : f.colorBy === "species" ? "Species" : "Line runs from source region to market region"}</h3></div>
     <div class="legend-f">${legend}</div>
-    <p class="muted" style="font-size:11.5px;margin:10px 0 0">Thicker and more solid = more shipments. The glow under a market grows with what arrives. ${f.noUS ? "" : "The United States reports its seizures more completely than most countries, so it looks bigger than it may be."}</p>`;
+    <p class="muted" style="font-size:11.5px;margin:10px 0 0">Thicker and more solid = more shipments. The glow under a market grows with what arrives. ${f.spread ? `Showing the busiest routes with at most ${PER_MARKET} per market; switch off "Spread across markets" for the raw ranking. ` : ""}${f.noUS ? "" : "The United States reports its seizures more completely than most countries, so it looks bigger than it may be."}</p>`;
   el.innerHTML = html;
   el.querySelectorAll("[data-key]").forEach((b) => b.addEventListener("change", () => { b.checked ? f.off.delete(b.dataset.key) : f.off.add(b.dataset.key); emit("flows"); }));
   el.querySelectorAll("[data-route]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation();
@@ -264,6 +276,7 @@ export function toQuery() {
   const ev = Object.entries(f.ev).filter(([, v]) => v).map(([k]) => k[0]).join("");
   if (ev !== "s") q.set("ev", ev);
   if (f.noUS) q.set("us", "0");
+  if (!f.spread) q.set("spread", "0");
   if (f.off.size) q.set("off", [...f.off].join(","));
   return q;
 }
@@ -273,7 +286,7 @@ export function fromQuery(q) {
   f.groups = new Set(list("g")); f.from = new Set(list("from")); f.to = new Set(list("to"));
   f.colorBy = q.get("colour") || "region"; f.top = +q.get("n") || 14;
   const ev = q.get("ev") || "s"; f.ev = { seized: ev.includes("s"), declared: ev.includes("d"), news: ev.includes("n") };
-  f.noUS = q.get("us") === "0"; f.off = new Set(list("off"));
+  f.noUS = q.get("us") === "0"; f.spread = q.get("spread") !== "0"; f.off = new Set(list("off"));
 }
 
 // ------------------------------------------------------------------ inspector blocks

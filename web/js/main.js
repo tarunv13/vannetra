@@ -289,7 +289,6 @@ async function boot() {
   $("#sat").addEventListener("click", () => { const on = $("#sat").getAttribute("aria-pressed") !== "true"; setSat(on); toast(on ? "Satellite view (EOxCloudless, Copernicus Sentinel-2)" : "Map view"); });
   if (satOn) { const wait = setInterval(() => { if (globe?.ready) { clearInterval(wait); setSat(true); } }, 300); }
   $("#go-flows").addEventListener("click", () => setMode("flows"));
-  $("#spin").addEventListener("click", () => { globe?.spin(!globe.spinning); $("#spin").setAttribute("aria-pressed", String(!!globe?.spinning)); });
   $("#legend-toggle").addEventListener("click", () => { const l = $(".legend"); l.hidden = !l.hidden; $("#legend-toggle").setAttribute("aria-pressed", String(!l.hidden)); });
   addEventListener("wildtrace:open", (e) => { const [k, t] = String(e.detail).split(":"); openSheet(k, t); });
   addEventListener("wildtrace:toast", (e) => toast(e.detail));

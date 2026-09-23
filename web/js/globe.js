@@ -212,7 +212,6 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     map.on("moveend", () => spinning && spinStep());
     api.ready = true;
     onReady?.();
-    setTimeout(() => api.spin(!document.body.classList.contains("mode-flows") && !document.body.classList.contains("mode-zoo")), 1200);
   });
 
   // Idle rotation: a slow drift that stops for good once the reader touches the map.

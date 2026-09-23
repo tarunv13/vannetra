@@ -11,6 +11,12 @@ All notable changes to WildTrace. Dates are the release date, newest first.
   EOX unless it is switched on.
 
 ### Changed
+- **Flows spreads routes across markets by default**: the busiest routes, but at most two into any
+  one country. The default view went from 12 of 14 routes ending in the United States (an artefact of
+  how completely it reports seizures) to routes into ten markets across Asia, the Gulf, Europe and
+  North America. Switch it off for the raw ranking; it is kept in the link.
+- The rotate button and the idle spin are gone: the spin stopped at the first touch and did nothing
+  outside Cases, so the button looked broken.
 - Deeper water on the map, so land and sea separate at a glance.
 - The two routes named in news reports are no longer drawn on the opening map, where "Routes 2"
   suggested wildlife moves along two routes. The legend now links to Flows (15,000+ seized

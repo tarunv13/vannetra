@@ -11,7 +11,7 @@ export const S = {
   mode: "cases",
   // Flows: what the reader chose to see. Every field round-trips through the URL (see flows.js).
   flow: { story: "species", groups: new Set(), from: new Set(), to: new Set(), country: "", colorBy: "region", top: 14,
-    ev: { seized: true, declared: false, news: false }, off: new Set(), noUS: false },
+    ev: { seized: true, declared: false, news: false }, off: new Set(), noUS: false, spread: true },
   // Zoonoses: which transmission pathways and overlays are on.
   zoo: { pathways: new Set(["wildlife", "birds", "livestock", "vector"]), cases: true, disease: "" },
 };
