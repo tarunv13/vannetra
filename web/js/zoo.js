@@ -87,7 +87,7 @@ export function renderSide(el, g) {
     <div class="eyebrow" style="--c:#c2366f">Countries with both</div>
     <p class="story">Outbreak reports passed on by <b>wildlife contact</b>, next to seized shipments taken from the same country and WildTrace cases there.</p>
     <table class="both"><thead><tr><th scope="col">Country</th><th scope="col" class="num">Outbreaks</th><th scope="col" class="num">Seized from</th><th scope="col" class="num">Cases</th></tr></thead>
-      <tbody>${both.map(([c, w, s, k]) => `<tr><td><button class="linkish" data-cc="${c}">${esc(ccName(c))}</button></td><td class="num">${w}</td><td class="num">${fmt(s)}</td><td class="num">${k}</td></tr>`).join("") || `<tr><td colspan="4" class="muted">Switch on wildlife contact to compare.</td></tr>`}</tbody></table>
+      <tbody>${both.map(([c, w, s, k]) => `<tr><td><button class="linkish" data-cc="${c}" style="display:inline-flex;gap:6px;align-items:center">${ic.flag(c)}${esc(ccName(c))}</button></td><td class="num">${w}</td><td class="num">${fmt(s)}</td><td class="num">${k}</td></tr>`).join("") || `<tr><td colspan="4" class="muted">Switch on wildlife contact to compare.</td></tr>`}</tbody></table>
     <div class="sec"><h3>Map key</h3></div>
     <div class="legend-f">${Object.values(PATHWAY).map(([l, c]) => `<span class="lg"><i style="background:${c}"></i>${l}</span>`).join("")}<span class="lg"><i style="background:transparent;box-shadow:inset 0 0 0 2px #0f1a17"></i>WildTrace cases</span></div>
     <p class="muted" style="font-size:11.5px;margin:10px 0 0">Bubble size: WHO reports naming the country; colour: the pathway most of them follow. Countries with better health reporting appear more often.</p>

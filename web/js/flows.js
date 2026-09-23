@@ -83,6 +83,7 @@ export function routes() {
 }
 const coords = (cc) => [S.data.countries[cc].lon, S.data.countries[cc].lat];
 const label = (r) => (r.k === "n" ? `${r.la} → ${r.lb}` : `${name(r.a)} → ${name(r.b)}`);
+const flagLabel = (r) => (r.k === "n" ? esc(label(r)) : `${icons.flag(r.a)}${esc(name(r.a))} <span class="muted">→</span> ${icons.flag(r.b)}${esc(name(r.b))}`);
 const KIND = { s: "seized shipments (CITES)", d: "declared shipments (CITES, legal trade)", n: "case(s) naming this route" };
 
 function ends(r, sc) {
@@ -170,7 +171,7 @@ export function renderControls(el) {
   const ccs = Object.keys(S.data.countries).sort((a, b) => ccName(a).localeCompare(ccName(b)));
   const years = {}; d.seized_years.forEach(([g, y, n]) => (!f.groups.size || f.groups.has(g)) && (years[y] = (years[y] || 0) + n));
   const ys = Object.keys(years).map(Number).sort(), ymax = Math.max(1, ...Object.values(years)), last = ys[ys.length - 1];
-  const picker = (id, set) => `<div class="chips">${[...set].map((c) => `<button class="chip" data-rm="${id}" data-v="${c}">${esc(ccName(c))} <span class="x">✕</span></button>`).join("")}
+  const picker = (id, set) => `<div class="chips">${[...set].map((c) => `<button class="chip" data-rm="${id}" data-v="${c}">${icons.flag(c)}${esc(ccName(c))} <span class="x">✕</span></button>`).join("")}
     <select id="${id}" aria-label="Add a country"><option value="">${set.size ? "Add" : "Any country"}</option>${ccs.map((c) => `<option value="${c}">${esc(ccName(c))}</option>`).join("")}</select></div>`;
   el.innerHTML = `
     <h1 class="headline" style="font-size:25px">Where wildlife is taken, and where it is bought</h1>
@@ -230,9 +231,9 @@ export function renderSide(el, g) {
     const on = !f.off.has(r.key), [ca, cb] = ends(r, g.sc);
     const gs = Object.entries(r.gs).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([k]) => spLabel(k)).join(", ");
     return `<label class="route ${on ? "" : "off"}"><input type="checkbox" data-key="${esc(r.key)}" ${on ? "checked" : ""}>
-      <span class="rt"><b>${esc(label(r))}</b>${r.k === "d" ? ` <span class="status info">declared</span>` : r.k === "n" ? ` <span class="status warn">news</span>` : ""}
-        <i class="rb" style="width:${Math.max(6, (r.n / top) * 100)}%;background:linear-gradient(90deg,${ca},${cb})"></i><small>${esc(gs)}</small></span>
-      <span class="rt-r"><span class="mono">${fmt(r.n)}</span>${r.k !== "n" ? `<button class="ev" data-route="${esc(r.key)}" title="See the evidence for this route" aria-label="Evidence for ${esc(label(r))}">${spIcons(r)}<b>Evidence</b></button>` : ""}</span></label>`;
+      <span class="rt"><b class="rl" title="${esc(label(r))}">${flagLabel(r)}</b>${r.k === "d" ? ` <span class="status info">declared</span>` : r.k === "n" ? ` <span class="status warn">news</span>` : ""}
+        <i class="rb" style="width:${Math.max(6, (r.n / top) * 100)}%;background:linear-gradient(90deg,${ca},${cb})"></i><small>${spIcons(r)}${esc(gs)}</small></span>
+      <span class="rt-r"><span class="mono">${fmt(r.n)}</span>${r.k !== "n" ? `<button class="ev" data-route="${esc(r.key)}" title="See the evidence for this route" aria-label="Evidence for ${esc(label(r))}"><b>Evidence</b> ›</button>` : ""}</span></label>`;
   }).join("");
   const html = `
     <div class="eyebrow" style="--c:var(--trade)">Your story</div>
@@ -350,8 +351,8 @@ export function mountMatrix(root) {
         <label class="ck" style="margin:0"><input type="checkbox" id="m-us" ${st.us ? "checked" : ""}><span><b>Include the United States</b></span></label>
         <span style="flex:1"></span><span class="muted" style="font-size:12.5px">Rows: where it was taken · Columns: where it was seized · click a cell to draw it</span></div>
       <div style="padding:12px 16px 16px;overflow:auto"><table class="matrix" aria-label="Seized shipments from each source to each market">
-        <thead><tr><th scope="col"></th>${cols.map((c) => `<th scope="col"><span class="dotc" style="background:${dot(c)}"></span>${esc(lab(c))}</th>`).join("")}</tr></thead>
-        <tbody>${rows.map((r) => `<tr><th scope="row"><span class="dotc" style="background:${dot(r)}"></span>${esc(lab(r))}</th>${cols.map((c) => { const v = m[`${r}|${c}`] || 0, [bg, fg] = cell(v);
+        <thead><tr><th scope="col"></th>${cols.map((c) => `<th scope="col"><span class="dotc" style="background:${dot(c)}"></span>${st.by === "countries" ? icons.flag(c) : ""}${esc(lab(c))}</th>`).join("")}</tr></thead>
+        <tbody>${rows.map((r) => `<tr><th scope="row"><span class="dotc" style="background:${dot(r)}"></span>${st.by === "countries" ? icons.flag(r) : ""}${esc(lab(r))}</th>${cols.map((c) => { const v = m[`${r}|${c}`] || 0, [bg, fg] = cell(v);
           return `<td><button class="mc" style="background:${bg};color:${fg}" data-a="${r}" data-b="${c}" ${v ? "" : "disabled"} title="${esc(lab(r))} → ${esc(lab(c))}: ${fmt(v)} seized shipments">${v ? fmt(v) : "·"}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table>
         <div class="row" style="margin-top:12px;gap:14px"><span class="muted" style="font-size:12px">Seized shipments</span>${RAMP.map((c, i) => `<span class="lg"><i style="background:${c};border-radius:4px;width:20px"></i>${["1–9", "10–29", "30–99", "100–299", "300+"][i]}</span>`).join("")}</div>
         ${best ? `<p style="font-size:13.5px;margin:12px 0 0">Leaving the US out, the busiest route here is <b>${esc(lab(best[0].split("|")[0]))} → ${esc(lab(best[0].split("|")[1]))}</b>, ${fmt(best[1])} seized shipments.</p>` : ""}
@@ -396,7 +397,8 @@ export function routeView(key, ic) {
   const reporter = det ? Object.entries(det.reporter).map(([r, n]) => `${fmt(n)} reported by the ${r === "I" ? `importing country (${esc(name(b))})` : r === "E" ? `exporting country (${esc(name(a))})` : "a party"}`).join(", ") : "";
   return `
     <div class="eyebrow">${ic.ui("package")} Route · ${k === "s" ? "seized shipments" : "declared trade"}</div>
-    <h2 class="title"><span class="dotc" style="background:${REGION_COLOR[regionOf(a)]}"></span>${esc(name(a))} <span class="muted">→</span> <span class="dotc" style="background:${REGION_COLOR[regionOf(b)]}"></span>${esc(name(b))}</h2>
+    <h2 class="title route-t">${ic.flag(a)}<span>${esc(name(a))}</span> <span class="muted">→</span> ${ic.flag(b)}<span>${esc(name(b))}</span></h2>
+    <p class="muted" style="font-size:12px;margin:-4px 0 10px"><span class="dotc" style="background:${REGION_COLOR[regionOf(a)]}"></span>${esc(regionName(regionOf(a)))} → <span class="dotc" style="background:${REGION_COLOR[regionOf(b)]}"></span>${esc(regionName(regionOf(b)))}</p>
     <div class="tiles"><div class="tile"><div class="v">${fmt(total)}</div><div class="k">${k === "s" ? "shipments seized or confiscated" : "shipments declared (mostly legal)"}</div></div>
       <div class="tile"><div class="v">${years.length ? `${years[0][0]}–${years[years.length - 1][0]}` : `${d.year_min}+`}</div><div class="k">years on record</div></div></div>
     <div class="eyebrow" style="margin:6px 0 8px">What ${k === "s" ? "was seized" : "was traded"}</div>

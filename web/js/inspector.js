@@ -134,7 +134,7 @@ function caseView(id) {
     ${!place ? `<div class="box" style="border-left:3px solid var(--ink-3)"><h4>Not on the map</h4>No report names a place for this case, so it is counted but not drawn. The reports below may say more.</div>` : ""}
     <div class="row">
       ${c.species.map((s) => `<button class="chip" data-go="species|${s}" style="border-color:rgba(33,138,91,.3)">${ic.sp(s)}${esc(spLabel(s))} <span class="muted">CITES ${esc(S.data.species[s]?.cites || "–")}</span></button>`).join("")}
-      ${place ? `<button class="chip" data-go="country|${esc(place.country)}">${esc(ccName(place.country))}</button>` : ""}
+      ${place ? `<button class="chip" data-go="country|${esc(place.country)}">${ic.flag(place.country)}${esc(ccName(place.country))}</button>` : ""}
     </div>
     <div class="account">${narrative(c, place, qs).map((t) => `<p>${t}</p>`).join("")}</div>
     <div class="box"><h4>Documented facts</h4>
@@ -181,7 +181,7 @@ function speciesView(gid) {
     ${sankey(gid)}${S.data.flows?.seized.some((r) => r[0] === gid) ? `<div class="row" style="margin-top:8px"><button class="btn" data-flows-g="${gid}">Follow on the Flows map</button></div>` : ""}
     ${speciesBlock(gid)}
     ${Object.keys(byCountry).length ? `<div class="eyebrow" style="margin:14px 0 6px">Where</div>${Object.entries(byCountry).sort((a, b) => b[1] - a[1]).slice(0, 8)
-      .map(([cc, n]) => link("country", cc, esc(ccName(cc)), `${n} case${n > 1 ? "s" : ""}`)).join("")}` : ""}
+      .map(([cc, n]) => link("country", cc, `<span style="display:inline-flex;gap:8px;align-items:center">${ic.flag(cc)}${esc(ccName(cc))}</span>`, `${n} case${n > 1 ? "s" : ""}`)).join("")}` : ""}
     <div class="eyebrow" style="margin:14px 0 8px">Names sellers and reporters use</div>
     <div class="terms">${terms.flatMap(([lang, ts]) => ts.slice(0, 5).map((t) => `<span class="term" title="${esc(LANG[lang] || lang)}"><i>${esc(lang.replace("_latn", "·lat").replace("id_ms", "id/ms"))}</i>${esc(t)}</span>`)).join("")}</div>
     ${pmcN ? `<p class="muted" style="font-size:12px;margin-top:8px">Plus ${pmcN} names in other languages from the open seized-wildlife codebook (PMC8579131).</p>` : ""}
@@ -198,7 +198,7 @@ function countryView(cc) {
   const outRoutes = S.data.cases.filter((c) => c.route?.length === 2 && c.route_coords && (c.place?.country === cc));
   return `
     <div class="eyebrow">Country</div>
-    <h2 class="title">${esc(ccName(cc))}</h2>
+    <div class="sp-hero">${ic.flag(cc).replace('class="flag"', 'class="flag xl"')}<h2 class="title">${esc(ccName(cc))}</h2></div>
     <div class="tiles"><div class="tile"><div class="v">${cases.length}</div><div class="k">cases</div></div>
       <div class="tile"><div class="v">${Object.keys(sp).length}</div><div class="k">species groups</div></div></div>
     ${roleBar(cc)}${countryBlock(cc)}

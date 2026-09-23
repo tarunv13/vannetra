@@ -12,7 +12,7 @@ export function mountSearch(root, input, list) {
     ...Object.entries(S.data.species).map(([id, g]) => ({ kind: "species", id, t: g.label, s: `${g.taxa.slice(0, 2).join(", ")} · CITES ${g.cites || "–"}`,
       hay: norm([g.label, ...g.taxa, ...Object.values(g.terms).flat()].join(" ")), c: "var(--species)", ic: "SP", html: ic.sp(id) })),
     ...Object.entries(S.data.countries).filter(([cc]) => S.data.cases.some((c) => c.place?.country === cc))
-      .map(([cc, v]) => ({ kind: "country", id: cc, t: v.name, s: `${S.data.cases.filter((c) => c.place?.country === cc).length} cases`, hay: norm(v.name + " " + cc), c: "var(--place)", ic: cc })),
+      .map(([cc, v]) => ({ kind: "country", id: cc, t: v.name, s: `${S.data.cases.filter((c) => c.place?.country === cc).length} cases`, hay: norm(v.name + " " + cc), c: "var(--place)", ic: cc, logo: ic.flag(cc) })),
     ...(S.data.obs.observatories || []).map((o) => ({ kind: "obs", id: o.id, t: o.name.split(" (")[0], s: `${o.entity} · ${o.hq?.city || "global"}`,
       hay: norm([o.name, o.entity, o.focus, o.features].join(" ")), c: "var(--network)", ic: "OB", logo: ic.org(o.id, o.name) })),
     ...S.data.cases.map((c) => ({ kind: "case", id: c.id, t: c.summary, s: `${c.date || "undated"} · ${c.agencies.slice(0, 2).join(", ")}`,

@@ -6,8 +6,8 @@ import { local, localEntity, localPoints, mountChart, mountImport } from "./inve
 import { renderPulse } from "./pulse.js";
 import { mountSearch } from "./search.js";
 import { mountAbout, mountMethods, mountNetwork, mountTable } from "./sheets.js";
-import { mountTrivia, openTrivia } from "./trivia.js";
-import { startTour } from "./tour.js";
+import { mountTrivia } from "./trivia.js";
+import { startSection, startTour, tourMenu } from "./tour.js";
 import { startAnalytics } from "./analytics.js";
 import { renderTimeline } from "./timeline.js";
 import { S, back, closeTrail, emit, filtered, fromHash, fwd, go, load, loadExtra, loadGraph, on } from "./store.js";
@@ -83,8 +83,8 @@ async function setMode(m) {
   drawMap();
   syncURL();
   if (m === "cases") { renderPulse($("#pulse-body")); globe?.world(); return; }
-  if (m === "flows") { flows.renderControls($("#pulse-body")); await loadExtra("flows"); if (S.mode === "flows") drawFlows(); }
-  if (m === "zoo") { zoo.renderControls($("#pulse-body")); await Promise.all([loadExtra("zoonoses"), loadExtra("flows")]); if (S.mode === "zoo") { drawZoo(); globe?.fit([[-120, -40], [150, 62]], 3); } }
+  if (m === "flows") { flows.renderControls($("#pulse-body")); await loadExtra("flows"); if (S.mode === "flows") { drawFlows(); startSection("flows"); } }
+  if (m === "zoo") { zoo.renderControls($("#pulse-body")); await Promise.all([loadExtra("zoonoses"), loadExtra("flows")]); if (S.mode === "zoo") { drawZoo(); globe?.fit([[-120, -40], [150, 62]], 3); startSection("zoo"); } }
   globe?.spin(false);
 }
 const keepScroll = (el, fn) => { const y = el.scrollTop; fn(); el.scrollTop = y; };
@@ -213,8 +213,8 @@ function openSheet(kind, tab, focus) {
       t === "import" ? lib("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js") : null]).then(() => {
       if (sheetOpen !== "investigate") return;
       body.innerHTML = "";
-      if (t === "chart") mountChart(body, { focus });
-      else mountImport(body, { onLocalChange: () => { drawMap(); toast("Your data is on the chart and the map"); } });
+      if (t === "chart") { mountChart(body, { focus }); startSection("investigate"); }
+      else { mountImport(body, { onLocalChange: () => { drawMap(); toast("Your data is on the chart and the map"); } }); startSection("import"); }
     });
   }
   if (kind === "table") mountTable(body);
@@ -228,6 +228,7 @@ function openSheet(kind, tab, focus) {
   if (kind === "analysis") later(["flows"], () => mountAnalysis(body));
   if (kind === "matrix") later(["flows"], () => flows.mountMatrix(body));
   if (kind === "zoo") later(["zoonoses", "flows"], () => zoo.mountZoo(body, t));
+  if (["analysis", "matrix", "network", "table", "methods"].includes(kind)) setTimeout(() => startSection(kind), kind === "analysis" || kind === "matrix" ? 900 : 300);
   $("#sheet").classList.add("on");
   document.querySelectorAll("[data-sheet]").forEach((b) => b.setAttribute("aria-expanded", String(b.dataset.sheet === kind)));
 }
@@ -269,7 +270,10 @@ async function boot() {
   // The trivia box and the walkthrough come after the first paint: neither should delay the map.
   startAnalytics();
   mountTrivia($("#trivia-root")).then(() => setTimeout(() => startTour({ auto: true }), 1200));
-  $("#tour-btn").addEventListener("click", () => { openTrivia(); startTour(); });
+  // The Tour button opens a menu: full tour, this section's tour, section tips on or off.
+  $("#tour-btn").addEventListener("click", (e) => tourMenu(e.currentTarget,
+    sheetOpen ? (sheetOpen === "investigate" && $("#sheet-tabs [aria-selected=true]")?.dataset.t === "import" ? "import" : sheetOpen) : S.mode === "cases" ? "main" : S.mode));
+  addEventListener("wildtrace:mode", (e) => { closeSheet(); if (S.mode !== e.detail) setMode(e.detail); });
   renderPulse($("#pulse-body")); renderTimeline($("#tl"));
   on((what) => {
     if (what === "filters") { if (S.mode === "cases") renderPulse($("#pulse-body")); renderTimeline($("#tl")); drawMap(); }

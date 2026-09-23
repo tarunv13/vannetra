@@ -7,7 +7,14 @@ const DAY = 864e5;
 const iso = (t) => new Date(t).toISOString().slice(0, 10);
 const weekStart = (d) => { const t = new Date(d + "T00:00:00Z").getTime(); const w = new Date(t).getUTCDay(); return t - ((w + 6) % 7) * DAY; };
 
+let observed = null;
 export function renderTimeline(el) {
+  // Redraw when the dock changes size (window resize, Pulse folding).
+  if (!observed && window.ResizeObserver) {
+    let w = el.clientWidth;
+    observed = new ResizeObserver(() => { if (Math.abs(el.clientWidth - w) > 8) { w = el.clientWidth; renderTimeline(el); } });
+    observed.observe(el);
+  }
   const dated = S.data.cases.filter((c) => c.date);
   if (!dated.length) { el.innerHTML = `<p class="muted" style="margin:0">No dated cases yet.</p>`; return; }
   const t0 = weekStart(dated.reduce((m, c) => (c.date < m ? c.date : m), "9999")), t1 = weekStart(dated.reduce((m, c) => (c.date > m ? c.date : m), "0000")) + 7 * DAY;
@@ -15,16 +22,20 @@ export function renderTimeline(el) {
   const all = new Array(weeks).fill(0), inFilter = new Array(weeks).fill(0);
   dated.forEach((c) => all[Math.min(weeks - 1, Math.floor((weekStart(c.date) - t0) / (7 * DAY)))]++);
   filtered("range").forEach((c) => c.date && inFilter[Math.min(weeks - 1, Math.floor((weekStart(c.date) - t0) / (7 * DAY)))]++);
-  const W = 1000, H = 84, pad = 16, max = Math.max(...all, 1), bw = W / weeks;
+  // Drawn at the dock's real pixel size (no stretching), so labels keep their proportions.
+  const W = Math.max(320, Math.round(el.clientWidth || 1000)), pad = 16, H = Math.max(40, Math.round((el.clientHeight || 78) - pad));
+  const max = Math.max(...all, 1), bw = W / weeks;
   const x = (t) => ((t - t0) / (t1 - t0)) * W;
   const r = S.filters.range;
   const months = [];
   for (let d = new Date(t0); d.getTime() <= t1; d.setUTCMonth(d.getUTCMonth() + 1, 1)) months.push(new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1)));
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H + pad}" preserveAspectRatio="none" role="img" aria-label="Cases per week">
+  // Month labels thin out when the dock is narrow, so they never collide.
+  const every = Math.max(1, Math.ceil(months.length / Math.max(1, Math.floor(W / 46))));
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H + pad}" width="${W}" height="${H + pad}" role="img" aria-label="Cases per week">
     ${all.map((n, i) => { const h = (n / max) * (H - 18), hi = (inFilter[i] / max) * (H - 18);
       return `<rect x="${i * bw + 1}" y="${H - h}" width="${Math.max(1, bw - 2)}" height="${h}" rx="2" class="col"></rect>
         <rect x="${i * bw + 1}" y="${H - hi}" width="${Math.max(1, bw - 2)}" height="${hi}" rx="2" class="col in"><title>${iso(t0 + i * 7 * DAY)}: ${n} case(s)</title></rect>`; }).join("")}
-    ${months.filter((m) => m.getTime() >= t0).map((m) => `<text class="axis" x="${x(m.getTime()) + 3}" y="${H + 13}">${m.toLocaleString("en", { month: "short", timeZone: "UTC" })}</text>
+    ${months.filter((m) => m.getTime() >= t0).filter((_, i) => i % every === 0).map((m) => `<text class="axis" x="${x(m.getTime()) + 3}" y="${H + 13}">${m.getUTCMonth() === 0 ? m.getUTCFullYear() : m.toLocaleString("en", { month: "short", timeZone: "UTC" })}</text>
       <line x1="${x(m.getTime())}" x2="${x(m.getTime())}" y1="${H - 4}" y2="${H + 4}" stroke="rgba(15,26,23,.25)"></line>`).join("")}
     ${r ? `<rect class="brush" x="${x(new Date(r[0]).getTime())}" y="0" width="${Math.max(3, x(new Date(r[1]).getTime() + DAY) - x(new Date(r[0]).getTime()))}" height="${H}" rx="6"></rect>` : ""}
   </svg>`;

@@ -41,6 +41,12 @@ const TERMS = [
 ];
 export const term = (t, plant = false) => ui(t && /^live$/i.test(t) && plant ? "plant-2" : (TERMS.find(([re]) => re.test(t || ""))?.[1] || "package"), t);
 
+/** A country's flag (flag-icons, MIT), self-hosted; nothing for "origin not recorded". */
+export function flag(cc) {
+  if (!cc || !/^[A-Z]{2}$/.test(cc) || cc === "XX") return "";
+  return `<img class="flag" src="icons/flags/${cc.toLowerCase()}.svg" alt="" loading="lazy" width="20" height="15" onerror="this.remove()">`;
+}
+
 /** An outlet's logo, or its initial on a neutral disc when the site offers no icon. */
 export function outlet(name) {
   const d = S.data.outlets?.outlets?.[name];

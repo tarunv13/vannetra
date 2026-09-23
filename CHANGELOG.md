@@ -17,6 +17,21 @@ All notable changes to WildTrace. Dates are the release date, newest first.
   and organisation logos on the Network cards. Logos are fetched once at build time and served from
   the site, so a reader's browser never contacts a third party for them.
 - `web/data/flows_detail.json`: per-route taxa, products, years, reporters, purposes and transit.
+- **Country flags** wherever a country is named: country pages, case chips, Pulse, search, Flows
+  routes and pickers, the route evidence page, the heatmap, the Zoonoses and Analysis lists
+  (flag-icons, MIT, self-hosted).
+- **Tours for every section.** The main tour now covers the three modes and every menu, with a
+  full Investigate step and buttons that jump straight into the Flows or Investigate tours. Flows,
+  Zoonoses, Investigate, its import tab, Analysis, the heatmap, Network, Table and Methods each have
+  a short tour that runs the first time they open. Every card has a "Don't show section tips"
+  switch, and the Tour button opens a menu: full tour, tour this section, tips on or off, reset.
+- Pulse links straight into Investigate.
+
+### Changed
+- The timeline is drawn at the dock's real size (it was stretched), with years marking January and
+  month labels thinned on narrow screens; it redraws when the dock resizes.
+- The map-layer switches (cases, routes, observatories, your data) moved from the top bar into the
+  legend beside the map, so the top bar fits every desktop width and Investigate is never cut off.
 
 ## 1.5.1 — 2026-09-23
 

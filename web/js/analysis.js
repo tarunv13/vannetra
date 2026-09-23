@@ -3,6 +3,7 @@
 import { columns, esc, fmt, hbars } from "./charts.js";
 import { S, spLabel } from "./store.js";
 import { ROLE, roles } from "./flows.js";
+import { flag } from "./icons.js";
 
 export function mountAnalysis(root) {
   const cs = S.data.cases, st = S.data.stats || {}, k = st.kpi || {};
@@ -11,7 +12,7 @@ export function mountAnalysis(root) {
   const f = S.data.flows, R = roles();
   const bal = ["US", "HK", "CN", "AU", "TH", "MX", "ZA", "IN", "ID", "VN"].filter((c) => R[c]).map((c) => {
     const s = R[c].supply, d = R[c].demand, t = s + d || 1;
-    return `<div class="bal"><span>${esc(S.data.countries[c]?.name || c)}</span>
+    return `<div class="bal"><span>${flag(c)}${esc(S.data.countries[c]?.name || c)}</span>
       <div class="l"><i style="width:${(s / t) * 100}%;background:${ROLE.supply[1]}" title="Taken from here: ${fmt(s)}"></i></div>
       <div class="r"><i style="width:${(d / t) * 100}%;background:${ROLE.demand[1]}" title="Seized arriving: ${fmt(d)}"></i></div>
       <span class="mono muted">${fmt(s + d)}</span></div>`;

@@ -47,7 +47,7 @@ export function renderPulse(el) {
     <div class="sec"><h3>Species</h3></div>
     <div class="bars">${bars(Object.entries(sp).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, n, spLabel(k)]), "species", "var(--species)", 8, (k) => ic.sp(k))}</div>
     <div class="sec"><h3>Countries</h3></div>
-    <div class="bars">${bars(Object.entries(cc).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, n, ccName(k)]), "countries", "var(--place)")}</div>
+    <div class="bars">${bars(Object.entries(cc).sort((a, b) => b[1] - a[1]).map(([k, n]) => [k, n, ccName(k)]), "countries", "var(--place)", 8, (k) => ic.flag(k))}</div>
     <div class="sec"><h3>Latest</h3><button data-open="table">All ${fmt(cs.length)} as a table</button></div>
     <div class="feed">${latest.map((c) => `<button class="item" data-case="${c.id}" style="--kc:${KIND_COLOR[KIND(c.kind)]}"><i class="k ki">${ic.kind(c.kind)}</i><span><div class="t">${esc(c.summary)}</div>
       <div class="s">${esc(c.date || "undated")} · ${c.n_sources} report${c.n_sources > 1 ? "s" : ""}</div></span></button>`).join("") || `<p class="muted">Nothing matches these filters.</p>`}</div>`;
@@ -56,5 +56,7 @@ export function renderPulse(el) {
   el.querySelector("[data-clear-range]")?.addEventListener("click", () => { S.filters.range = null; emit("filters"); });
   el.querySelectorAll("[data-case]").forEach((b) => b.addEventListener("click", () => go({ kind: "case", id: b.dataset.case })));
   el.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:open", { detail: b.dataset.open }))));
+  el.insertAdjacentHTML("beforeend", `<button class="btn violet" style="width:100%;margin-top:16px" id="p-chart">Explore the links in Investigate</button>`);
+  el.querySelector("#p-chart").addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:open", { detail: "investigate" })));
   el.insertAdjacentHTML("beforeend", `<p class="muted" style="font-size:12px;margin:16px 0 0">Counts show where wildlife crime is <i>reported</i> in the newsrooms and government sites searched, not where it happens. <a href="data/cases.csv" download>Download CSV</a> · CC BY 4.0</p>`);
 }
