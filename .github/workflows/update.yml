@@ -78,7 +78,8 @@ jobs:
           git add web
           if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           git commit -q -m "data: daily refresh $(date -u +%F)"
-          git push
+          # main may have moved while this run collected (a human push): replay on top of it.
+          git pull --rebase -X theirs origin main && git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-pages-artifact@v3
         if: steps.commit.outputs.changed == 'true'
