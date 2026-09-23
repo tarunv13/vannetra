@@ -37,7 +37,7 @@ def counts() -> tuple[str, str]:
 # 500 px wide in a feed, so small print is unreadable where it matters.
 OVERLAY = """({ cases, countries }) => {
   document.querySelectorAll('header, .topbar, #pulse, .pulse, .timeline, #timeline, .legend, .mapctl,'
-    + ' .maplibregl-ctrl-bottom-right, .maplibregl-ctrl-bottom-left, .toast, .dock, .tour, .trivia, #trivia-root, .flowside, .inspector').forEach((e) => (e.style.display = 'none'));
+    + ' .maplibregl-ctrl-bottom-right, .maplibregl-ctrl-bottom-left, .toast, .dock, .tour, .guide, .guide-card-cta, .trivia, #trivia-root, .flowside, .inspector').forEach((e) => (e.style.display = 'none'));
   document.getElementById('globe').style.transform = 'translateX(120px)';
   const d = document.createElement('div');
   d.style.cssText = 'position:fixed;left:70px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;'
@@ -77,7 +77,7 @@ def main() -> int:
                 b = p.chromium.launch(executable_path=exe,
                                       args=["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
                 pg = b.new_page(viewport={"width": 1200, "height": 630})
-                pg.add_init_script("try { localStorage.setItem('wildtrace.tour.v1', 'done') } catch (e) {}")  # no walkthrough on the card
+                pg.add_init_script("try { localStorage.setItem('wildtrace.tour.v2', 'done'); localStorage.setItem('wildtrace.guide', 'seen') } catch (e) {}")  # no walkthrough on the card
                 pg.goto(f"http://127.0.0.1:{PORT}/", wait_until="networkidle", timeout=60000)
                 pg.wait_for_timeout(4000)      # let the globe draw and the markers settle
                 pg.evaluate(OVERLAY, {"cases": n_cases, "countries": n_countries})

@@ -8,7 +8,7 @@ import { mountSearch } from "./search.js";
 import { mountAbout, mountMethods, mountNetwork, mountTable } from "./sheets.js";
 import { mountTrivia } from "./trivia.js";
 import { startSection, startTour, tourMenu } from "./tour.js";
-import { openGuide } from "./video.js";
+import { firstVisit, openGuide } from "./video.js";
 import { startAnalytics } from "./analytics.js";
 import { renderTimeline } from "./timeline.js";
 import { S, back, closeTrail, emit, filtered, fromHash, fwd, go, load, loadExtra, loadGraph, on } from "./store.js";
@@ -265,7 +265,12 @@ async function boot() {
   mountSearch($("#omni"), $("#q"), $("#omni-results"));
   // The trivia box and the walkthrough come after the first paint: neither should delay the map.
   startAnalytics();
-  mountTrivia($("#trivia-root")).then(() => setTimeout(() => startTour({ auto: true }), 1200));
+  // A first-time visitor sees the 2-minute video first (it offers the tour); a returning reader who
+  // never finished the tour still gets it.
+  const welcome = firstVisit() && location.hash !== "#guide";
+  if (welcome) { const w = setInterval(() => { if ($("#boot").classList.contains("done")) { clearInterval(w); openGuide({ first: true }); } }, 200); }
+  mountTrivia($("#trivia-root")).then(() => { if (!welcome) setTimeout(() => startTour({ auto: true }), 1200); });
+  addEventListener("wildtrace:tour", () => (innerWidth < 860 ? toast("The guided tour needs a wider screen; the video covers the same ground.") : startTour()));
   // The Tour button opens a menu: full tour, this section's tour, section tips on or off.
   $("#tour-btn").addEventListener("click", (e) => tourMenu(e.currentTarget,
     sheetOpen ? (sheetOpen === "investigate" && $("#sheet-tabs [aria-selected=true]")?.dataset.t === "import" ? "import" : sheetOpen) : S.mode === "cases" ? "main" : S.mode));

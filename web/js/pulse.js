@@ -29,6 +29,9 @@ export function renderPulse(el) {
   el.innerHTML = `
     <h1 class="headline">${fmt(cs.length)} cases across ${countries.size} ${countries.size === 1 ? "country" : "countries"}</h1>
     <p class="lede">${any ? "Filtered view. Click a chip to remove it." : `Seizures, arrests and convictions from ${fmt(reports)} public reports, ${esc(m.window?.[0] || "")} to ${esc(m.window?.[1] || "")}. <b>${fmt(mapped)}</b> are pinned to a city or district; the rest are country-level or name no place. Nobody accused is ever named.`}</p>
+    ${any ? "" : `<button class="guide-card-cta" data-guide aria-label="Watch the 2-minute video guide">
+      <span class="gc-thumb"><img src="media/guide-thumb.jpg" alt=""><span class="gc-play">▶</span></span>
+      <span class="gc-text"><b>New here? Watch the 2-minute guide</b><span>Three research questions, answered on this Atlas</span></span></button>`}
     <div class="active-filters">${[
       ...[...f.kinds].map((k) => `<button class="chip k" style="--kc:${KIND_COLOR[k]}" data-f="kinds" data-v="${k}">${KIND_LABEL[k]} <span class="x">✕</span></button>`),
       ...[...f.species].map((s) => `<button class="chip" data-f="species" data-v="${s}">${esc(spLabel(s))} <span class="x">✕</span></button>`),
@@ -53,6 +56,7 @@ export function renderPulse(el) {
       <div class="s">${esc(c.date || "undated")} · ${c.n_sources} report${c.n_sources > 1 ? "s" : ""}</div></span></button>`).join("") || `<p class="muted">Nothing matches these filters.</p>`}</div>`;
   el.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => toggle(b.dataset.f, b.dataset.v)));
   el.querySelector("[data-clear-all]")?.addEventListener("click", clearFilters);
+  el.querySelector("[data-guide]")?.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:video")));
   el.querySelector("[data-clear-range]")?.addEventListener("click", () => { S.filters.range = null; emit("filters"); });
   el.querySelectorAll("[data-case]").forEach((b) => b.addEventListener("click", () => go({ kind: "case", id: b.dataset.case })));
   el.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:open", { detail: b.dataset.open }))));

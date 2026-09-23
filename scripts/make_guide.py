@@ -5,7 +5,7 @@
 A real browser plays a scripted walkthrough that answers three research questions, with captions
 and a visible cursor drawn into the page (motion on the OpenHiggsfield easing: cubic-bezier(0.2, 0,
 0, 1) in, cubic-bezier(0.4, 0, 1, 1) out). Nothing is generated: every frame is the real interface.
-Outputs web/media/guide.mp4 (H.264, plays everywhere), guide.jpg (poster) and guide.vtt (captions for
+Outputs web/media/guide.mp4 (H.264, plays everywhere), guide.jpg (poster), guide-thumb.jpg (Pulse card) and guide.vtt (captions for
 screen readers). Needs Playwright's Chromium and ffmpeg.
 """
 from __future__ import annotations
@@ -80,7 +80,7 @@ def main() -> None:
     with sync_playwright() as p:
         b = p.chromium.launch(executable_path=EXE, args=["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
         ctx = b.new_context(viewport={"width": W, "height": H}, record_video_dir=str(tmp), record_video_size={"width": W, "height": H})
-        ctx.add_init_script("localStorage.setItem('wildtrace.tour.v2','done');localStorage.setItem('wildtrace.tips','off');localStorage.removeItem('wildtrace.basemap');")
+        ctx.add_init_script("localStorage.setItem('wildtrace.tour.v2','done');localStorage.setItem('wildtrace.tips','off');localStorage.setItem('wildtrace.guide','seen');localStorage.removeItem('wildtrace.basemap');")
         pg = ctx.new_page()
         t0 = time.time()
         pg.goto(BASE, wait_until="domcontentloaded")
@@ -203,6 +203,9 @@ def main() -> None:
                     "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(OUT / "guide.mp4")], check=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", "0.8", "-i", str(OUT / "guide.mp4"), "-frames:v", "1",
                     "-q:v", "4", str(OUT / "guide.jpg")], check=True)
+    # Small thumbnail for the Pulse card: the globe from the Atlas scene (the title card reads as blank when small).
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", "5", "-i", str(OUT / "guide.mp4"), "-frames:v", "1",
+                    "-vf", "crop=640:360:500:190,scale=240:-2", "-q:v", "4", str(OUT / "guide-thumb.jpg")], check=True)
     # Captions for screen readers (the same words are burned into the picture).
     def ts(t):
         t = max(0.0, t); return f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{t % 60:06.3f}"

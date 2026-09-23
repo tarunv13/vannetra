@@ -49,8 +49,8 @@ export const TOURS = {
       cta: [["Show me Investigate", () => { open("investigate")(); setTimeout(() => startSection("investigate", { force: true }), 900); }]] },
     { el: '[data-sheet="methods"]', title: "Methods and About",
       body: "How a report becomes a case, how far to trust one (validated, official, corroborated or single report), the data sources and licences, and how to cite. Every case has a Report a correction link." },
-    { el: "#tour-btn", title: "Tours on your terms",
-      body: "Open this menu any time to replay this tour, tour the section you are in, or switch the automatic section tips off.",
+    { el: "#tour-btn", title: "The guide, any time",
+      body: "Open Guide to watch the 2-minute video again, replay this tour, tour the section you are in, or switch the automatic section tips off.",
       cta: [["Show me Flows", () => { mode("flows")(); setTimeout(() => startSection("flows", { force: true }), 1400); }]] },
   ] },
   flows: { name: "Flows", steps: [
@@ -184,7 +184,7 @@ function render() {
   const last = idx === steps.length - 1;
   const card = root.querySelector(".tour-card");
   card.innerHTML = `
-    <div class="tour-step mono">${current === "main" ? "Tour" : `${TOURS[current].name} tour`} · step ${idx + 1} of ${steps.length}</div>
+    <div class="tour-step mono">${current === "main" ? "Guided tour" : `${TOURS[current].name} tour`} · step ${idx + 1} of ${steps.length}</div>
     <h2>${s.title}</h2>
     <p>${s.body}</p>
     ${s.cta ? `<div class="row" style="margin:-4px 0 12px">${s.cta.map(([l], i) => `<button class="btn tour-cta" data-i="${i}">${l}</button>`).join("")}</div>` : ""}

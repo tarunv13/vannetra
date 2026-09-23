@@ -2,6 +2,17 @@
 
 All notable changes to WildTrace. Dates are the release date, newest first.
 
+## Unreleased
+
+### Changed
+- **The video guide comes first.** A first-time visitor sees the 2-minute video before anything else
+  (muted autoplay, captions on screen). It ends with a choice: take the guided tour or explore on
+  their own. Phones get it too, although the guided tour needs a wider screen.
+- **Easy to find again.** A "New here? Watch the 2-minute guide" card with a thumbnail sits at the
+  top of Pulse. The top-bar "Tour" button is now **▶ Guide**, and its menu opens with the video.
+- The site citation is now "Verma, T. K. (2026) … (Version …) … Zenodo DOI", built from
+  `CITATION.cff`. The Zenodo metadata now gives each data file its correct licence.
+
 ## 1.6.2 — 2026-09-23
 
 ### Added
