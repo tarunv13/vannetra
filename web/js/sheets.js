@@ -127,12 +127,14 @@ export function mountTable(root) {
 export function mountAbout(root) {
   const m = S.data.meta || {};
   const v = m.verification || {}, cov = m.coverage || {};
+  setTimeout(() => root.querySelector("#about-video")?.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:video"))), 0);
   root.innerHTML = `<div class="prose" style="max-width:80ch">
     <h3 style="margin-top:0">The open atlas of illegal wildlife trade</h3>
     <p>WildTrace maps seizures, arrests and convictions involving wild fauna and flora, from ivory and pangolins to rosewood and agarwood. Every case links back to its public sources and states how strong its evidence is. The link-analysis workbench runs on your own data in your browser.</p>
     <h3>How reliable is a case?</h3>
     <p><b>Validated</b> (${v.validated || 0}): checked by a person against its sources. <b>Official source</b> (${v.official || 0}): at least one government, customs, police or judicial release. <b>Corroborated</b> (${v.corroborated || 0}): two or more independent outlets. <b>Single report</b> (${v.single || 0}): one outlet; treat as a lead.</p>
     <p>${cov.mapped || 0} cases have a city- or district-level place, ${cov.country_only || 0} only a country, and ${cov.unmapped || 0} none. Coverage follows the newsrooms and government sites searched, so counts show where wildlife crime is <i>reported</i>, not where it happens.</p>
+    <p><button class="btn" id="about-video">▶ Watch the 2-minute video guide</button></p>
     <h3>Who runs it</h3>
     <p>An open-source research project, maintained on GitHub by <a href="https://github.com/tarunv13" target="_blank" rel="noopener">@tarunv13</a>. It builds on the OWT labelled set of online listings and on the observatories listed under Network. Code and method: <a href="https://github.com/tarunv13/wildtrace" target="_blank" rel="noopener">github.com/tarunv13/wildtrace</a>.</p>
     <h3>Use and cite</h3>

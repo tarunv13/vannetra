@@ -77,6 +77,9 @@ UNODC World WISE and TRAFFIC's portal hold records WildTrace will never match.
 
 ## The Atlas
 
+**New here? [Watch the 2-minute guide](https://tarunv13.github.io/wildtrace/#guide)** ([MP4](web/media/guide.mp4)).
+It is a real recording of the Atlas answering three research questions.
+
 Everything happens on one globe. The other surfaces float over it, so you can wander without
 losing your place.
 

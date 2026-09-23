@@ -26,7 +26,8 @@ const mode = (m) => () => dispatchEvent(new CustomEvent("wildtrace:mode", { deta
 export const TOURS = {
   main: { name: "The Atlas", steps: [
     { el: null, title: "Welcome to WildTrace",
-      body: "One open map of the illegal trade in wild animals and plants: seizures, arrests and convictions from public reports, where traded wildlife comes from and goes, and where animal-borne outbreaks are reported. About a minute; leave at any point." },
+      body: "One open map of the illegal trade in wild animals and plants: seizures, arrests and convictions from public reports, where traded wildlife comes from and goes, and where animal-borne outbreaks are reported. About a minute; leave at any point. Prefer to watch? A 2-minute video answers three research questions on the live Atlas.",
+      cta: [["▶ Watch the 2-minute video", () => dispatchEvent(new CustomEvent("wildtrace:video"))]] },
     { el: "#globe", place: "center", title: "The Atlas",
       body: "Every case sits where its report says it happened. The icon inside a point is the kind of event (box: seizure, lock: arrest, hands: rescue); paler points rest on a single report; a ring means the place is approximate; the glow shows where reporting is dense. Switch cases and observatories on and off in the legend, bottom right, and turn on satellite imagery with the map buttons to see the landscape. Trade routes live in Flows." },
     { el: ".modes", title: "Three ways to read the map",
@@ -274,6 +275,7 @@ export function tourMenu(anchor, section) {
   m.style.right = `${Math.max(12, innerWidth - r.right)}px`;
   const sec = section && TOURS[section] && section !== "main" ? section : null;
   m.innerHTML = `
+    <button role="menuitem" data-a="video" class="tm-video">▶ Watch the 2-minute video guide</button>
     <button role="menuitem" data-a="main">Full tour of the Atlas</button>
     ${sec ? `<button role="menuitem" data-a="sec">Tour this section: ${TOURS[sec].name}</button>` : ""}
     <label class="tm-switch"><input type="checkbox" ${tipsOn() ? "checked" : ""}> Show section tips the first time I open a section</label>
@@ -282,6 +284,7 @@ export function tourMenu(anchor, section) {
   const close = (e) => { if (!m.contains(e.target) && e.target !== anchor) { m.remove(); removeEventListener("pointerdown", close, true); } };
   addEventListener("pointerdown", close, true);
   m.querySelector('[data-a="main"]').addEventListener("click", () => { m.remove(); run("main"); });
+  m.querySelector('[data-a="video"]').addEventListener("click", () => { m.remove(); dispatchEvent(new CustomEvent("wildtrace:video")); });
   m.querySelector('[data-a="sec"]')?.addEventListener("click", () => { m.remove(); startSection(sec, { force: true }); });
   m.querySelector("input").addEventListener("change", (e) => setTips(e.target.checked));
   m.querySelector('[data-a="reset"]').addEventListener("click", () => {

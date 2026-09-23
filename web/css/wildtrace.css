@@ -629,3 +629,15 @@ svg .hit { fill: transparent; cursor: default; }
 .route .rt b.rl { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .route .rt b.rl .flag { width: 16px; height: 12px; margin-right: 4px; }
 .route small .ico.sp { color: var(--species-ink); width: 15px; height: 13px; margin-right: 3px; }
+
+/* v1.6.2: the video guide ------------------------------------------------------------ */
+.guide { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; animation: fade 220ms var(--ease) both; }
+.guide-veil { position: absolute; inset: 0; background: rgba(15, 26, 23, 0.5); backdrop-filter: blur(2px); }
+.guide-card { position: relative; width: min(1000px, calc(100vw - 32px)); padding: 12px 14px 10px; border-radius: var(--r); animation: rise 380ms var(--ease-slide) both; }
+.guide-head { display: flex; align-items: center; gap: 12px; padding: 2px 2px 10px; }
+.guide-head b { font: 650 17px/1.1 var(--display); letter-spacing: -0.02em; }
+.guide-head .muted { font-size: 12.5px; flex: 1; }
+.guide video { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; background: #edf1ef; display: block; }
+.guide-foot { font-size: 12px; margin: 8px 2px 0; }
+.tour-menu .tm-video { color: var(--invest-ink); font-weight: 650; }
+@media (max-width: 600px) { .guide-head .muted { display: none; } .guide-head b { flex: 1; } }

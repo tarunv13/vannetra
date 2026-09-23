@@ -8,6 +8,7 @@ import { mountSearch } from "./search.js";
 import { mountAbout, mountMethods, mountNetwork, mountTable } from "./sheets.js";
 import { mountTrivia } from "./trivia.js";
 import { startSection, startTour, tourMenu } from "./tour.js";
+import { openGuide } from "./video.js";
 import { startAnalytics } from "./analytics.js";
 import { renderTimeline } from "./timeline.js";
 import { S, back, closeTrail, emit, filtered, fromHash, fwd, go, load, loadExtra, loadGraph, on } from "./store.js";
@@ -292,6 +293,8 @@ async function boot() {
   $("#legend-toggle").addEventListener("click", () => { const l = $(".legend"); l.hidden = !l.hidden; $("#legend-toggle").setAttribute("aria-pressed", String(!l.hidden)); });
   addEventListener("wildtrace:open", (e) => { const [k, t] = String(e.detail).split(":"); openSheet(k, t); });
   addEventListener("wildtrace:toast", (e) => toast(e.detail));
+  addEventListener("wildtrace:video", openGuide);
+  if (location.hash === "#guide") openGuide();
   addEventListener("wildtrace:go", (e) => go(e.detail));
   addEventListener("wildtrace:flows-focus", () => { closeSheet(); if (S.mode !== "flows") setMode("flows"); else emit("flows"); });
   addEventListener("wildtrace:follow", (e) => {

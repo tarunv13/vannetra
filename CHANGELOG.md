@@ -2,6 +2,16 @@
 
 All notable changes to WildTrace. Dates are the release date, newest first.
 
+## Unreleased
+
+### Added
+- **A 2-minute video guide** (Tour menu, the welcome card, About, or `#guide` in the address).
+  It is a real recording of the live Atlas, not generated footage, and it answers three research
+  questions: where the pangolin evidence in India comes from, where seized red sanders goes, and
+  where animal-borne outbreaks and trafficking overlap. It also shows Investigate, Analysis and the
+  tours. Captions are burned into the picture and also provided as a text track. To regenerate it,
+  run `scripts/make_guide.py`, which writes `web/media/guide.mp4`, `.jpg` and `.vtt`.
+
 ## 1.6.1 — 2026-09-23
 
 ### Added
