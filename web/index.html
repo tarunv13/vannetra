@@ -24,9 +24,9 @@
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "WildTrace: the open atlas of illegal wildlife trade", "alternateName": "WildTrace illegal wildlife trade dataset", "description": "Interactive global map of illegal wildlife trade: 1,251 recorded seizures, arrests and convictions of trafficked animals and plants — pangolin, ivory, rhino horn, orchids, rosewood and more — each case graded by the strength of its evidence, with free CSV data (CC BY 4.0) and a link-analysis workbench.", "url": "https://tarunv13.github.io/wildtrace/", "sameAs": ["https://github.com/tarunv13/wildtrace", "https://doi.org/10.5281/zenodo.22902819"], "identifier": "https://doi.org/10.5281/zenodo.22902819", "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true, "keywords": ["illegal wildlife trade", "wildlife trafficking", "wildlife crime", "seizures", "CITES", "poaching", "pangolin", "ivory", "rhino horn", "rosewood", "orchids", "open data", "OSINT", "link analysis", "environmental crime"], "creator": {"@type": "Person", "name": "Tarun Kumar Verma", "identifier": "https://orcid.org/0009-0009-4130-2455"}, "distribution": [{"@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": "https://tarunv13.github.io/wildtrace/data/cases.csv"}, {"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://tarunv13.github.io/wildtrace/data/cases.json"}], "citation": "Verma, T. K. (2026). WildTrace: the open atlas of illegal wildlife trade. Zenodo. https://doi.org/10.5281/zenodo.22902819", "measurementTechnique": "Automated collection of public government, enforcement and news reports; rule-based extraction; per-case verification grading", "spatialCoverage": {"@type": "Place", "name": "Worldwide"}}</script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "WildTrace", "url": "https://tarunv13.github.io/wildtrace/", "potentialAction": {"@type": "SearchAction", "target": {"@type": "EntryPoint", "urlTemplate": "https://tarunv13.github.io/wildtrace/browse.html?q={search_term_string}"}, "query-input": "required name=search_term_string"}}</script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is illegal wildlife trade?", "acceptedAnswer": {"@type": "Answer", "text": "Illegal wildlife trade is the unlawful taking, transport and sale of wild animals and plants and their parts, from pangolin scales and elephant ivory to orchids, cacti, rosewood and medicinal roots. CITES lists more than 40,900 species whose international trade is regulated; UNODC recorded around 140,000 seizures in 162 countries between 2015 and 2021, involving about 4,000 species."}}, {"@type": "Question", "name": "Where can I download open data on wildlife seizures?", "acceptedAnswer": {"@type": "Answer", "text": "WildTrace publishes every recorded case as CSV at https://tarunv13.github.io/wildtrace/data/cases.csv under CC BY 4.0, with the place, species group, quantity, agencies, sources and an evidence grade for each case. The JSON behind the map is in the same folder."}}, {"@type": "Question", "name": "How reliable is each wildlife trafficking case?", "acceptedAnswer": {"@type": "Answer", "text": "Every case is graded: validated (checked by a reviewer), official (at least one government, customs, police or judicial source), corroborated (two or more independent outlets) or single report (one outlet, a lead rather than a finding). Counts show where wildlife crime is reported, not where it happens, and cases whose reports name no place are counted but not mapped."}}, {"@type": "Question", "name": "Does WildTrace cover plants as well as animals?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Alongside pangolin, ivory, rhino horn and big cats, WildTrace tracks orchids, cacti and succulents, cycads, carnivorous plants, rosewood and other timber, agarwood, sandalwood, red sanders and medicinal and aromatic plants, which are heavily traded and rarely reported."}}, {"@type": "Question", "name": "Is there a free alternative to i2 Analyst's Notebook for link analysis?", "acceptedAnswer": {"@type": "Answer", "text": "WildTrace includes an open-source link-analysis workbench that runs entirely in your browser. You can import your own CSV, Excel or JSON, map the columns, and chart your entities against the public wildlife trade data. Nothing is uploaded: imported data stays in your browser."}}]}</script>
-  <link rel="stylesheet" href="css/fonts.css?v=1.4.1">
+  <link rel="stylesheet" href="css/fonts.css?v=1.5.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="css/wildtrace.css?v=1.4.1">
+  <link rel="stylesheet" href="css/wildtrace.css?v=1.5.0">
 </head>
 <!-- data-clarity: the Microsoft Clarity project id. Remove the attribute (or set it to
      REPLACE_ME) and no analytics load at all — useful for forks and local work. -->
@@ -57,12 +57,18 @@
       <div class="omni-results glass" id="omni-results" role="listbox" aria-label="Search results"></div>
     </div>
     <nav class="lenses glass" aria-label="Atlas layers and tools">
-      <span class="lens-title" aria-hidden="true">Atlas</span>
+      <div class="modes" role="group" aria-label="What the map shows">
+        <button class="mode" data-mode="cases" aria-pressed="true" style="--c:var(--cases-ink)">Cases</button>
+        <button class="mode" data-mode="flows" aria-pressed="false" style="--c:var(--trade-ink)">Flows</button>
+        <button class="mode" data-mode="zoo" aria-pressed="false" style="--c:#a3245e">Zoonoses</button>
+      </div>
+      <span class="sep" aria-hidden="true"></span>
       <button class="lens" data-layer="cases" aria-pressed="true" style="--c:var(--cases)"><span class="dot"></span><span class="label">Cases</span> <span class="n" id="n-cases"></span></button>
       <button class="lens" data-layer="routes" aria-pressed="true" style="--c:var(--trade)"><span class="dot"></span><span class="label">Routes</span> <span class="n" id="n-routes"></span></button>
       <button class="lens" data-layer="observatories" aria-pressed="false" style="--c:var(--network)"><span class="dot"></span><span class="label">Observatories</span> <span class="n" id="n-obs"></span></button>
       <button class="lens" data-layer="mine" aria-pressed="true" style="--c:var(--invest)" hidden id="lens-mine"><span class="dot"></span><span class="label">Your data</span> <span class="n" id="n-mine"></span></button>
       <span class="sep" aria-hidden="true"></span>
+      <button class="lens" data-sheet="analysis"><span class="label">Analysis</span></button>
       <button class="lens" data-sheet="table"><span class="label">Table</span></button>
       <button class="lens" data-sheet="network"><span class="label">Network</span></button>
       <button class="lens" data-sheet="methods"><span class="label">Methods</span></button>
@@ -91,6 +97,8 @@
     </div>
     <div class="insp-body" id="insp-body"></div>
   </aside>
+
+  <aside class="flowside glass" id="flowside" aria-label="Your story and the routes on the map" aria-live="polite"><div class="fs-body" id="fs-body"></div></aside>
 
   <div class="mapctl">
     <button class="icon-btn" id="proj" aria-label="Switch between globe and flat map" title="Globe / flat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg></button>
@@ -129,6 +137,7 @@
 
   <div id="trivia-root"></div>
   <div class="toast glass" id="toast" role="status"></div>
+  <div class="tip glass" id="tip" role="tooltip"></div>
   <noscript><div style="position:fixed;inset:0;overflow:auto;background:#edf1ef;padding:24px 16px;font:16px/1.6 system-ui,sans-serif">
     <h1 style="font-size:1.6rem;margin:0 0 8px">WildTrace — the open atlas of illegal wildlife trade</h1>
     <p>The map needs JavaScript, but the whole record is readable without it:</p>
@@ -137,6 +146,6 @@
       <li><a href="llms.txt">What this dataset is, in plain text</a></li></ul></div></noscript>
 
   <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
-  <script type="module" src="js/main.js?v=1.4.1"></script>
+  <script type="module" src="js/main.js?v=1.5.0"></script>
 </body>
 </html>

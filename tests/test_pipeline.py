@@ -273,3 +273,52 @@ def test_seo_pages_are_crawlable_and_honest(tmp_path):
     assert "doi.org/10.5281/zenodo" in llms and "reported" in llms
     # internal links must be relative, so a fork or a local copy works
     assert 'href="../css/page.css"' in case_html
+
+
+# ---------------------------------------------------------------- v1.5: flows and zoonoses
+def test_cites_taxa_map_most_specific_first():
+    from wildtrace.collect.cites import group_of, taxon_index
+    sp, hi = taxon_index()
+    assert group_of({"Taxon": "Pterocarpus santalinus"}, sp, hi) == "red_sanders"
+    assert group_of({"Taxon": "Dalbergia latifolia", "Genus": "Dalbergia"}, sp, hi) == "rosewood"
+    assert group_of({"Taxon": "Phataginus tricuspis", "Genus": "Phataginus", "Family": "Manidae"}, sp, hi) == "pangolin"
+    assert group_of({"Taxon": "Dendrobium nobile", "Genus": "Dendrobium", "Family": "Orchidaceae"}, sp, hi) == "orchids"
+    assert group_of({"Taxon": "Carcharhinus falciformis", "Class": "Elasmobranchii"}, sp, hi) == "shark_ray"
+    assert group_of({"Taxon": "Canis lupus", "Genus": "Canis", "Family": "Canidae", "Order": "Carnivora"}, sp, hi) is None
+
+
+def test_cites_aggregate_keeps_seized_apart_and_drops_domestic(tmp_path):
+    from wildtrace.collect.cites import aggregate
+    head = "Id,Year,Appendix,Taxon,Class,Order,Family,Genus,Term,Quantity,Unit,Importer,Exporter,Origin,Purpose,Source,Reporter.type\n"
+    rows = ["1,2020,II,Pterocarpus santalinus,,,,Pterocarpus,timber,5,kg,CN,IN,,T,I,I",
+            "2,2020,II,Pterocarpus santalinus,,,,Pterocarpus,timber,5,kg,CN,AE,IN,T,I,I",
+            "3,2020,II,Pterocarpus santalinus,,,,Pterocarpus,timber,5,kg,CN,IN,,T,W,E",
+            "4,2020,II,Pterocarpus santalinus,,,,Pterocarpus,timber,5,kg,IN,IN,,T,I,I",   # domestic: dropped
+            "5,2010,II,Pterocarpus santalinus,,,,Pterocarpus,timber,5,kg,CN,IN,,T,I,I"]   # before 2015: dropped
+    (tmp_path / "trade_db_1.csv").write_text(head + "\n".join(rows), encoding="utf-8")
+    d = aggregate(tmp_path)
+    assert sorted(map(tuple, d["seized"])) == [("red_sanders", "IN", "AE", "CN", 1), ("red_sanders", "IN", "IN", "CN", 1)]
+    assert d["declared"]["red_sanders"] == [["IN", "CN", 1]]
+
+
+@pytest.mark.parametrize("title,disease,pathway,countries", [
+    ("Ebola disease caused by Bundibugyo virus, Democratic Republic of the Congo & Uganda", "Ebola and Sudan virus disease", "wildlife", ["CD", "UG"]),
+    ("Avian Influenza A(H5N1) - Cambodia", "Avian influenza", "birds", ["KH"]),
+    ("Middle East respiratory syndrome coronavirus - Kingdom of Saudi Arabia", "MERS", "livestock", ["SA"]),
+    ("Yellow fever in the Republic of Congo", "Yellow fever", "vector", ["CG"]),
+    ("Lassa fever - Guinea", "Lassa fever", "wildlife", ["GN"]),
+])
+def test_who_titles_parse_to_disease_pathway_and_country(tmp_path, monkeypatch, title, disease, pathway, countries):
+    from wildtrace.collect import zoonoses
+    monkeypatch.setattr(zoonoses, "Z", tmp_path)
+    (tmp_path / "who_don.json").write_text(json.dumps([{"Title": title, "PublicationDate": "2026-01-01T00:00:00Z", "UrlName": "x"}]), encoding="utf-8")
+    [r] = zoonoses.outbreaks()
+    assert (r["disease"], r["pathway"], r["countries"]) == (disease, pathway, countries)
+
+
+def test_non_zoonotic_outbreaks_are_left_out(tmp_path, monkeypatch):
+    from wildtrace.collect import zoonoses
+    monkeypatch.setattr(zoonoses, "Z", tmp_path)
+    (tmp_path / "who_don.json").write_text(json.dumps([{"Title": "Cholera - Haiti", "PublicationDate": "2026-01-01", "UrlName": "y"},
+                                                       {"Title": "Poliomyelitis - Pakistan", "PublicationDate": "2026-01-01", "UrlName": "z"}]), encoding="utf-8")
+    assert zoonoses.outbreaks() == []

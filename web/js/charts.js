@@ -47,7 +47,7 @@ export function hbars(el, rows, { color = "var(--j)", max = 10, onClick } = {}) 
 }
 
 /** Vertical column chart over time. rows: [{label:'2026-07', value}] */
-export function columns(el, rows, { color = "var(--j)", height = 170 } = {}) {
+export function columns(el, rows, { color = "var(--j)", height = 170, unit = "cases" } = {}) {
   if (!rows.length) { el.innerHTML = `<div class="empty">No dated events yet</div>`; return; }
   const W = 640, H = height, padB = 24, padT = 16, gap = 2;
   const top = Math.max(...rows.map((r) => r.value)) || 1;
@@ -60,7 +60,7 @@ export function columns(el, rows, { color = "var(--j)", height = 170 } = {}) {
     ${rows.map((r, i) => {
       const h = Math.max(r.value ? 3 : 0, (r.value / top) * (H - padB - padT)), x = i * (bw + gap), y = H - padB - h;
       const r4 = Math.min(4, bw / 2, h);
-      return `<g class="g" data-tip="${esc(`<b>${esc(r.label)}</b><br>${fmt(r.value)} cases`)}">
+      return `<g class="g" data-tip="${esc(`<b>${esc(r.label)}</b><br>${fmt(r.value)} ${esc(unit)}`)}">
         ${h ? `<path class="mark" fill="${color}" d="M${x},${H - padB} v-${h - r4} a${r4},${r4} 0 0 1 ${r4},-${r4} h${bw - 2 * r4} a${r4},${r4} 0 0 1 ${r4},${r4} v${h - r4} z"/>` : ""}
         ${i % labelEvery === 0 ? `<text x="${x + bw / 2}" y="${H - 6}" text-anchor="middle">${esc(r.label)}</text>` : ""}
         <rect class="hit" x="${x}" y="${padT}" width="${bw + gap}" height="${H - padT}"/>

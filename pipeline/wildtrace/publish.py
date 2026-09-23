@@ -26,6 +26,11 @@ NOT_EVENTS = {"cordis.europa.eu", "op.europa.eu", "eur-lex.europa.eu", "data.eur
 
 
 
+# Species groups that are plants; everything else in the lexicon is an animal.
+FLORA = {"red_sanders", "rosewood", "agarwood", "orchids", "cacti_succulents", "cycads", "carnivorous_plants",
+         "medicinal_plants", "sandalwood", "resins_gums", "bulbs_ornamental"}
+
+
 def _cite() -> str:
     """Citation line for the site. Uses the Zenodo DOI once CITATION.cff records one."""
     try:
@@ -290,7 +295,8 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
     lex = lexicon.load()["groups"]
     species_meta = {gid: {"label": g["label"], "taxa": g.get("taxa", []), "cites": g.get("cites"),
                           "products": g.get("products", []), "uses": g.get("uses", []),
-                          "terms": {k: v for k, v in g["terms"].items()}} for gid, g in lex.items()}
+                          "terms": {k: v for k, v in g["terms"].items()},
+                          "kingdom": "plant" if gid in FLORA else "animal"} for gid, g in lex.items()}
     report = {}
     if (MODELS / "relevance_report.json").exists():
         report = json.loads((MODELS / "relevance_report.json").read_text(encoding="utf-8"))
@@ -319,7 +325,15 @@ def build(min_relevance: float | None = None, fetch_text: bool = True) -> dict:
         for pl in places:
             if pl.type == "country" and pl.country not in countries:
                 countries[pl.country] = {"name": pl.name, "lon": pl.lon, "lat": pl.lat}
+    # Territories the gazetteer lacks but CITES records name (Hong Kong, Israel, Kosovo, Macao).
+    for cc, pt in json.loads((RESOURCES / "country_points.json").read_text(encoding="utf-8"))["points"].items():
+        countries.setdefault(cc, pt)
+    # Trade region (UN M49 sub-regions grouped into eight): the Flows lens colours by it.
+    regions = json.loads((RESOURCES / "regions.json").read_text(encoding="utf-8"))
+    for cc, c in countries.items():
+        c["region"] = regions["countries"].get(cc, "other")
     _dump("countries.json", countries)
+    _dump("regions.json", {"source": regions["source"], "regions": regions["regions"]})
     obs = yaml.safe_load((RESOURCES / "observatories.yaml").read_text(encoding="utf-8"))
     _dump("observatories.json", obs)
     _dump("codewords.json", [{k: v for k, v in c.items()} for c in lexicon.codewords()])

@@ -10,7 +10,10 @@ import { mountTrivia, openTrivia } from "./trivia.js";
 import { startTour } from "./tour.js";
 import { startAnalytics } from "./analytics.js";
 import { renderTimeline } from "./timeline.js";
-import { S, back, closeTrail, emit, filtered, fromHash, fwd, go, load, loadGraph, on } from "./store.js";
+import { S, back, closeTrail, emit, filtered, fromHash, fwd, go, load, loadExtra, loadGraph, on } from "./store.js";
+import * as flows from "./flows.js";
+import * as zoo from "./zoo.js";
+import { mountAnalysis } from "./analysis.js";
 
 const $ = (s) => document.querySelector(s);
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -38,6 +41,10 @@ function obsGeo() {
 }
 function drawMap() {
   if (!globe?.map.getSource("cases")) return;
+  if (S.mode !== "cases") {   // the case layers step back while Flows or Zoonoses is on
+    ["cases", "routes", "obs", "mine"].forEach((k) => globe.visible(k, false));
+    return;
+  }
   const cs = filtered();
   const geo = caseGeo(cs);
   globe.set("cases", geo);
@@ -55,6 +62,68 @@ function drawMap() {
   const mine = localPoints().features.length;
   $("#lens-mine").hidden = !local.elements.length;
   $("#n-mine").textContent = mine || local.elements.filter((e) => e.group === "nodes").length;
+}
+
+// ------------------------------------------------------------------ modes: Cases, Flows, Zoonoses
+const MODE_TITLE = { cases: "Pulse", flows: "Build your view", zoo: "Zoonoses" };
+function syncURL() {
+  const q = S.mode === "flows" ? flows.toQuery() : S.mode === "zoo" ? new URLSearchParams({ mode: "zoo" }) : new URLSearchParams();
+  const qs = q.toString();
+  history.replaceState(null, "", `${location.pathname}${qs ? `?${qs}` : ""}${location.hash}`);
+}
+async function setMode(m) {
+  S.mode = m;
+  document.body.classList.remove("mode-cases", "mode-flows", "mode-zoo");
+  document.body.classList.add(`mode-${m}`);
+  document.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+  $(".pulse-head h2").textContent = MODE_TITLE[m];
+  $("#pulse").classList.remove("folded");
+  globe?.group("flows", m === "flows"); globe?.group("zoo", m === "zoo");
+  globe?.flat(m !== "cases"); lastSig = "";
+  drawMap();
+  syncURL();
+  if (m === "cases") { renderPulse($("#pulse-body")); globe?.world(); return; }
+  if (m === "flows") { flows.renderControls($("#pulse-body")); await loadExtra("flows"); if (S.mode === "flows") drawFlows(); }
+  if (m === "zoo") { zoo.renderControls($("#pulse-body")); await Promise.all([loadExtra("zoonoses"), loadExtra("flows")]); if (S.mode === "zoo") { drawZoo(); globe?.fit([[-120, -40], [150, 62]], 3); } }
+  globe?.spin(false);
+}
+const keepScroll = (el, fn) => { const y = el.scrollTop; fn(); el.scrollTop = y; };
+let lastSig = "";
+/** Frame the routes on show, but only when the set of routes changes (not on every switch). */
+function frame(g) {
+  const sig = g.all.map((r) => r.key).join();
+  if (sig === lastSig || !g.shown.length) return;
+  lastSig = sig;
+  const pts = g.nodes.features.map((f) => f.geometry.coordinates);
+  const lo = pts.map((p) => p[0]), la = pts.map((p) => p[1]);
+  globe?.fit([[Math.min(...lo) - 8, Math.max(-55, Math.min(...la) - 8)], [Math.max(...lo) + 8, Math.min(72, Math.max(...la) + 8)]], 4);
+}
+function drawFlows() {
+  if (!S.data.flows) return;
+  const g = flows.geo();
+  if (globe?.map.getSource("flowlines")) {
+    globe.set("flowlines", g.lines); globe.set("flowdash", g.dash); globe.set("flowarrows", g.arrows);
+    globe.set("flownodes", g.nodes); globe.set("flowglow", g.glow);
+    frame(g);
+  }
+  keepScroll($("#pulse-body"), () => flows.renderControls($("#pulse-body")));
+  keepScroll($("#fs-body"), () => flows.renderSide($("#fs-body"), g));
+  // On a phone the side panel is hidden: the same route switches are repeated in the bottom panel.
+  const m = $("#f-routes-m");
+  if (m) { m.innerHTML = ""; flows.renderSide(m, g); }
+  syncURL();
+}
+function drawZoo() {
+  if (!S.data.zoonoses) return;
+  const g = zoo.geo();
+  if (globe?.map.getSource("zoo")) { globe.set("zoo", g.bubbles); globe.set("zoocases", g.rings); }
+  keepScroll($("#pulse-body"), () => zoo.renderControls($("#pulse-body")));
+  zoo.renderSide($("#fs-body"), g);
+}
+/** Re-render the open record without moving the map (used when late data arrives). */
+function refreshInspector() {
+  const item = S.trail[S.pos];
+  if (item) renderInspector(item, $("#insp-body"), { act, entity: localEntity });
 }
 
 // ------------------------------------------------------------------ inspector + navigation
@@ -122,6 +191,9 @@ const SHEETS = {
   investigate: { title: "Investigate", tabs: [["chart", "Link chart"], ["import", "Your data"]] },
   network: { title: "The observatory network", tabs: [] },
   methods: { title: "Methods", tabs: [["pipeline", "Pipeline"], ["model", "Classifier"], ["privacy", "Privacy"], ["sources", "Sources"]] },
+  analysis: { title: "What the evidence shows", tabs: [] },
+  matrix: { title: "Who supplies whom", tabs: [] },
+  zoo: { title: "Zoonoses", tabs: [["species", "Species and viruses"], ["reports", "Outbreak reports"]] },
 };
 let sheetOpen = null;
 function openSheet(kind, tab, focus) {
@@ -148,6 +220,13 @@ function openSheet(kind, tab, focus) {
   if (kind === "about") mountAbout(body);
   if (kind === "network") mountNetwork(body);
   if (kind === "methods") mountMethods(body, t);
+  const later = (names, fn) => {
+    body.innerHTML = `<div class="skeleton" style="margin:18px;height:50%"></div>`;
+    Promise.all(names.map(loadExtra)).then(() => { if (sheetOpen === kind) { body.innerHTML = ""; fn(); } });
+  };
+  if (kind === "analysis") later(["flows"], () => mountAnalysis(body));
+  if (kind === "matrix") later(["flows"], () => flows.mountMatrix(body));
+  if (kind === "zoo") later(["zoonoses", "flows"], () => zoo.mountZoo(body, t));
   $("#sheet").classList.add("on");
   document.querySelectorAll("[data-sheet]").forEach((b) => b.setAttribute("aria-expanded", String(b.dataset.sheet === kind)));
 }
@@ -181,7 +260,7 @@ async function boot() {
   await load();
   globe = createGlobe($("#globe"), {
     onPick: (item) => go(item),
-    onReady: () => { drawMap(); drawInspector(); setTimeout(() => $("#boot").classList.add("done"), 250); },
+    onReady: () => { drawMap(); drawInspector(); if (S.mode !== "cases") setMode(S.mode); setTimeout(() => $("#boot").classList.add("done"), 250); },
   });
   // Never let a slow tile server trap the page behind the splash.
   setTimeout(() => $("#boot").classList.add("done"), 6000);
@@ -192,7 +271,9 @@ async function boot() {
   $("#tour-btn").addEventListener("click", () => { openTrivia(); startTour(); });
   renderPulse($("#pulse-body")); renderTimeline($("#tl"));
   on((what) => {
-    if (what === "filters") { renderPulse($("#pulse-body")); renderTimeline($("#tl")); drawMap(); }
+    if (what === "filters") { if (S.mode === "cases") renderPulse($("#pulse-body")); renderTimeline($("#tl")); drawMap(); }
+    if (what === "flows" && S.mode === "flows") drawFlows();
+    if (what === "zoo" && S.mode === "zoo") drawZoo();
     if (what === "nav") drawInspector();
   });
   document.querySelectorAll("[data-layer]").forEach((b) => b.addEventListener("click", () => setLayer(b.dataset.layer, b.getAttribute("aria-pressed") !== "true")));
@@ -204,9 +285,24 @@ async function boot() {
   $("#world").addEventListener("click", () => globe?.world());
   $("#spin").addEventListener("click", () => { globe?.spin(!globe.spinning); $("#spin").setAttribute("aria-pressed", String(!!globe?.spinning)); });
   $("#legend-toggle").addEventListener("click", () => { const l = $(".legend"); l.hidden = !l.hidden; $("#legend-toggle").setAttribute("aria-pressed", String(!l.hidden)); });
-  addEventListener("wildtrace:open", (e) => openSheet(e.detail));
-  if (/^#(table|about|network|methods|investigate)$/.test(location.hash)) openSheet(location.hash.slice(1));
-  $("#home").addEventListener("click", (e) => { e.preventDefault(); closeTrail(); closeSheet(); globe?.world(); });
+  addEventListener("wildtrace:open", (e) => { const [k, t] = String(e.detail).split(":"); openSheet(k, t); });
+  addEventListener("wildtrace:toast", (e) => toast(e.detail));
+  addEventListener("wildtrace:go", (e) => go(e.detail));
+  addEventListener("wildtrace:flows-focus", () => { closeSheet(); if (S.mode !== "flows") setMode("flows"); else emit("flows"); });
+  addEventListener("wildtrace:follow", (e) => {
+    Object.assign(S.flow, { story: "country", country: e.detail }); S.flow.off.clear(); closeTrail();
+    if (S.mode === "flows") emit("flows"); else setMode("flows");
+  });
+  document.querySelectorAll("[data-mode]").forEach((b) => b.addEventListener("click", () => b.dataset.mode !== S.mode && setMode(b.dataset.mode)));
+  if (/^#(table|about|network|methods|investigate|analysis|matrix|zoo)$/.test(location.hash)) openSheet(location.hash.slice(1));
+  // A shared view: ?mode=flows&g=... or ?mode=zoo
+  const q = new URLSearchParams(location.search);
+  if (q.get("mode") === "flows") { flows.fromQuery(q); setMode("flows"); }
+  else if (q.get("mode") === "zoo") setMode("zoo");
+  else document.body.classList.add("mode-cases");
+  // Species and country records gain CITES and outbreak blocks once that data is in.
+  setTimeout(() => Promise.all([loadExtra("flows"), loadExtra("zoonoses")]).then(refreshInspector), 2500);
+  $("#home").addEventListener("click", (e) => { e.preventDefault(); closeTrail(); closeSheet(); if (S.mode !== "cases") setMode("cases"); globe?.world(); });
   $("#play").addEventListener("click", glide);
   $("#range-reset").addEventListener("click", () => { S.filters.range = null; emit("filters"); });
   addEventListener("keydown", (e) => {

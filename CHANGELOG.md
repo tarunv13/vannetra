@@ -2,6 +2,38 @@
 
 All notable changes to WildTrace. Dates are the release date, newest first.
 
+## 1.5.0 — 2026-09-23
+
+### Added
+- **Cases · Flows · Zoonoses.** The Atlas now answers three questions on the same map, switched
+  from the top bar. Each mode brings its own left panel, and Flows and Zoonoses switch to the flat
+  map so both ends of a route are in view.
+- **Flows: supply, transit and demand.** 15,512 seized shipments reported to CITES since 2015
+  (source code I, CITES Trade Database 2026.1), drawn from where a specimen was taken to where it
+  was seized. The reader builds the view: follow a species or a country, pick source and market
+  countries, the number of routes and the evidence (seized, declared legal trade, routes named in
+  cases), and colour lines by region (eight UN M49 regions, colour-blind-safe palette), role
+  (source, transit hub, market) or species. Lines shade from the source region's colour to the
+  market's, arrowheads and moving dashes show direction, and a glow under each market grows with
+  what arrives. Every route is a checkbox; a story sentence is written from what is on; the whole
+  view is kept in the link.
+- **Who supplies whom**: a source × market heatmap by country or region, plants, animals or both,
+  with or without the United States. Clicking a cell draws that route.
+- **Zoonoses**: 2,116 WHO Disease Outbreak News reports of diseases with an animal reservoir,
+  grouped by how they reach people (wildlife contact, birds, livestock, insects and ticks), with
+  WildTrace cases overlaid; a "countries with both" list; and a table of the viruses confirmed by
+  sequencing or isolation in each traded species group (VIRION), same species as in people and
+  close relatives, by virus family. Literature notes found with Consensus (Gippet et al. 2026,
+  Shivaprakash et al. 2021, Lee et al. 2020, Gibb et al. 2024).
+- **Analysis sheet**: cases per month, events, species, source or market, transport and CITES
+  seizures per year, each with what it can and cannot show.
+- Species records show a Sankey of seized shipments (taken from, shipped from, seized in) and the
+  species' viruses; country records show a source / transit / market bar and outbreak counts.
+- Species pages for groups the news rarely covers (orchids, cacti, cycads and others) now exist,
+  built from their CITES seizure records.
+- `wildtrace cites` now covers every country (it was limited to South and Southeast Asia) and
+  `wildtrace zoonoses` refreshes VIRION and WHO data weekly in CI.
+
 ## 1.4.0 — 2026-09-23
 
 ### Added

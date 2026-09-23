@@ -1,75 +1,130 @@
-"""CITES Trade Database loader: the legal-trade (demand/supply) baseline.
+"""CITES Trade Database: where traded wildlife comes from and where it goes.
 
 Download the full database from https://trade.cites.org/ (``Download`` → full
 database, a zip of CSVs, updated yearly), unzip it anywhere, and run
 
     wildtrace cites path/to/Trade_database_download_vYYYY.1
 
-The loader streams each CSV, keeps shipments where the exporter or importer is
-in scope, maps taxa onto the lexicon's species groups, and aggregates flows:
-exporter → importer × group × year, with quantities and the share whose
-Source code is ``I`` (confiscated/seized specimens). Individual permits are never
-published.
+The loader streams every shipment worldwide, maps taxa onto the lexicon's species
+groups, and aggregates two layers for web/data/flows.json:
+
+* seized: shipments with Source code ``I`` (confiscated or seized specimens), kept
+  as origin → exporter → importer, the closest open record of illegal flows;
+* declared: all other reported trade, exporter → importer, the legal baseline.
+
+Individual shipments and permit identifiers are never published, only counts.
+Recommended citation (UNEP-WCMC): Full CITES Trade Database Download. Version YYYY.1.
+Compiled by UNEP-WCMC, Cambridge, UK for the CITES Secretariat, Geneva, Switzerland.
 """
 from __future__ import annotations
 
+import csv
 import json
+import re
+from collections import Counter, defaultdict
 from pathlib import Path
-
-import pandas as pd
 
 from .. import lexicon
 from ..config import WEB_DATA
 
-SCOPE = {"IN", "NP", "BD", "LK", "BT", "MM", "TH", "VN", "LA", "KH", "MY", "SG", "ID", "PH", "CN", "HK"}
-USE = ["Year", "Taxon", "Genus", "Family", "Order", "Class", "Term", "Quantity", "Unit",
-       "Importer", "Exporter", "Origin", "Purpose", "Source"]
+MIN_YEAR = 2015
+DECLARED_TOP = 60   # declared-trade corridors kept per species group (the file stays small)
+# Ranks that are not CITES ranks, or families a group implies but does not list.
+EXTRA_HIGHER = {"elasmobranchii": "shark_ray", "manidae": "pangolin"}
 
 
-def _taxon_to_group() -> dict[str, str]:
-    m = {}
+def taxon_index() -> tuple[dict[str, str], dict[str, str]]:
+    """species name -> group, and higher taxon (genus/family/order/class) -> group.
+    The first group to list a taxon keeps it, so a specific group beats a catch-all."""
+    species, higher = {}, {}
     for gid, g in lexicon.load()["groups"].items():
         for t in g.get("taxa", []):
-            key = t.replace(" spp.", "").strip().lower()
-            m[key] = gid
-    return m
+            m = re.search(r"\(([^)]+)\)", t)       # "Tree ferns (Cyatheaceae)" -> Cyatheaceae
+            t = (m.group(1) if m else t).replace(" spp.", "").strip().lower()
+            (species if " " in t else higher).setdefault(t, gid)
+    for k, v in EXTRA_HIGHER.items():
+        higher.setdefault(k, v)
+    return species, higher
 
 
-def _group(row, tmap) -> str | None:
-    for col in ("Taxon", "Genus", "Family", "Order"):
-        v = str(row.get(col) or "").lower()
-        if not v:
-            continue
-        if v in tmap:
-            return tmap[v]
-        g = v.split(" ")[0]
-        if g in tmap:
-            return tmap[g]
+def group_of(row: dict, species: dict, higher: dict) -> str | None:
+    g = species.get((row.get("Taxon") or "").strip().lower())
+    if g:
+        return g
+    for col in ("Genus", "Family", "Order", "Class"):
+        g = higher.get((row.get(col) or "").strip().lower())
+        if g:
+            return g
     return None
 
 
-def load(folder: Path, min_year: int = 2000) -> pd.DataFrame:
-    tmap = _taxon_to_group()
-    parts = []
-    for csv in sorted(Path(folder).glob("*.csv")):
-        for chunk in pd.read_csv(csv, usecols=lambda c: c in USE, dtype=str, chunksize=200_000, low_memory=False):
-            chunk = chunk[(chunk["Exporter"].isin(SCOPE)) | (chunk["Importer"].isin(SCOPE))]
-            chunk = chunk[pd.to_numeric(chunk["Year"], errors="coerce") >= min_year]
-            if chunk.empty:
-                continue
-            chunk = chunk.assign(group=chunk.apply(lambda r: _group(r, tmap), axis=1)).dropna(subset=["group"])
-            chunk["Quantity"] = pd.to_numeric(chunk["Quantity"], errors="coerce").fillna(0)
-            chunk["seized"] = (chunk["Source"] == "I").astype(int)
-            parts.append(chunk)
-        print(f"  {csv.name}: {sum(len(p) for p in parts)} in-scope shipments so far")
-    return pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=USE + ["group", "seized"])
+def aggregate(folder: Path | str, min_year: int = MIN_YEAR) -> dict:
+    species, higher = taxon_index()
+    seized, seized_years, declared = Counter(), Counter(), Counter()
+    files = sorted(Path(folder).glob("*.csv"))
+    if not files:
+        raise SystemExit(f"no CSV files in {folder}: unzip the CITES download there first")
+    version = next((m.group(1) for f in Path(folder).glob("*.zip") if (m := re.search(r"v(\d{4}\.\d)", f.name))), "")
+    for f in files:
+        with open(f, encoding="utf-8", errors="replace", newline="") as fh:
+            for r in csv.DictReader(fh):
+                try:
+                    y = int(r["Year"])
+                except (TypeError, ValueError):
+                    continue
+                if y < min_year:
+                    continue
+                exp, imp = (r.get("Exporter") or "").strip(), (r.get("Importer") or "").strip()
+                if not exp or not imp or exp == imp:
+                    continue
+                g = group_of(r, species, higher)
+                if not g:
+                    continue
+                if (r.get("Source") or "").strip() == "I":
+                    org = (r.get("Origin") or "").strip() or exp
+                    seized[(g, org, exp, imp)] += 1
+                    seized_years[(g, y)] += 1
+                else:
+                    declared[(g, exp, imp)] += 1
+        print(f"  {f.name}: {sum(seized.values()):,} seized, {sum(declared.values()):,} declared so far")
+    per_group = defaultdict(list)
+    for (g, e, i), n in declared.most_common():
+        if len(per_group[g]) < DECLARED_TOP:
+            per_group[g].append([e, i, n])
+    declared_tot = Counter()
+    for (g, _, _), n in declared.items():
+        declared_tot[g] += n
+    return {
+        "source": "CITES Trade Database (UNEP-WCMC for the CITES Secretariat)",
+        "version": version, "year_min": min_year,
+        "cite": f"Full CITES Trade Database Download. Version {version or 'YYYY.1'}. Compiled by UNEP-WCMC, Cambridge, UK "
+                "for the CITES Secretariat, Geneva, Switzerland. Available at: trade.cites.org.",
+        "licence": "Derived from the CITES Trade Database; reuse under its terms (non-commercial, with attribution), not CC BY.",
+        "note": "Counts are shipment records, not quantities. Seized = source code I (confiscated or seized specimens). "
+                "Reporting is uneven: some Parties report seizures far more completely than others.",
+        # [group, origin, exporter, importer, shipments]; origin XX = not recorded
+        "seized": [[g, o, e, i, n] for (g, o, e, i), n in seized.most_common()],
+        "seized_years": [[g, y, n] for (g, y), n in sorted(seized_years.items())],
+        # [group, exporter, importer, shipments], top corridors per group; totals below
+        "declared": {g: rows for g, rows in per_group.items()},
+        "declared_total": dict(declared_tot),
+    }
 
 
-def publish_flows(df: pd.DataFrame, out: Path = WEB_DATA) -> Path:
-    agg = (df.groupby(["Exporter", "Importer", "group", "Year"])
-             .agg(shipments=("Quantity", "size"), quantity=("Quantity", "sum"), seized=("seized", "sum"))
-             .reset_index())
-    rows = agg.rename(columns=str.lower).to_dict(orient="records")
-    path = out / "cites_flows.json"
-    path.write_text(json.dumps({"source": "CITES Trade Database (UNEP-WCMC)", "rows": rows}), encoding="utf-8")
+def publish_flows(data: dict, out: Path = WEB_DATA) -> Path:
+    path = out / "flows.json"
+    path.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
+    # The same counts as flat tables, for spreadsheets and R/Python users.
+    with open(out / "cites_seized_flows.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["species_group", "origin", "exporter", "importer", "seized_shipments"])
+        w.writerows(data["seized"])
+    with open(out / "cites_declared_flows.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["species_group", "exporter", "importer", "declared_shipments"])
+        w.writerows([g, *row] for g, rows in data["declared"].items() for row in rows)
     return path
+
+
+def load(folder):  # kept for the CLI's older call shape
+    return aggregate(folder)

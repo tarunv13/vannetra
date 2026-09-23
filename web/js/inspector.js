@@ -4,6 +4,8 @@
 import { esc, fmt } from "./charts.js";
 import { KIND, KIND_COLOR, KIND_LABEL } from "./globe.js";
 import { S, ccName, go, spLabel } from "./store.js";
+import { roleBar, sankey } from "./flows.js";
+import { countryBlock, speciesBlock } from "./zoo.js";
 
 const HUE = { case: "var(--cases)", species: "var(--species)", country: "var(--place)", obs: "var(--network)", entity: "var(--invest)" };
 const LANG = { en: "English", hi: "Hindi", hi_latn: "Hindi (Latin)", te: "Telugu", te_latn: "Telugu (Latin)", vi: "Vietnamese", id_ms: "Indonesian / Malay",
@@ -80,6 +82,12 @@ export function render(item, el, ctx) {
     go({ kind, id });
   }));
   el.querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", () => ctx.act(b.dataset.act, item)));
+  el.querySelectorAll("[data-follow]").forEach((b) => b.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:follow", { detail: b.dataset.follow }))));
+  el.querySelectorAll("[data-open-zoo]").forEach((b) => b.addEventListener("click", () => dispatchEvent(new CustomEvent("wildtrace:open", { detail: "zoo" }))));
+  el.querySelectorAll("[data-flows-g]").forEach((b) => b.addEventListener("click", () => {
+    Object.assign(S.flow, { story: "species" }); S.flow.groups = new Set([b.dataset.flowsG]); S.flow.from.clear(); S.flow.to.clear(); S.flow.off.clear();
+    dispatchEvent(new CustomEvent("wildtrace:flows-focus"));
+  }));
   el.scrollTop = 0;
 }
 
@@ -167,6 +175,8 @@ function speciesView(gid) {
       ${online ? `<dt>Online listings</dt><dd>${online.flagged} flagged as trade this build <span class="muted">(${online.not_flagged} not)</span></dd>` : ""}
       ${owt ? `<dt>OWT labelled set</dt><dd>${owt.R} trade · ${owt.IR} irrelevant</dd>` : ""}
     </dl>
+    ${sankey(gid)}${S.data.flows?.seized.some((r) => r[0] === gid) ? `<div class="row" style="margin-top:8px"><button class="btn" data-flows-g="${gid}">Follow on the Flows map</button></div>` : ""}
+    ${speciesBlock(gid)}
     ${Object.keys(byCountry).length ? `<div class="eyebrow" style="margin:14px 0 6px">Where</div>${Object.entries(byCountry).sort((a, b) => b[1] - a[1]).slice(0, 8)
       .map(([cc, n]) => link("country", cc, esc(ccName(cc)), `${n} case${n > 1 ? "s" : ""}`)).join("")}` : ""}
     <div class="eyebrow" style="margin:14px 0 8px">Names sellers and reporters use</div>
@@ -188,7 +198,8 @@ function countryView(cc) {
     <h2 class="title">${esc(ccName(cc))}</h2>
     <div class="tiles"><div class="tile"><div class="v">${cases.length}</div><div class="k">cases</div></div>
       <div class="tile"><div class="v">${Object.keys(sp).length}</div><div class="k">species groups</div></div></div>
-    ${Object.keys(sp).length ? `<div class="eyebrow" style="margin:6px 0 6px">Species involved</div>${Object.entries(sp).sort((a, b) => b[1] - a[1])
+    ${roleBar(cc)}${countryBlock(cc)}
+    ${Object.keys(sp).length ? `<div class="eyebrow" style="margin:14px 0 6px">Species involved</div>${Object.entries(sp).sort((a, b) => b[1] - a[1])
       .map(([s, n]) => link("species", s, esc(spLabel(s)), `${n}`)).join("")}` : ""}
     ${outRoutes.length ? `<div class="eyebrow" style="margin:14px 0 6px">Reported routes</div>${outRoutes.map((c) => link("case", c.id, `${esc(c.route[0])} → ${esc(c.route[1])}`, esc(c.date || ""))).join("")}` : ""}
     ${obs.length ? `<div class="eyebrow" style="margin:14px 0 6px">Observatories based here</div>${obs.map((o) => link("obs", o.id, esc(o.name.split(" (")[0]), esc(o.hq.city))).join("")}` : ""}

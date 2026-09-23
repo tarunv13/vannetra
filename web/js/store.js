@@ -7,13 +7,20 @@ export const S = {
   filters: { kinds: new Set(), species: new Set(), countries: new Set(), ver: new Set(), range: null },
   layers: { cases: true, routes: true, observatories: false, mine: true },
   trail: [], pos: -1, // navigation stack for the inspector (back / forward)
+  // Atlas mode: "cases" (the default map), "flows" (supply -> demand) or "zoo" (zoonoses).
+  mode: "cases",
+  // Flows: what the reader chose to see. Every field round-trips through the URL (see flows.js).
+  flow: { story: "species", groups: new Set(), from: new Set(), to: new Set(), country: "", colorBy: "region", top: 14,
+    ev: { seized: true, declared: false, news: false }, off: new Set(), noUS: false },
+  // Zoonoses: which transmission pathways and overlays are on.
+  zoo: { pathways: new Set(["wildlife", "birds", "livestock", "vector"]), cases: true, disease: "" },
 };
 const subs = new Set();
 export const on = (fn) => (subs.add(fn), () => subs.delete(fn));
 export const emit = (what = "filters") => subs.forEach((fn) => fn(what));
 
 // graph.json (the link chart) is fetched only when Investigate opens: see loadGraph().
-const FILES = { cases: "cases", species: "species", countries: "countries", obs: "observatories", meta: "meta",
+const FILES = { cases: "cases", stats: "stats", species: "species", countries: "countries", regions: "regions", obs: "observatories", meta: "meta",
   report: "model_report", trade: "trade_signals", sources: "sources", codewords: "codewords" };
 export async function loadGraph() {
   if (!S.data.graph.elements?.length) {
@@ -31,8 +38,19 @@ export async function load() {
   S.data.obsById = Object.fromEntries((S.data.obs.observatories || []).map((o) => [o.id, o]));
 }
 
+// Flows and zoonoses data are larger and only needed in their modes: fetched once, on demand.
+const lazy = {};
+export function loadExtra(name) {
+  return (lazy[name] ||= fetch(`data/${name}.json`, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    .then((d) => { S.data[name] = d; return d; }));
+}
+
 export const spLabel = (g) => S.data.species[g]?.label || g;
-export const ccName = (cc) => S.data.countries[cc]?.name || cc;
+// Country names: the gazetteer first, then the browser's own list (covers codes such as HK or MO
+// that appear in CITES data but have no case).
+let regionNames = null;
+try { regionNames = new Intl.DisplayNames(["en"], { type: "region" }); } catch { /* old browser */ }
+export const ccName = (cc) => S.data.countries[cc]?.name || (cc && /^[A-Z]{2}$/.test(cc) && cc !== "XX" ? regionNames?.of(cc) : null) || cc;
 
 /** Cases that pass the current filters (optionally ignoring one facet, for facet counts). */
 export function filtered(ignore = "") {

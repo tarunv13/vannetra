@@ -53,3 +53,6 @@ footer p { font-size: 0.86rem; }
   }
   :root:not([data-theme="light"]) .brand { color: var(--ink); }
 }
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cols2 h3 { margin: 0 0 4px; font-size: 1rem; }
+@media (max-width: 640px) { .cols2 { grid-template-columns: 1fr; } }

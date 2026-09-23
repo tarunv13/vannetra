@@ -23,6 +23,9 @@ jobs:
           restore-keys: raw-
       # YouTube is left out of CI: datacentre IPs are routinely bot-checked. Run it locally.
       - run: python -m wildtrace.cli run --timespan 1m --official --gnews --countries ALL
+      # WHO outbreak reports and the latest VIRION release. CITES flows are refreshed by hand once a
+      # year from the bulk download (`wildtrace cites <folder>`), so flows.json is kept as committed.
+      - run: python -m wildtrace.cli zoonoses || echo "zoonoses refresh failed; keeping the last published file"
       - run: pytest -q || true
       # The share card carries the current counts, so it is redrawn from the rebuilt site.
       - name: Redraw the social card

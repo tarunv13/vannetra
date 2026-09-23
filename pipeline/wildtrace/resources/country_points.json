@@ -1,0 +1,25 @@
+{
+ "note": "Points for territories the gazetteer lacks but CITES records use (approximate centres).",
+ "points": {
+  "HK": {
+   "name": "Hong Kong",
+   "lon": 114.17,
+   "lat": 22.32
+  },
+  "MO": {
+   "name": "Macao",
+   "lon": 113.55,
+   "lat": 22.2
+  },
+  "IL": {
+   "name": "Israel",
+   "lon": 34.85,
+   "lat": 31.05
+  },
+  "KV": {
+   "name": "Kosovo",
+   "lon": 20.9,
+   "lat": 42.6
+  }
+ }
+}

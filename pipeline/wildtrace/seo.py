@@ -26,6 +26,7 @@ import html
 import json
 import re
 from datetime import date
+from pathlib import Path
 
 SITE = "https://tarunv13.github.io/wildtrace"
 LICENCE = "https://creativecommons.org/licenses/by/4.0/"
@@ -198,11 +199,36 @@ def build_pages(cases: list[dict], species: dict, countries: dict, meta: dict, o
                                        [("WildTrace", SITE + "/"), ("Cases", SITE + "/browse.html")]))
 
     # ---------------------------------------------------------------- species pages
+    # CITES seizure records (flows.json, from `wildtrace cites`): a group the news rarely covers,
+    # such as orchids or cacti, still gets a page when seizures of it are reported to CITES.
+    flows_path = Path(out_dir) / "data" / "flows.json"
+    cites = {}
+    if flows_path.exists():
+        fl = json.loads(flows_path.read_text(encoding="utf-8"))
+        for g_, o_, _e, i_, n_ in fl["seized"]:
+            d_ = cites.setdefault(g_, {"n": 0, "from": {}, "to": {}})
+            d_["n"] += n_
+            if o_ != "XX":
+                d_["from"][o_] = d_["from"].get(o_, 0) + n_
+            d_["to"][i_] = d_["to"].get(i_, 0) + n_
+        cites_since = fl.get("year_min")
     for gid, g in species.items():
         mine = [c for c in cases if gid in c.get("species", [])]
-        if not mine:
+        cz = cites.get(gid)
+        if not mine and not (cz and cz["n"] >= 5):
             continue
         label = g.get("label", gid)
+        cites_html = ""
+        if cz and cz["n"] >= 5:
+            tf = sorted(cz["from"].items(), key=lambda kv: -kv[1])[:8]
+            tt = sorted(cz["to"].items(), key=lambda kv: -kv[1])[:8]
+            cites_html = f"""
+<h2>Where seized {esc(label.lower())} came from, and where it was seized</h2>
+<p><b>{cz["n"]:,}</b> shipments of {esc(label.lower())} seized or confiscated were reported to CITES since {cites_since}
+  (CITES Trade Database, source code I). Counts are shipment records, not quantities, and some countries report far more completely than others.</p>
+<div class="cols2"><div><h3>Taken from</h3><ul>{"".join(f'<li>{esc(cc_name(cc))} <span class="muted">{n:,}</span></li>' for cc, n in tf)}</ul></div>
+<div><h3>Seized in</h3><ul>{"".join(f'<li>{esc(cc_name(cc))} <span class="muted">{n:,}</span></li>' for cc, n in tt)}</ul></div></div>
+<p><a class="pill" href="{SITE}/?mode=flows&amp;g={esc(gid)}">Follow {esc(label.lower())} on the Flows map →</a></p>"""
         by_country: dict[str, int] = {}
         for c in mine:
             cc = (c.get("place") or {}).get("country")
@@ -211,6 +237,22 @@ def build_pages(cases: list[dict], species: dict, countries: dict, meta: dict, o
         top = sorted(by_country.items(), key=lambda kv: -kv[1])[:12]
         recent = sorted(mine, key=lambda c: c.get("date") or "", reverse=True)[:25]
         official = sum(1 for c in mine if c.get("verification") in ("official", "validated"))
+        if not mine:   # CITES-only page
+            title = f"{label} in the illegal wildlife trade: {cz['n']:,} seized shipments reported to CITES — WildTrace"
+            desc = (f"{cz['n']:,} seized or confiscated shipments of {label.lower()} reported to CITES since {cites_since}: "
+                    f"where they were taken from and where they were seized. Open data.")
+            body = f"""
+<h1>{esc(label)} in the illegal wildlife trade</h1>
+<p class="lede">No news report of a {esc(label.lower())} seizure has reached WildTrace yet. The trade is still recorded:
+  countries report seized and confiscated shipments to CITES.</p>
+<p>{f"CITES appendix {esc(g.get('cites'))}. " if g.get("cites") else ""}{f"Taxa covered: {esc(', '.join(g.get('taxa', [])))}. " if g.get("taxa") else ""}</p>
+{cites_html}"""
+            ld = {"@context": "https://schema.org", "@type": "Dataset", "name": f"Seized shipments of {label} reported to CITES",
+                  "description": desc, "url": f"{SITE}/species/{slug(gid)}.html", "license": LICENCE,
+                  "isPartOf": {"@type": "Dataset", "name": "WildTrace", "url": SITE + "/"}}
+            write(f"species/{slug(gid)}.html", page(title, desc, f"{SITE}/species/{slug(gid)}.html", body, ld,
+                                                    [("WildTrace", SITE + "/"), ("Species", SITE + "/browse.html")]))
+            continue
         title = f"{label} in the illegal wildlife trade: {len(mine)} recorded cases — WildTrace"
         desc = (f"{len(mine)} seizures, arrests and convictions involving {label.lower()} recorded from public reports "
                 f"in {len(by_country)} countries, {window[0]} to {window[1]}. Open data, each case graded by evidence.")
@@ -227,6 +269,7 @@ def build_pages(cases: list[dict], species: dict, countries: dict, meta: dict, o
 <ul class="cols">{"".join(f'<li><a href="{SITE}/country/{cc.lower()}.html">{esc(cc_name(cc))}</a> <span class="muted">{n}</span></li>' for cc, n in top)}</ul>
 <h2>Recent cases</h2>
 <ul class="cases">{"".join(f'<li><a href="{SITE}/case/{c["id"]}.html">{esc(c.get("summary", ""))}</a> <span class="muted">{esc(c.get("date", ""))} · {esc(c.get("verification", ""))}</span></li>' for c in recent)}</ul>
+{cites_html}
 <p><a class="pill" href="{SITE}/#species/{esc(gid)}">See {esc(label.lower())} on the map →</a>
    <a class="pill" href="{SITE}/data/cases.csv">Download all cases (CSV)</a></p>
 """
@@ -284,7 +327,7 @@ def build_pages(cases: list[dict], species: dict, countries: dict, meta: dict, o
         f'<li><a href="{SITE}/species/{slug(gid)}.html">{esc(g.get("label", gid))}</a> '
         f'<span class="muted">{sum(1 for c in cases if gid in c.get("species", []))}</span></li>'
         for gid, g in sorted(species.items(), key=lambda kv: -sum(1 for c in cases if kv[0] in c.get("species", [])))
-        if any(gid in c.get("species", []) for c in cases))
+        if any(gid in c.get("species", []) for c in cases) or (cites.get(gid) or {}).get("n", 0) >= 5)
     cc_rows = "".join(
         f'<li><a href="{SITE}/country/{cc.lower()}.html">{esc(cc_name(cc))}</a> '
         f'<span class="muted">{sum(1 for c in cases if (c.get("place") or {}).get("country") == cc)}</span></li>'

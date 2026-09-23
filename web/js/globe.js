@@ -114,6 +114,39 @@ export function createGlobe(el, { onPick, onReady } = {}) {
         "circle-stroke-width": ["case", approx, 2.5, ["in", ["get", "ver"], ["literal", ["official", "validated"]]], 3, 2],
       } });
 
+    // ---- Flows: supply -> demand arcs. Each arc arrives as short segments, each with its own
+    // colour, so a line can shade from the source region's hue to the market's (MapLibre's
+    // line-gradient cannot vary per feature).
+    const tri = document.createElement("canvas"); tri.width = tri.height = 32;
+    const tc = tri.getContext("2d"); tc.fillStyle = "#000"; tc.beginPath(); tc.moveTo(16, 3); tc.lineTo(29, 29); tc.lineTo(3, 29); tc.closePath(); tc.fill();
+    if (!map.hasImage("arrow")) map.addImage("arrow", tc.getImageData(0, 0, 32, 32), { sdf: true });
+    ["flowglow", "flowlines", "flowdash", "flowarrows", "flownodes", "zoo", "zoocases"].forEach((id) => map.addSource(id, { type: "geojson", data: EMPTY }));
+    map.addLayer({ id: "flow-glow", type: "circle", source: "flowglow", layout: { visibility: "none" },
+      paint: { "circle-radius": ["get", "r"], "circle-color": ["get", "c"], "circle-opacity": 0.32, "circle-blur": 1 } });
+    map.addLayer({ id: "flow-lines", type: "line", source: "flowlines", filter: ["!=", ["get", "k"], "d"], layout: { visibility: "none", "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": ["get", "c"], "line-width": ["get", "w"], "line-opacity": ["get", "o"] } });
+    // Declared (legal) trade is dashed so it never reads as seizures.
+    map.addLayer({ id: "flow-lines-d", type: "line", source: "flowlines", filter: ["==", ["get", "k"], "d"], layout: { visibility: "none", "line-join": "round" },
+      paint: { "line-color": ["get", "c"], "line-width": ["get", "w"], "line-opacity": ["get", "o"], "line-dasharray": [2, 2] } });
+    map.addLayer({ id: "flow-dash", type: "line", source: "flowdash", layout: { visibility: "none", "line-cap": "round" },
+      paint: { "line-color": "#ffffff", "line-width": ["*", 0.45, ["get", "w"]], "line-opacity": 0.85, "line-dasharray": [0, 4, 3] } });
+    map.addLayer({ id: "flow-arrows", type: "symbol", source: "flowarrows", layout: { visibility: "none", "icon-image": "arrow", "icon-size": ["get", "s"],
+      "icon-rotate": ["get", "b"], "icon-rotation-alignment": "map", "icon-allow-overlap": true, "icon-ignore-placement": true },
+      paint: { "icon-color": ["get", "c"] } });
+    map.addLayer({ id: "flow-nodes", type: "circle", source: "flownodes", layout: { visibility: "none" },
+      paint: { "circle-radius": ["get", "r"], "circle-color": ["get", "c"], "circle-stroke-color": "#ffffff", "circle-stroke-width": 2 } });
+    map.addLayer({ id: "flow-labels", type: "symbol", source: "flownodes", layout: { visibility: "none", "text-field": ["get", "name"], "text-font": ["Noto Sans Bold"],
+      "text-size": 12, "text-offset": [0.9, 0], "text-anchor": "left", "text-optional": true },
+      paint: { "text-color": "#0f1a17", "text-halo-color": "#f7f8f5", "text-halo-width": 1.6 } });
+    // ---- Zoonoses: WHO outbreak reports per country, and WildTrace cases as rings over them.
+    map.addLayer({ id: "zoo", type: "circle", source: "zoo", layout: { visibility: "none" },
+      paint: { "circle-radius": ["get", "r"], "circle-color": ["get", "c"], "circle-opacity": 0.5, "circle-stroke-color": ["get", "c"], "circle-stroke-width": 1.5 } });
+    map.addLayer({ id: "zoo-cases", type: "circle", source: "zoocases", layout: { visibility: "none" },
+      paint: { "circle-radius": ["get", "r"], "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": "#0f1a17", "circle-stroke-width": 1.6, "circle-stroke-opacity": 0.75 } });
+    map.addLayer({ id: "zoo-labels", type: "symbol", source: "zoo", filter: [">=", ["get", "n"], 20], layout: { visibility: "none", "text-field": ["get", "name"],
+      "text-font": ["Noto Sans Bold"], "text-size": 12, "text-offset": [0, -1.6], "text-optional": true },
+      paint: { "text-color": "#0f1a17", "text-halo-color": "#f7f8f5", "text-halo-width": 1.6 } });
+
     const hover = (layer, html) => {
       map.on("mouseenter", layer, (e) => {
         map.getCanvas().style.cursor = "pointer";
@@ -127,6 +160,13 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     hover("obs", (p) => `<div class="muted" style="font-size:12px">Observatory · ${esc(p.city)}</div><b>${esc(p.name)}</b>`);
     hover("mine", (p) => `<div class="muted" style="font-size:12px">Your data (local)</div><b>${esc(p.label)}</b>`);
     hover("routes", (p) => `<b>${esc(p.label)}</b><div class="muted" style="font-size:12px">${p.n} case(s) · route as reported</div>`);
+    const tipLine = (p) => `<b>${esc(p.label)}</b><div class="muted" style="font-size:12px">${esc(p.what)}</div>`;
+    hover("flow-lines", tipLine); hover("flow-lines-d", tipLine);
+    hover("flow-nodes", (p) => `<b>${esc(p.name)}</b><div class="muted" style="font-size:12px">${esc(p.what)}</div>`);
+    hover("zoo", (p) => `<b>${esc(p.name)}</b><div class="muted" style="font-size:12px">${esc(p.what)}</div>`);
+    hover("zoo-cases", (p) => `<b>${esc(p.name)}</b><div class="muted" style="font-size:12px">${esc(p.what)}</div>`);
+    map.on("click", "flow-nodes", (e) => onPick?.({ kind: "country", id: e.features[0].properties.cc }));
+    map.on("click", "zoo", (e) => onPick?.({ kind: "country", id: e.features[0].properties.cc }));
     map.on("mouseenter", "clusters", () => (map.getCanvas().style.cursor = "pointer"));
     map.on("mouseleave", "clusters", () => (map.getCanvas().style.cursor = ""));
     map.on("click", "clusters", async (e) => {
@@ -139,8 +179,9 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     map.on("click", "mine", (e) => onPick?.({ kind: "entity", id: e.features[0].properties.id }));
     ["mousedown", "touchstart", "wheel", "dragstart"].forEach((ev) => map.on(ev, () => api.spin(false)));
     map.on("moveend", () => spinning && spinStep());
+    api.ready = true;
     onReady?.();
-    setTimeout(() => api.spin(true), 1200);
+    setTimeout(() => api.spin(!document.body.classList.contains("mode-flows") && !document.body.classList.contains("mode-zoo")), 1200);
   });
 
   // Idle rotation: a slow drift that stops for good once the reader touches the map.
@@ -160,6 +201,16 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     pulseRaf = requestAnimationFrame(pulse);
   };
 
+  // Moving dashes: the white dash walks from source to market, so direction is visible at a glance.
+  // Stepped through a short dash sequence (MapLibre's documented technique); off for reduced motion.
+  const DASH = [[0, 4, 3], [0.5, 4, 2.5], [1, 4, 2], [1.5, 4, 1.5], [2, 4, 1], [2.5, 4, 0.5], [3, 4, 0], [0, 0.5, 3, 3.5], [0, 1, 3, 3], [0, 1.5, 3, 2.5], [0, 2, 3, 2], [0, 2.5, 3, 1.5], [0, 3, 3, 1], [0, 3.5, 3, 0.5]];
+  let dashTimer = 0, dashStep = 0;
+  function animate(on) {
+    clearInterval(dashTimer);
+    if (!on || reduced() || !map.getLayer("flow-dash")) { map.getLayer("flow-dash") && map.setLayoutProperty("flow-dash", "visibility", on && !reduced() ? "visible" : "none"); return; }
+    dashTimer = setInterval(() => { dashStep = (dashStep + 1) % DASH.length; map.setPaintProperty("flow-dash", "line-dasharray", DASH[dashStep]); }, 70);
+  }
+
   const api = {
     map,
     set(source, fc) { const s = map.getSource(source); if (s) s.setData(fc); },
@@ -173,15 +224,29 @@ export function createGlobe(el, { onPick, onReady } = {}) {
       cancelAnimationFrame(pulseRaf);
       if (id && !reduced()) pulseRaf = requestAnimationFrame(pulse);
     },
+    /** Show one family of layers: the case layers, the flow arcs, or the outbreak bubbles. */
+    group(name, on) {
+      const ids = { flows: ["flow-glow", "flow-lines", "flow-lines-d", "flow-dash", "flow-arrows", "flow-nodes", "flow-labels"], zoo: ["zoo", "zoo-cases", "zoo-labels"] }[name] || [];
+      ids.forEach((id) => map.getLayer(id) && map.setLayoutProperty(id, "visibility", on ? "visible" : "none"));
+      if (name === "flows") animate(on);
+    },
     spin(on) { spinning = on && !reduced(); if (spinning) spinStep(); },
     get spinning() { return spinning; },
     fly(center, zoom = 6) {
       const o = { center, zoom: Math.max(zoom, 1.2) };
       reduced() ? map.jumpTo(o) : map.flyTo({ ...o, speed: 0.9, curve: 1.5, essential: false, padding: api.padding() });
     },
-    fit(bounds) {
+    fit(bounds, maxZoom = 6) {
       if (!bounds) return;
-      map.fitBounds(bounds, { padding: api.padding(60), maxZoom: 6, duration: reduced() ? 0 : 1400 });
+      // The panels' padding lives on the map itself; fitBounds adds only a small margin on top.
+      map.setPadding(api.padding());
+      map.fitBounds(bounds, { padding: 30, maxZoom, duration: reduced() ? 0 : 1400 });
+    },
+    /** Flows and outbreaks are worldwide: a flat map shows both ends of a route at once. */
+    flat(on) {
+      if (!api.ready) return;   // onReady re-applies the mode once the style is in
+      map.setProjection({ type: on ? "mercator" : "globe" });
+      map.setMinZoom(on ? 0 : 0.4);
     },
     world() { const o = { center: [30, 12], zoom: small ? 0.9 : 1.75, pitch: 0, bearing: 0, padding: api.padding() };
       reduced() ? map.jumpTo(o) : map.flyTo({ ...o, speed: 0.8 }); },
@@ -193,9 +258,10 @@ export function createGlobe(el, { onPick, onReady } = {}) {
     // Keep flights centred in the part of the map that panels do not cover.
     padding(extra = 0) {
       if (innerWidth < 860) return { top: 140 + extra, bottom: innerHeight * 0.45, left: 20, right: 20 };
-      const insp = document.body.classList.contains("inspecting") ? 450 : 20;
+      const side = !document.body.classList.contains("mode-cases") && innerWidth >= 860;
+      const insp = document.body.classList.contains("inspecting") ? 450 : side ? 410 : 20;
       const pulse = document.getElementById("pulse")?.classList.contains("folded") ? 70 : 390;
-      return { top: 90 + extra, bottom: 140 + extra, left: pulse + extra, right: insp + extra };
+      return { top: 90 + extra, bottom: (side ? 30 : 140) + extra, left: pulse + extra, right: insp + extra };
     },
   };
   return api;

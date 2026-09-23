@@ -56,7 +56,14 @@ export function mountMethods(root, tab = "pipeline") {
       <p><b>Screen.</b> A multilingual lexicon of 30 species groups (English, Hindi, Telugu, Portuguese, Spanish, French, Vietnamese, Thai, Indonesian, plus 2,376 codebook names in 66 languages) meets enforcement words in the same languages. Films, liquor brands and look-alike places are filtered out.</p>
       <p><b>Extract.</b> Species, place (46,000 places, Hindi and native-script names included), route, quantities, arrests (a count, never a name), agencies and transport, each traceable to a phrase.</p>
       <p><b>Merge.</b> Reports of one incident become one case, across languages and across the days a story runs.</p>
-      <p><b>Link and publish.</b> Cases become a graph of species, places, agencies and outlets. A privacy gate blocks names, phones and handles before anything is published.</p></div>`,
+      <p><b>Link and publish.</b> Cases become a graph of species, places, agencies and outlets. A privacy gate blocks names, phones and handles before anything is published.</p>
+      <h3>Flows: supply, transit and demand</h3>
+      <p>News reports rarely name both ends of a route, so the Flows view draws on the <b>CITES Trade Database</b> (UNEP-WCMC for the CITES Secretariat, full download ${esc(S.data.flows?.version || "2026.1")}).
+        Every shipment since ${esc(String(S.data.flows?.year_min || 2015))} is matched to a WildTrace species group by species, genus, family, order or class. Shipments with source code I (confiscated or seized) become the seized layer, drawn from the country of origin to the country that seized them; all other shipments form the declared, mostly legal, layer. Only counts are published, never shipments or permit identifiers.</p>
+      <p>A country's role (source, transit hub or market) is whichever of the three counts is largest: taken from there, re-exported through there, or seized arriving there. Reporting to CITES is uneven, and the United States reports its seizures more completely than most, so it can look like a bigger market than it is. Regions follow the UN M49 sub-regions, grouped into eight.</p>
+      <h3>Zoonoses</h3>
+      <p><b>VIRION</b> (Carlson et al. 2022) gives the viruses recorded in each species group; only detections by sequencing or isolation count. A close relative is a virus in a genus that also infects people. <b>WHO Disease Outbreak News</b> gives the outbreak reports: diseases with an animal reservoir are grouped by how they reach people, and each report is placed in every country its title names.
+        The two layers share a map, not a cause, and both follow research and reporting effort.</p></div>`,
     model: `<div class="prose">
       <h3 style="margin-top:0">The online-listing classifier</h3>
       <p>${esc(m.task || "")}. Trained on ${fmt(m.n)} items from the OWT labelled set (${fmt(m.n_R)} trade / ${fmt(m.n_IR)} irrelevant). ${esc(m.protocol || "")}.</p>
@@ -127,10 +134,15 @@ export function mountAbout(root) {
     <h3>Who runs it</h3>
     <p>An open-source research project, maintained on GitHub by <a href="https://github.com/tarunv13" target="_blank" rel="noopener">@tarunv13</a>. It builds on the OWT labelled set of online listings and on the observatories listed under Network. Code and method: <a href="https://github.com/tarunv13/wildtrace" target="_blank" rel="noopener">github.com/tarunv13/wildtrace</a>.</p>
     <h3>Use and cite</h3>
-    <p>Data: <b>CC BY 4.0</b>. Code: MIT. Suggested citation:</p>
+    <p>Cases and case data: <b>CC BY 4.0</b>. Code: MIT. The Flows data (<code>flows.json</code>) is derived from the CITES Trade Database and shared under its terms (non-commercial, with attribution); the virus counts in <code>zoonoses.json</code> come from VIRION under <b>ODbL 1.0</b>. Suggested citation:</p>
     <p class="box mono" style="font-size:12.5px">${esc(m.cite || "WildTrace. The open atlas of illegal wildlife trade.")}</p>
     <div class="row"><a class="btn primary" href="data/cases.csv" download>Download all cases (CSV)</a>
-      <a class="btn" href="browse.html">Browse by species &amp; country</a>
+      <a class="btn" href="browse.html">Browse by species &amp; country</a></div>
+    <h3>More open data</h3>
+    <div class="row"><a class="btn" href="data/cites_seized_flows.csv" download>Seized-shipment flows (CSV)</a>
+      <a class="btn" href="data/cites_declared_flows.csv" download>Declared-trade flows (CSV)</a>
+      <a class="btn" href="data/zoonotic_outbreak_reports.csv" download>Zoonotic outbreak reports (CSV)</a>
+      <a class="btn" href="data/species_viruses.csv" download>Viruses by species group (CSV, ODbL)</a>
       <a class="btn" href="https://github.com/tarunv13/wildtrace/issues/new?title=Correction%3A%20&labels=correction" target="_blank" rel="noopener">Report a correction</a></div>
     <p class="muted" style="font-size:12.5px">Every species group, country and case also has a plain page of its own,
       readable without JavaScript and linked from <a href="browse.html">the index</a>.</p>

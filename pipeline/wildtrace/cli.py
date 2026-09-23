@@ -4,7 +4,8 @@
   wildtrace collect [--countries IN,TH,VN] [--gnews] [--youtube] [--timespan 3m]
   wildtrace build                                        extract cases, publish web/data
   wildtrace run                                          collect + build
-  wildtrace cites   <folder>                             aggregate CITES trade flows
+  wildtrace cites   <folder>                             CITES supply -> demand flows (web/data/flows.json)
+  wildtrace zoonoses [--offline]                         VIRION + WHO outbreaks (web/data/zoonoses.json)
   wildtrace relabel                                      merge reviewed labels into corrections.csv
   wildtrace codebook <zip>                               merge PMC8579131 multilingual names (CC BY)
   wildtrace gazetteer                                    build GeoNames place index (CC-BY)
@@ -100,6 +101,7 @@ def main(argv=None) -> None:
     b = sub.add_parser("build"); b.add_argument("--no-fetch", action="store_true", help="skip fetching article ledes")
     sub.add_parser("relabel"); sub.add_parser("doctor"); sub.add_parser("gazetteer")
     ci = sub.add_parser("cites"); ci.add_argument("folder")
+    zo = sub.add_parser("zoonoses"); zo.add_argument("--offline", action="store_true", help="use the files already in data/raw/zoonoses")
     cb = sub.add_parser("codebook"); cb.add_argument("source", help="PMC8579131 zip or unzipped folder")
     a = p.parse_args(argv)
 
@@ -119,8 +121,11 @@ def main(argv=None) -> None:
         from .publish import build
         build()
     elif a.cmd == "cites":
-        from .collect.cites import load, publish_flows
-        print(publish_flows(load(a.folder)))
+        from .collect.cites import aggregate, publish_flows
+        print(publish_flows(aggregate(a.folder)))
+    elif a.cmd == "zoonoses":
+        from .collect.zoonoses import build as build_zoonoses
+        build_zoonoses(a.offline)
     elif a.cmd == "codebook":
         from .extract.codebook import build as build_codebook
         build_codebook(a.source)

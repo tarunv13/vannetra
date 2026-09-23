@@ -72,7 +72,36 @@ sources:
     role: [legal-trade, demand-supply, seizures-source-I]
     region: global
     terms: "Free for non-commercial use with attribution to CITES Secretariat / UNEP-WCMC"
-    notes: "Annual full CSV download. Source code 'I' = confiscated/seized specimens. Loader: wildtrace cites <folder>."
+    notes: "Annual full CSV download (2026.1 in use: 1975 to 2026). Source code 'I' = confiscated/seized specimens. Loader: wildtrace cites <folder> -> web/data/flows.json, the Flows view. That file is shared under CITES's terms, not CC BY."
+
+  - id: virion
+    name: VIRION, the Global Virome in One Network (Verena)
+    url: https://doi.org/10.5281/zenodo.15643003
+    access: bulk
+    enabled: true
+    role: [zoonoses, host-virus]
+    region: global
+    terms: "ODbL 1.0; cite Carlson et al. 2022, mBio 13:e02985-21"
+    notes: "Host-virus records from GenBank and four literature databases, refreshed on Zenodo. Only PCR/sequencing or isolation counted. Loader: wildtrace zoonoses -> web/data/zoonoses.json (ODbL)."
+
+  - id: who_don
+    name: WHO Disease Outbreak News
+    url: https://www.who.int/emergencies/disease-outbreak-news
+    access: api
+    enabled: true
+    role: [zoonoses, outbreaks]
+    region: global
+    terms: "WHO website terms; titles and dates are used to count reports, text is not republished"
+    notes: "Public API, 1996 to today. Diseases with an animal reservoir are grouped by how they reach people. Refreshed weekly."
+
+  - id: clover
+    name: CLOVER host-pathogen associations (Verena)
+    url: https://github.com/viralemergence/clover
+    access: bulk
+    enabled: false
+    role: [zoonoses, host-pathogen]
+    terms: "Cite the Zenodo DOI and Gibb et al. 2021"
+    notes: "Adds bacteria, helminths, protozoa and fungi, but stops at 2021 and has no pangolin records; kept as a cross-check, not published."
 
   - id: cites_speciesplus
     name: Species+ / CITES Checklist API

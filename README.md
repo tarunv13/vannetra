@@ -83,6 +83,10 @@ losing your place.
 | Surface | What it does |
 | --- | --- |
 | **Globe** | Cases by kind, a density glow, reported routes as arcs, observatories. Globe or flat, slow rotation, legend toggle |
+| **Flows** | Where wildlife is taken, where it passes through and where it is seized, from 15,512 seized shipments reported to CITES. You build the view: follow a species or a country, choose source and market countries, how many routes, which evidence (seized, declared legal trade, news routes), and colour lines by region, role or species. Every route can be switched off; a story sentence rewrites itself from what is on; the whole view lives in the link |
+| **Who supplies whom** | A heatmap of source countries (or regions) against the countries that seized them, for plants, animals or both, with or without the United States; click a cell to draw it |
+| **Zoonoses** | A separate lens: 2,116 WHO outbreak reports of animal-borne disease, grouped by how they reach people, with WildTrace cases as rings over them, and a table of the viruses confirmed in each traded species group (VIRION). A shared map, not a cause |
+| **Analysis** | What the evidence shows on one sheet: cases per month, events, species, source or market, transport, CITES seizures per year |
 | **Search** (`/`) | Cases, species, countries and observatories in one box |
 | **Pulse** | A live summary of what is in view; every bar is a filter |
 | **Inspector** | A written account of the case, then the documented facts, analytical context and limits of the evidence, with every source listed. Back, forward and a shareable link |
@@ -134,8 +138,17 @@ Found a mistake? Use **Report a correction** on any case, which opens a pre-fill
 - **Download:** [`cases.csv`](https://tarunv13.github.io/wildtrace/data/cases.csv), one row per
   case, with status, place, species and source links. The JSON behind the map sits beside it in
   [`web/data/`](web/data).
-- **Licence:** data CC BY 4.0, code MIT.
-- **Coverage:** 1,251 cases, 59 countries, 1,752 public reports, 2024-01-15 to 2026-09-22.
+- **More downloads:** [`cites_seized_flows.csv`](https://tarunv13.github.io/wildtrace/data/cites_seized_flows.csv)
+  (origin, exporter, importer, seized shipments per species group),
+  [`cites_declared_flows.csv`](https://tarunv13.github.io/wildtrace/data/cites_declared_flows.csv),
+  [`zoonotic_outbreak_reports.csv`](https://tarunv13.github.io/wildtrace/data/zoonotic_outbreak_reports.csv)
+  (2,116 WHO reports with disease, pathway and countries) and
+  [`species_viruses.csv`](https://tarunv13.github.io/wildtrace/data/species_viruses.csv).
+- **Licence:** case data CC BY 4.0, code MIT. `flows.json` is derived from the CITES Trade Database
+  and shared under its terms (non-commercial, with attribution); the virus counts in
+  `zoonoses.json` come from VIRION under ODbL 1.0.
+- **Coverage:** 1,271 cases, 59 countries, 1,788 public reports, 2024-01-15 to 2026-09-22; 15,512
+  seized and 7 million declared CITES shipments since 2015; 2,116 zoonotic WHO outbreak reports.
 
 ## Run it yourself
 
@@ -144,6 +157,8 @@ pip install -e ".[dev,video]"
 wildtrace collect --official --gnews --countries ALL   # official releases + global news
 wildtrace collect --history 12 --no-gdelt              # one-off: backfill 12 months
 wildtrace build                                        # cases, graph, CSV, site data (privacy gate)
+wildtrace cites path/to/Trade_database_download_v2026.1 # yearly: CITES supply -> demand flows
+wildtrace zoonoses                                     # weekly: VIRION + WHO outbreak reports
 python scripts/make_og.py                              # redraw the share card with the new counts
 python -m http.server -d web 8000                      # open http://localhost:8000
 ```
