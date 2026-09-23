@@ -111,6 +111,24 @@ losing your place.
 </p>
 
 <p align="center">
+  <img src="docs/img/flows.png" alt="The Flows view: plant products seized on the way from North America and South Asia to East Asia, lines shading from the source region's colour to the market's, with a list of routes, each with flags and an Evidence button" width="100%">
+  <br>
+  <sub>Flows: you choose the species, countries, evidence and colours; every route can be switched off and has its evidence one click away. The whole view lives in the link.</sub>
+</p>
+
+<p align="center">
+  <img src="docs/img/route.png" alt="The evidence page for the route Austria to United States: three seized shipments of ivory carvings, trophies and leather products, 2019 to 2021, all reported by the United States as personal items" width="100%">
+  <br>
+  <sub>Every route shows the records behind it: what was seized, when, who reported it and why it moved, the matching news cases, and how to check it in the CITES database.</sub>
+</p>
+
+<p align="center">
+  <img src="docs/img/zoonoses.png" alt="The Zoonoses view: WHO outbreak reports as bubbles coloured by how the disease reaches people, WildTrace cases as rings, and a list of countries with both" width="100%">
+  <br>
+  <sub>Zoonoses: animal-borne outbreaks beside the trade, stated on every surface as a shared map, not a cause.</sub>
+</p>
+
+<p align="center">
   <img src="docs/img/table.png" alt="The All cases table: date, case, evidence badge, country and number of reports, with a Download CSV button" width="100%">
   <br>
   <sub>Every case as a table, sortable by any column, with the evidence grade beside it and "not mapped" stated rather than hidden.</sub>
@@ -377,7 +395,7 @@ If WildTrace helps your work, please cite it. Use the **Cite this repository** b
 
 **APA 7**
 
-> Verma, T. K. (2026). *WildTrace: the open atlas of illegal wildlife trade* (Version 1.2.1) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22902819
+> Verma, T. K. (2026). *WildTrace: the open atlas of illegal wildlife trade* (Version 1.6.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22902819
 
 **BibTeX**
 
@@ -386,7 +404,7 @@ If WildTrace helps your work, please cite it. Use the **Cite this repository** b
   author  = {Verma, Tarun Kumar},
   title   = {WildTrace: the open atlas of illegal wildlife trade},
   year    = {2026},
-  version = {1.2.1},
+  version = {1.6.0},
   doi     = {10.5281/zenodo.22902819},
   url     = {https://github.com/tarunv13/wildtrace},
   license = {MIT}
